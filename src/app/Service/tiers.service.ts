@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { TiersRequest } from '../TiersRequest';
 import { Tiers } from '../tiers';
 import { TiersGeneralInfoRequest } from '../TiersGeneralInfoRequest';
+import { Config } from '../Config';
 
 @Injectable({
   providedIn: 'root'
@@ -42,8 +43,18 @@ export class TiersService {
       responseType: 'text' as 'json'  // Ici, on s'attend à une réponse de type texte
     });
   }
-  
-  
+  getConfigsByTiersId(tiersId: number): Observable<Config[]> {
+    return this.http.get<Config[]>(`${this.base}/tiers/configs/${tiersId}`, {
+      headers: this.getAuthHeaders()
+    });
+  }
+  getTiersById(id: number): Observable<Tiers> {
+    return this.http.get<Tiers>(`${this.baseUrl}/${id}`, {
+        headers: this.getAuthHeaders()
+      }
+    );
+
+  }
   
 
   

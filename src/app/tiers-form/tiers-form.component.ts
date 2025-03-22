@@ -46,7 +46,8 @@ export class TiersFormComponent {
       configName: ['', Validators.required],
       url: ['', Validators.required],
       headers: [''],
-      httpMethod: ['', Validators.required],
+      // httpMethod: ['', Validators.required],
+      httpMethod: [''],
       endpoint: ['', Validators.required],
       methodHeaders: [''],
       paginated: [false],
@@ -54,7 +55,9 @@ export class TiersFormComponent {
       pageSizeParamName: [''],
       totalPagesFieldInResponse: [''],
       contentFieldInResponse: [''],
-      type: ['', Validators.required]
+      //type: ['', Validators.required]
+      type: ['']
+
     });
 
     this.fieldMappingsForm = this.fb.group({

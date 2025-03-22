@@ -10,6 +10,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { UpdateTiersComponent } from '../update-tiers/update-tiers.component';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-tiers',
@@ -20,7 +21,8 @@ import { UpdateTiersComponent } from '../update-tiers/update-tiers.component';
       MatButtonModule,
       MatIconModule,
       MatDialogModule ,
-      MatPaginatorModule
+      MatPaginatorModule,
+      RouterModule
   ],
   templateUrl: './tiers.component.html',
   styleUrl: './tiers.component.css'
@@ -65,13 +67,15 @@ export class TiersComponent implements OnInit {
   }
   openSettingsDialog(tiers: any): void {
     const dialogRef = this.dialog.open(UpdateTiersComponent, {
-      data: tiers  // Passer les données du tiers (nom, email, etc.) dans le dialogue
+      width: '400px',
+      data: tiers  
     });
 
     dialogRef.afterClosed().subscribe((result: any) => {
       if (result) {
         console.log('Le dialogue a été fermé avec des données:', result);
       }
+      this.loadTiers();
     });
   }
 

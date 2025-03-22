@@ -1,29 +1,52 @@
-<h2 mat-dialog-title>Modifier Tiers</h2>
+<mat-card class="form-container">
+    <mat-card-title class="title">Modifier le Tiers</mat-card-title>
 
-<form [formGroup]="tiersForm" (ngSubmit)="onSubmit()">
-    <mat-card>
-        <mat-form-field appearance="fill">
-            <mat-label>Nom</mat-label>
-            <input matInput formControlName="nom" placeholder="Nom" required>
-            <!-- <mat-error *ngIf="tiersForm.get('nom').hasError('required')">Le nom est requis.</mat-error> -->
-        </mat-form-field>
+    <mat-card-content>
+        <form [formGroup]="tiersForm" fxLayout="column" fxLayoutGap="20px">
 
-        <mat-form-field appearance="fill">
-            <mat-label>Email</mat-label>
-            <input matInput formControlName="email" placeholder="Email" required>
-            <!-- <mat-error *ngIf="tiersForm.get('email').hasError('required')">L'email est requis.</mat-error> -->
-            <!-- <mat-error *ngIf="tiersForm.get('email').hasError('email')">Entrez un email valide.</mat-error> -->
-        </mat-form-field>
+            <!-- Nom -->
+            <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Nom</mat-label>
+                <mat-icon matPrefix>badge</mat-icon>
+                <input matInput formControlName="nom" placeholder="Nom" required>
+                <mat-error *ngIf="tiersForm.get('nom')?.hasError('required')">
+                    Le nom est obligatoire.
+                </mat-error>
+            </mat-form-field>
 
-        <mat-form-field appearance="fill">
-            <mat-label>Numéro</mat-label>
-            <input matInput formControlName="numero" placeholder="Numéro" required>
-            <!-- <mat-error *ngIf="tiersForm.get('numero').hasError('required')">Le numéro est requis.</mat-error> -->
-        </mat-form-field>
+            <!-- Email -->
+            <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Email</mat-label>
+                <mat-icon matPrefix>email</mat-icon>
+                <input matInput formControlName="email" placeholder="Email" type="email" required>
+                <mat-error *ngIf="tiersForm.get('email')?.hasError('required')">
+                    L'email est obligatoire.
+                </mat-error>
+                <mat-error *ngIf="tiersForm.get('email')?.hasError('email')">
+                    L'email doit être valide.
+                </mat-error>
+            </mat-form-field>
 
-        <div mat-dialog-actions>
-            <button mat-button (click)="onCancel()">Annuler</button>
-            <button mat-button type="submit" [disabled]="!tiersForm.valid">Sauvegarder</button>
-        </div>
-    </mat-card>
-</form>
+            <!-- Numéro -->
+            <mat-form-field appearance="outline" class="full-width">
+                <mat-label>Numéro</mat-label>
+                <mat-icon matPrefix>call</mat-icon>
+                <input matInput formControlName="numero" placeholder="Numéro" required>
+                <mat-error *ngIf="tiersForm.get('numero')?.hasError('required')">
+                    Le numéro est obligatoire.
+                </mat-error>
+            </mat-form-field>
+
+            <!-- Actions -->
+            <div class="buttons" fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="10px">
+                <button mat-stroked-button color="warn" (click)="onCancel()">
+            <mat-icon>close</mat-icon> Annuler
+          </button>
+                <button mat-raised-button color="accent" type="submit" [disabled]="!tiersForm.valid" (click)="onSubmit() ">
+            <mat-icon>save</mat-icon> Sauvegarder
+          </button>
+            </div>
+
+        </form>
+    </mat-card-content>
+</mat-card>

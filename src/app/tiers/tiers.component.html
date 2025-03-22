@@ -41,7 +41,7 @@
                     <button mat-icon-button style="color: rgb(174, 9, 9);" (click)="deleteTiers(tiers.id)">
               <mat-icon>delete</mat-icon>
             </button>
-                    <button mat-icon-button style="color: rgb(3, 3, 95);">
+                    <button mat-icon-button style="color: rgb(3, 3, 95);" [routerLink]="['/adminhome/configlist', tiers.id]">
                 <mat-icon>settings</mat-icon>
               </button>
                 </td>

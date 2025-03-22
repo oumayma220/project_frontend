@@ -18,6 +18,7 @@ import { TiersFormComponent } from './tiers-form/tiers-form.component';
 import { HelpMappingComponent } from './help-mapping/help-mapping.component';
 import { TiersComponent } from './tiers/tiers.component';
 import { UpdateTiersComponent } from './update-tiers/update-tiers.component';
+import { ConfigListComponent } from './config-list/config-list.component';
 
 export const routes: Routes = [
 {
@@ -91,7 +92,9 @@ export const routes: Routes = [
         { path:'tiersform', component:TiersFormComponent},
         { path:'helpmapping', component:HelpMappingComponent},
         { path:'tiers', component:TiersComponent},
-        { path:'updatetiers', component:UpdateTiersComponent}
+        { path:'updatetiers', component:UpdateTiersComponent},
+        { path: 'configlist/:tiersId', component:ConfigListComponent},
+
 
 
 

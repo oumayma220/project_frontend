@@ -1,0 +1,175 @@
+<div class="config-container">
+    <header class="config-header">
+        <h1>
+            <mat-icon>settings</mat-icon>
+            Configurations pour le Tiers {{ tiersNom }}
+        </h1>
+        <button mat-raised-button color="accent" class="add-button">
+        <mat-icon>add</mat-icon>
+        Nouvelle Configuration
+      </button>
+    </header>
+
+    <!-- État vide -->
+    <div *ngIf="configs.length === 0" class="empty-state">
+        <mat-icon class="empty-icon">settings_applications</mat-icon>
+        <h2>Aucune configuration trouvée</h2>
+        <p>Vous n'avez pas encore créé de configuration pour ce tiers.</p>
+        <button mat-raised-button color="accent">
+        <mat-icon>add</mat-icon>
+        Créer une configuration
+      </button>
+    </div>
+
+    <!-- Liste des configurations -->
+    <div class="config-list" *ngIf="configs.length > 0">
+        <mat-card *ngFor="let config of configs" class="config-card">
+            <mat-card-header>
+                <mat-card-title-group>
+                    <mat-card-title>{{ config.configName }}</mat-card-title>
+                    <mat-card-subtitle>ID: {{ config.id }}</mat-card-subtitle>
+                    <div class="header-actions">
+                        <button mat-icon-button [matMenuTriggerFor]="configMenu" aria-label="Options">
+                <mat-icon>more_vert</mat-icon>
+              </button>
+                        <mat-menu #configMenu="matMenu">
+                            <button mat-menu-item>
+                  <mat-icon>edit</mat-icon>
+                  <span>Modifier</span>
+                </button>
+                            <button mat-menu-item>
+                  <mat-icon>content_copy</mat-icon>
+                  <span>Dupliquer</span>
+                </button>
+                            <mat-divider></mat-divider>
+                            <button mat-menu-item color="warn">
+                  <mat-icon color="warn">delete</mat-icon>
+                  <span class="warn-text">Supprimer</span>
+                </button>
+                        </mat-menu>
+                    </div>
+                </mat-card-title-group>
+            </mat-card-header>
+
+            <mat-card-content>
+                <div class="config-details">
+                    <div class="detail-group">
+                        <span class="detail-label">URL de base</span>
+                        <span class="detail-value">{{ config.url }}</span>
+                    </div>
+
+                    <div class="detail-group" *ngIf="config.headers">
+                        <span class="detail-label">Headers</span>
+                        <div class="detail-value code-block">{{ config.headers }}</div>
+                    </div>
+                </div>
+
+                <!-- Section des méthodes API -->
+                <div class="api-methods-section">
+                    <h3>
+                        <mat-icon>api</mat-icon>
+                        Méthodes API ({{ config.apiMethods.length || 0 }})
+                    </h3>
+
+                    <mat-accordion>
+                        <mat-expansion-panel *ngFor="let method of config.apiMethods; let i = index">
+                            <mat-expansion-panel-header>
+                                <mat-panel-title>
+                                    <span [ngClass]="{'method-get': method.httpMethod === 'GET', 
+                                     'method-post': method.httpMethod === 'POST',
+                                     'method-put': method.httpMethod === 'PUT',
+                                     'method-delete': method.httpMethod === 'DELETE'}">
+                      {{ method.httpMethod }}
+                    </span>
+                                </mat-panel-title>
+                                <mat-panel-description>
+                                    {{ method.endpoint }}
+                                    <span class="method-type-badge" *ngIf="method.type">{{ method.type }}</span>
+                                </mat-panel-description>
+                            </mat-expansion-panel-header>
+
+                            <!-- Contenu du panneau d'expansion -->
+                            <div class="method-details">
+                                <div class="detail-group" *ngIf="method.headers">
+                                    <span class="detail-label">Headers spécifiques</span>
+                                    <div class="detail-value code-block">{{ method.headers }}</div>
+                                </div>
+
+                                <!-- Field Mappings avec tableau amélioré -->
+                                <div class="field-mappings-section" *ngIf="method.fieldMappings && method.fieldMappings.length > 0">
+                                    <h4>
+                                        <mat-icon>compare_arrows</mat-icon>
+                                        Field Mappings
+                                    </h4>
+                                    <table mat-table [dataSource]="method.fieldMappings" class="mapping-table">
+                                        <ng-container matColumnDef="target">
+                                            <th mat-header-cell *matHeaderCellDef>Target</th>
+                                            <td mat-cell *matCellDef="let mapping">{{ mapping.target }}</td>
+                                        </ng-container>
+                                        <ng-container matColumnDef="source">
+                                            <th mat-header-cell *matHeaderCellDef>Source</th>
+                                            <td mat-cell *matCellDef="let mapping">{{ mapping.source }}</td>
+                                        </ng-container>
+                                        <tr mat-header-row *matHeaderRowDef="['target', 'source']"></tr>
+                                        <tr mat-row *matRowDef="let row; columns: ['target', 'source']"></tr>
+                                    </table>
+                                </div>
+
+                                <div class="empty-mappings" *ngIf="!method.fieldMappings || method.fieldMappings.length === 0">
+                                    <mat-icon>info</mat-icon>
+                                    <span>Aucun field mapping défini pour cette méthode</span>
+                                </div>
+
+                                <!-- Information de pagination -->
+                                <div class="pagination-info" *ngIf="method.paginated">
+                                    <h4>
+                                        <mat-icon>pages</mat-icon>
+                                        Configuration de pagination
+                                    </h4>
+                                    <div class="pagination-details">
+                                        <div class="detail-group">
+                                            <span class="detail-label">Paramètre de page</span>
+                                            <span class="detail-value">{{ method.paginationParamName }}</span>
+                                        </div>
+                                        <div class="detail-group">
+                                            <span class="detail-label">Paramètre de taille</span>
+                                            <span class="detail-value">{{ method.pageSizeParamName }}</span>
+                                        </div>
+                                        <div class="detail-group">
+                                            <span class="detail-label">Taille de page</span>
+                                            <span class="detail-value">{{ method.pageSize }}</span>
+                                        </div>
+                                        <div class="detail-group">
+                                            <span class="detail-label">Champ total pages</span>
+                                            <span class="detail-value">{{ method.totalPagesFieldInResponse }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </mat-expansion-panel>
+                    </mat-accordion>
+
+                    <div class="empty-methods" *ngIf="!config.apiMethods || config.apiMethods.length === 0">
+                        <mat-icon>warning</mat-icon>
+                        <span>Aucune méthode API configurée</span>
+                    </div>
+                </div>
+            </mat-card-content>
+
+            <mat-card-actions align="end">
+                <button mat-button style="color: rgb(10, 10, 99);">
+            <mat-icon>edit</mat-icon>
+            Modifier
+          </button>
+                <button mat-button style="color: rgb(5, 104, 5);">
+            <mat-icon>play_arrow</mat-icon>
+            Tester
+          </button>
+                <button mat-button color="warn">
+            <mat-icon>delete</mat-icon>
+            Supprimer
+          </button>
+            </mat-card-actions>
+        </mat-card>
+    </div>
+</div>
