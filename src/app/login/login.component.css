@@ -37,7 +37,6 @@ h4 {
 #form3Example3,
 #form3Example4 {
     width: 100%;
-    /* Utilise toute la largeur possible */
     margin-bottom: 1rem;
 }
 
@@ -49,4 +48,29 @@ h4 {
 
 .img-fluid {
     display: none;
+}
+
+
+/* Pour les petits écrans (mobiles) */
+
+@media (max-width: 576px) {
+    .card {
+        max-width: 100%;
+        height: auto;
+    }
+    h1 {
+        font-size: 28px;
+    }
+    h4 {
+        font-size: 12px;
+    }
+    .btn-warning {
+        width: 100%;
+    }
+}
+
+@media (min-width: 1200px) {
+    .card {
+        max-width: 500px;
+    }
 }

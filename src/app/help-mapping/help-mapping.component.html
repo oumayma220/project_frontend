@@ -1,0 +1,132 @@
+<mat-tab-group mat-stretch-tabs class="docs-tabs">
+    <mat-tab label="jsonPath">
+        <div class="help-content">
+            <p>JSONPath est plus adapté si le modèle de réponse est complexe. Ci-joint, vous trouverez un exemple qui pourra vous aider</p>
+            <!-- Division de l'écran en 2 parties -->
+            <div class="flex-container">
+                <div class="flex-column">
+                    <h4>Exemple de réponse JSON :</h4>
+                    <pre>
+{{ '{' }}
+  "totalPages": 20,
+  "numberOfElements": 1,
+  "number": 0,
+  "totalElements": 20,
+  "content": [
+    {{ '{' }}
+      "title": "Exemple de produit",
+      "price": 109.95,
+      "description": "Description du produit...",
+      "image": "https://exemple.com/image.jpg",
+      "ref": "1234567890"
+    {{ '}' }}
+  ]
+{{ '}' }}
+                    </pre>
+
+                    <h4>Exemple de configuration JSONPath :</h4>
+                    <pre>contentFieldInResponse: $.content[*]</pre>
+                    <p>
+                        <strong>Explication :</strong> Ce champ spécifie le chemin JSONPath pointant vers la liste contenant les objets produits.
+                    </p>
+                </div>
+
+                <div class="flex-column">
+                    <div class="note">
+                        <strong>NB :</strong> Si, par exemple, votre structure JSON contient une liste imbriquée sous <code>content</code> comme ceci :
+                    </div>
+                    <pre>
+{{ '{' }}
+  "content": {{ '{' }}
+    "data": [
+      {{ '{' }}
+        "title": "Produit imbriqué"
+      {{ '}' }}
+    ]
+  {{ '}' }}
+{{ '}' }}
+                    </pre>
+                    <p>Alors la configuration JSONPath devient :</p>
+                    <pre>contentFieldInResponse: $.content.data[*]</pre>
+                    <p>
+                        Sinon, pour les sources, il suffit d'ajouter <code>$.</code> suivi du nom du champ dans la réponse JSON. Par exemple : <code>$.title</code>
+                    </p>
+                    <p>
+                        Pour obtenir le nombre total de pages, vous pouvez suivre la même logique. Si le champ est <strong>direct</strong> (non imbriqué), il suffit de saisir <code>$.</code> suivi du nom du champ dans la réponse JSON. Par exemple :
+                        <code>$.totalPages</code>.
+                    </p>
+                    <p>
+                        Si le champ est <strong>imbriqué</strong>, vous devrez spécifier le chemin vers ce champ à l'intérieur de la structure. Par exemple, pour accéder à <code>totalPages</code> dans un champ imbriqué sous <code>content</code>, vous
+                        écrirez :
+                    </p>
+                    <pre>$.content[*].totalPages</pre>
+                </div>
+            </div>
+        </div>
+    </mat-tab>
+
+    <mat-tab label="Reflection">
+        <div class="help-content">
+            <p>
+                La <strong>Reflection</strong> est une méthode simple et rapide à utiliser lorsque votre réponse JSON est <strong>structurée de manière plate</strong>.
+            </p>
+
+
+            <div class="flex-container">
+                <div class="flex-column">
+
+                    <h4>Exemple de réponse JSON :</h4>
+                    <pre>
+      {{ '{' }}
+        "totalPages": 20,
+        "numberOfElements": 1,
+        "number": 0,
+        "totalElements": 20,
+        "content": [
+          {{ '{' }}
+            "title": "Exemple de produit",
+            "price": 109.95,
+            "description": "Description du produit...",
+            "image": "https://exemple.com/image.jpg",
+            "ref": "1234567890"
+          {{ '}' }}
+        ]
+      {{ '}' }}
+          </pre>
+
+                    <h4>Exemple de configuration Reflection :</h4>
+                    <pre>contentFieldInResponse: content</pre>
+
+                    <p>
+                        <strong>Explication :</strong> Ici, <code>content</code> est le champ contenant la liste des objets à traiter. Grâce à la reflection, chaque clé de l’objet JSON (par exemple <code>title</code>, <code>price</code>, etc.) sera mappée
+                        automatiquement sur une propriété Java portant le même nom.
+                    </p>
+                </div>
+                <div class="flex-column">
+
+
+                    <div class="note">
+                        <strong>NB :</strong> La reflection ne gère que des structures simples avec un seul niveau d’arborescence. Si vos données sont imbriquées dans des sous-objets, il est recommandé d’utiliser <strong>JSONPath</strong> à la place.
+                    </div>
+
+                    <p>
+                        Pour accéder aux autres champs de la réponse JSON (comme <code>totalPages</code> ou <code>title</code>), il suffit d’utiliser directement le <strong>nom du champ</strong> sans préfixe, par exemple :
+                    </p>
+
+                    <ul>
+                        <li><code>totalPages</code></li>
+                        <li><code>title</code></li>
+                    </ul>
+
+                    <p>
+                        Aucun besoin d’utiliser un chemin JSON complexe si vos données sont accessibles au premier niveau.
+                    </p>
+
+                </div>
+            </div>
+        </div>
+    </mat-tab>
+</mat-tab-group>
+<div style="text-align: right; margin-top: 20px;">
+    <button mat-raised-button color="accent" (click)="close()">Fermer</button>
+</div>

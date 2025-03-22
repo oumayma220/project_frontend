@@ -1,0 +1,61 @@
+<mat-card>
+    <mat-toolbar>
+        <span>Liste des Tiers</span>
+        <span class="spacer"></span>
+    </mat-toolbar>
+
+    <div class="table-container">
+        <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+
+            <!-- Nom Column -->
+            <ng-container matColumnDef="nom">
+                <th mat-header-cell *matHeaderCellDef> Nom </th>
+                <td mat-cell *matCellDef="let tiers"> {{ tiers.nom }} </td>
+            </ng-container>
+
+            <!-- Email Column -->
+            <ng-container matColumnDef="email">
+                <th mat-header-cell *matHeaderCellDef> Email </th>
+                <td mat-cell *matCellDef="let tiers"> {{ tiers.email }} </td>
+            </ng-container>
+
+            <!-- Numero Column -->
+            <ng-container matColumnDef="numero">
+                <th mat-header-cell *matHeaderCellDef> Numéro </th>
+                <td mat-cell *matCellDef="let tiers"> {{ tiers.numero }} </td>
+            </ng-container>
+
+            <!-- TenantId Column -->
+            <ng-container matColumnDef="tenantid">
+                <th mat-header-cell *matHeaderCellDef> Tenant ID </th>
+                <td mat-cell *matCellDef="let tiers"> {{ tiers.tenantid }} </td>
+            </ng-container>
+
+            <!-- Actions Column -->
+            <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef> Actions </th>
+                <td mat-cell *matCellDef="let tiers">
+                    <button mat-icon-button style="color: rgb(2, 67, 15);" (click)="openSettingsDialog(tiers)">
+              <mat-icon>edit</mat-icon>
+            </button>
+                    <button mat-icon-button style="color: rgb(174, 9, 9);" (click)="deleteTiers(tiers.id)">
+              <mat-icon>delete</mat-icon>
+            </button>
+                    <button mat-icon-button style="color: rgb(3, 3, 95);">
+                <mat-icon>settings</mat-icon>
+              </button>
+                </td>
+            </ng-container>
+
+            <!-- Header and Row -->
+            <thead>
+                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            </thead>
+            <tbody>
+                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </tbody>
+        </table>
+
+        <mat-paginator [pageSize]="5" [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+    </div>
+</mat-card>

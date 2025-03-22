@@ -1,0 +1,221 @@
+<div class="container">
+    <pre></pre>
+    <h2 style="color: black;">Ajouter un Tiers</h2>
+
+    <mat-vertical-stepper [linear]="true" #stepper>
+        <!-- STEP 1 : Infos Tiers -->
+        <mat-step [stepControl]="tiersInfoForm">
+            <form [formGroup]="tiersInfoForm">
+                <ng-template matStepLabel>Informations du Tiers</ng-template>
+                <pre></pre>
+
+                <!-- Container Flex -->
+                <div class="form-row">
+                    <mat-form-field class="half-width">
+                        <mat-label>Nom du Tiers</mat-label>
+                        <input matInput formControlName="nom" required>
+                    </mat-form-field>
+
+                    <mat-form-field class="half-width">
+                        <mat-label>Email du Tiers</mat-label>
+                        <input matInput formControlName="email" required type="email">
+                    </mat-form-field>
+                </div>
+
+                <!-- Deuxième ligne -->
+                <div class="form-row">
+                    <mat-form-field class="half-width">
+                        <mat-label>Téléphone du Tiers</mat-label>
+                        <input matInput formControlName="numero" required>
+                    </mat-form-field>
+                </div>
+
+                <div>
+                    <button mat-button color="primary" matStepperNext [disabled]="tiersInfoForm.invalid">
+                  Suivant <mat-icon>arrow_forward</mat-icon>
+                </button>
+                </div>
+            </form>
+        </mat-step>
+
+
+        <!-- STEP 2 : Configuration -->
+        <!-- STEP 2 : Configuration -->
+        <mat-step [stepControl]="configForm">
+            <form [formGroup]="configForm">
+                <ng-template matStepLabel>Configuration</ng-template>
+                <pre></pre>
+
+                <!-- Première ligne -->
+                <div class="form-row">
+                    <mat-form-field class="half-width">
+                        <mat-label>Nom de la Configuration</mat-label>
+                        <input matInput formControlName="configName" required>
+                    </mat-form-field>
+
+                    <mat-form-field class="half-width">
+                        <mat-label>URL</mat-label>
+                        <input matInput formControlName="url" required>
+                    </mat-form-field>
+                </div>
+
+                <!-- Deuxième ligne -->
+                <div class="form-row">
+                    <mat-form-field class="half-width">
+                        <mat-label>Headers</mat-label>
+                        <input matInput formControlName="headers">
+                    </mat-form-field>
+
+                    <mat-form-field class="half-width">
+                        <mat-label>Méthode HTTP</mat-label>
+                        <mat-select formControlName="httpMethod" required>
+                            <mat-option value="GET">GET</mat-option>
+                            <mat-option value="POST">POST</mat-option>
+                            <mat-option value="PUT">PUT</mat-option>
+                            <mat-option value="DELETE">DELETE</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+
+                <!-- Troisième ligne -->
+                <div class="form-row">
+                    <mat-form-field class="half-width">
+                        <mat-label>Endpoint</mat-label>
+                        <input matInput formControlName="endpoint" required>
+                    </mat-form-field>
+
+                    <mat-form-field class="half-width">
+                        <mat-label>Method Headers</mat-label>
+                        <input matInput formControlName="methodHeaders">
+                    </mat-form-field>
+                </div>
+                <div class="form-row">
+                    <mat-form-field class="half-width">
+                        <mat-label>Type Mapping</mat-label>
+                        <mat-select formControlName="type" required>
+                            <mat-option value="jsonPath">jsonPath</mat-option>
+                            <mat-option value="reflection">reflection</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+
+                    <button mat-icon-button style="color: rgb(237, 245, 21);" (click)="openHelpDialog()">
+                        <mat-icon>help_outline</mat-icon>
+                      </button>
+
+
+                </div>
+
+                <!-- Checkbox Pagination -->
+                <div class="form-row">
+                    <mat-checkbox formControlName="paginated">Pagination activée</mat-checkbox>
+                </div>
+
+                <!-- Champs pagination affichés uniquement si la case est cochée -->
+                <div *ngIf="configForm.get('paginated')?.value">
+                    <div class="form-row">
+                        <mat-form-field class="half-width">
+                            <mat-label>Pagination Param Name</mat-label>
+                            <input matInput formControlName="paginationParamName">
+                        </mat-form-field>
+
+                        <mat-form-field class="half-width">
+                            <mat-label>Page Size Param Name</mat-label>
+                            <input matInput formControlName="pageSizeParamName">
+                        </mat-form-field>
+                    </div>
+
+                    <div class="form-row">
+                        <mat-form-field class="full-width">
+                            <mat-label>Total Pages Field In Response</mat-label>
+                            <input matInput formControlName="totalPagesFieldInResponse">
+                        </mat-form-field>
+                    </div>
+                </div>
+
+                <!-- Dernière ligne -->
+                <div class="form-row">
+                    <mat-form-field class="half-width">
+                        <mat-label>Content Field In Response</mat-label>
+                        <input matInput formControlName="contentFieldInResponse">
+                    </mat-form-field>
+
+                    <!-- <mat-form-field class="half-width">
+                        <mat-label>Type Mapping</mat-label>
+                        <mat-select formControlName="type" required>
+                            <mat-option value="jsonPath">jsonPath</mat-option>
+                            <mat-option value="reflection">reflection</mat-option>
+                        </mat-select>
+                    </mat-form-field> -->
+                </div>
+
+                <!-- Boutons navigation -->
+                <div class="button-group">
+                    <button mat-button color="primary" matStepperPrevious>
+          <mat-icon>arrow_back</mat-icon> Retour
+        </button>
+
+                    <button mat-button color="primary" matStepperNext [disabled]="configForm.invalid">
+          Suivant <mat-icon>arrow_forward</mat-icon>
+        </button>
+                </div>
+            </form>
+        </mat-step>
+
+        <!-- STEP 3 : Field Mappings -->
+        <mat-step [stepControl]="fieldMappingsForm">
+            <form [formGroup]="fieldMappingsForm">
+                <ng-template matStepLabel>Field Mappings</ng-template>
+
+                <div formArrayName="fieldMappings">
+
+                    <!-- Itération sur les mappings -->
+                    <div *ngFor="let mapping of fieldMappings.controls; let i = index" [formGroupName]="i" class="mapping-row">
+
+                        <div class="form-row">
+                            <mat-form-field class="half-width">
+                                <mat-label>Source</mat-label>
+                                <input matInput formControlName="source" required>
+                            </mat-form-field>
+
+                            <mat-form-field class="half-width">
+                                <mat-label>Target</mat-label>
+                                <mat-select formControlName="target" required>
+                                    <mat-option value="name">name</mat-option>
+                                    <mat-option value="description">description</mat-option>
+                                    <mat-option value="price">price</mat-option>
+                                    <mat-option value="url">url</mat-option>
+                                    <mat-option value="reference">reference</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+
+                            <!-- Bouton suppression -->
+                            <button mat-icon-button color="warn" (click)="removeFieldMapping(i)" type="button" aria-label="Supprimer le mapping" class="delete-button">
+                                <mat-icon>delete</mat-icon>
+                              </button>
+                        </div>
+                    </div>
+                </div>
+                <!-- Bouton ajouter un mapping -->
+
+
+                <!-- Boutons navigation -->
+                <div class="button-group add-mapping-button">
+                    <button mat-raised-button color="accent" type="button" (click)="addFieldMapping()">
+                      <mat-icon>add_circle_outline</mat-icon>
+                      Ajouter un Mapping
+                    </button>
+                </div>
+
+                <!-- Navigation Buttons -->
+                <div class="button-group justify-space-between">
+                    <button mat-button color="primary" matStepperPrevious>
+                      <mat-icon>arrow_back</mat-icon> Retour
+                    </button>
+
+                    <button mat-raised-button color="primary" (click)="onSubmit()">
+                      <mat-icon>save</mat-icon> Enregistrer
+                    </button>
+                </div>
+
+            </form>
+        </mat-step>

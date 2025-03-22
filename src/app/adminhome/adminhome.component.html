@@ -1,7 +1,6 @@
 <mat-sidenav-container class="sidenav-container">
     <!-- Barre latérale -->
     <mat-sidenav #sidenav mode="side" [(opened)]="isExpanded" class="sidenav">
-        <!-- <mat-toolbar class="toolbar">Admin Panel</mat-toolbar> -->
 
         <mat-nav-list>
             <a mat-list-item routerLink="/admin/dashboard">
@@ -16,9 +15,13 @@
                 <mat-icon>shopping_cart</mat-icon>
                 <span>Commandes</span>
             </a>
-            <a mat-list-item routerLink="/admin/settings">
+            <a mat-list-item routerLink="/adminhome/tiersform">
                 <mat-icon>settings</mat-icon>
-                <span>Paramètres</span>
+                <span>Tiers&Configuration</span>
+            </a>
+            <a mat-list-item routerLink="/adminhome/tiers">
+                <mat-icon>group</mat-icon>
+                <span>Tiers</span>
             </a>
             <a mat-list-item (click)="logout()">
                 <mat-icon>logout</mat-icon>

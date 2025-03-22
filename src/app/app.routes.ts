@@ -14,6 +14,10 @@ import { ClienthomeComponent } from './clienthome/clienthome.component';
 import { employeeGuard } from './Guard/employee.guard';
 import { CrudemployeeComponent } from './crudemployee/crudemployee.component';
 import { EditEmployeeComponent } from './edit-employee/edit-employee.component';
+import { TiersFormComponent } from './tiers-form/tiers-form.component';
+import { HelpMappingComponent } from './help-mapping/help-mapping.component';
+import { TiersComponent } from './tiers/tiers.component';
+import { UpdateTiersComponent } from './update-tiers/update-tiers.component';
 
 export const routes: Routes = [
 {
@@ -83,7 +87,14 @@ export const routes: Routes = [
     children: [
         { path: 'crudemployee', component: CrudemployeeComponent },
         { path:'addemployee', component:AddEmployeeComponent},
-        { path:'editemployee', component:EditEmployeeComponent}
+        { path:'editemployee', component:EditEmployeeComponent},
+        { path:'tiersform', component:TiersFormComponent},
+        { path:'helpmapping', component:HelpMappingComponent},
+        { path:'tiers', component:TiersComponent},
+        { path:'updatetiers', component:UpdateTiersComponent}
+
+
+
 
       ] 
 },

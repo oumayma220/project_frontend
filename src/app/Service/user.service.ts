@@ -18,6 +18,10 @@ export class UserService {
     this.getCurrentUser();  
   }
   public getCurrentUser() {
+    if (!this.service.isLoggedIn()) {
+      this.currentUserSubject.next(null); // Aucun utilisateur n'est connecté
+      return;
+    }
     this.service.getPrincipal().subscribe({
       next: (data) => {
         if (data) {

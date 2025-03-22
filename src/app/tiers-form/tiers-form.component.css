@@ -1,0 +1,101 @@
+::ng-deep .mat-step-header .mat-step-label {
+    font-weight: bold;
+}
+
+ ::ng-deep .mat-step-header.mat-active .mat-step-icon {
+    /* Icône active jaune */
+    color: #f0e912 !important;
+    /* Noir sur fond jaune */
+}
+
+ ::ng-deep .mat-step-header .mat-step-icon {
+    background-color: #000000;
+    /* Gris clair icône inactive */
+    color: #ffffff;
+}
+
+.full-width {
+    width: 100%;
+}
+
+.half-width {
+    width: 48%;
+    margin-right: 2%;
+}
+
+.mapping-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+mat-form-field {
+    margin-bottom: 16px;
+}
+
+button.mat-button {
+    margin-right: 8px;
+}
+
+button.mat-stroked-button {
+    margin-top: 16px;
+}
+
+.container {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    background: #ffffff;
+    border-radius: 12px;
+}
+
+h2 {
+    margin-bottom: 24px;
+}
+
+mat-vertical-stepper {
+    /* background-color: #fafafa; */
+    border-radius: 12px;
+    padding: 16px;
+}
+
+button.mat-button,
+button.mat-stroked-button {
+    font-weight: 600;
+}
+
+.form-row {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    /* Important si l’écran est plus petit */
+}
+
+.delete-button {
+    height: 40px;
+    width: 40px;
+    min-width: 40px;
+    background-color: #ffe5e5;
+    border-radius: 50%;
+    transition: background-color 0.3s ease;
+}
+
+.delete-button:hover {
+    background-color: #ffcccc;
+}
+
+.button-group {
+    margin-top: 2rem;
+    display: flex;
+    gap: 1rem;
+}
+
+.add-mapping-button {
+    justify-content: center;
+}
+
+.justify-space-between {
+    justify-content: space-between;
+}
+
+button[mat-raised-button] {
+    font-weight: 600;
+}
