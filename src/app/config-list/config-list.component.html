@@ -4,10 +4,10 @@
             <mat-icon>settings</mat-icon>
             Configurations pour le Tiers {{ tiersNom }}
         </h1>
-        <button mat-raised-button color="accent" class="add-button">
-        <mat-icon>add</mat-icon>
-        Nouvelle Configuration
-      </button>
+        <button mat-raised-button color="accent" class="add-button" (click)="redirectToAddConfig(tiersId)">
+            <mat-icon>add</mat-icon>
+            Nouvelle Configuration
+        </button>
     </header>
 
     <!-- État vide -->
@@ -15,10 +15,10 @@
         <mat-icon class="empty-icon">settings_applications</mat-icon>
         <h2>Aucune configuration trouvée</h2>
         <p>Vous n'avez pas encore créé de configuration pour ce tiers.</p>
-        <button mat-raised-button color="accent">
-        <mat-icon>add</mat-icon>
-        Créer une configuration
-      </button>
+        <button mat-raised-button color="accent" (click)="redirectToAddConfig(tiersId)">
+            <mat-icon>add</mat-icon>
+            Créer une configuration
+        </button>
     </div>
 
     <!-- Liste des configurations -->
@@ -27,28 +27,19 @@
             <mat-card-header>
                 <mat-card-title-group>
                     <mat-card-title>{{ config.configName }}</mat-card-title>
-                    <mat-card-subtitle>ID: {{ config.id }}</mat-card-subtitle>
-                    <div class="header-actions">
-                        <button mat-icon-button [matMenuTriggerFor]="configMenu" aria-label="Options">
-                <mat-icon>more_vert</mat-icon>
-              </button>
-                        <mat-menu #configMenu="matMenu">
-                            <button mat-menu-item>
-                  <mat-icon>edit</mat-icon>
-                  <span>Modifier</span>
-                </button>
-                            <button mat-menu-item>
-                  <mat-icon>content_copy</mat-icon>
-                  <span>Dupliquer</span>
-                </button>
-                            <mat-divider></mat-divider>
-                            <button mat-menu-item color="warn">
-                  <mat-icon color="warn">delete</mat-icon>
-                  <span class="warn-text">Supprimer</span>
-                </button>
-                        </mat-menu>
-                    </div>
                 </mat-card-title-group>
+
+                <div class="config-quick-actions">
+                    <button mat-icon-button style="color: rgb(37, 37, 89);" matTooltip="Modifier" (click)="openSettingsDialog(config)">
+                        <mat-icon>edit</mat-icon>
+                    </button>
+                    <!-- <button mat-icon-button color="accent" matTooltip="Tester">
+                        <mat-icon>play_arrow</mat-icon>
+                    </button> -->
+                    <button mat-icon-button color="warn" matTooltip="Supprimer" (click)="deleteConfig(config.id)">
+                        <mat-icon>delete</mat-icon>
+                    </button>
+                </div>
             </mat-card-header>
 
             <mat-card-content>
@@ -66,21 +57,34 @@
 
                 <!-- Section des méthodes API -->
                 <div class="api-methods-section">
-                    <h3>
-                        <mat-icon>api</mat-icon>
-                        Méthodes API ({{ config.apiMethods.length || 0 }})
-                    </h3>
+                    <div class="api-methods-header">
+                        <h3>
+                            <mat-icon>api</mat-icon>
+                            Méthodes API ({{ config.apiMethods.length || 0 }})
+                        </h3>
+                        <button mat-stroked-button style="color: rgb(40, 40, 91);" (click)="redirectToAddMethod(config.id)">
+                            <mat-icon>add</mat-icon>
+                            Nouvelle méthode
+                        </button>
+
+                    </div>
 
                     <mat-accordion>
                         <mat-expansion-panel *ngFor="let method of config.apiMethods; let i = index">
                             <mat-expansion-panel-header>
                                 <mat-panel-title>
+                                    <button mat-icon-button color="warn" matTooltip="Supprimer" (click)="deleteapimethod(method.id)">
+                                        <mat-icon>delete</mat-icon>
+                                    </button>
+                                    <button mat-icon-button style="color: rgb(37, 37, 89);" matTooltip="Modifier" (click)="openSettingsDialogmethod(method)">
+                                        <mat-icon>edit</mat-icon>
+                                    </button>
                                     <span [ngClass]="{'method-get': method.httpMethod === 'GET', 
                                      'method-post': method.httpMethod === 'POST',
                                      'method-put': method.httpMethod === 'PUT',
                                      'method-delete': method.httpMethod === 'DELETE'}">
-                      {{ method.httpMethod }}
-                    </span>
+                                        {{ method.httpMethod }}
+                                    </span>
                                 </mat-panel-title>
                                 <mat-panel-description>
                                     {{ method.endpoint }}
@@ -90,6 +94,14 @@
 
                             <!-- Contenu du panneau d'expansion -->
                             <div class="method-details">
+                                <div class="method-actions">
+                                    <button mat-stroked-button color="accent" (click)="redirectToAddMapping(method.id)">
+                                        <mat-icon>add</mat-icon>
+                                        Ajouter un mapping
+                                    </button>
+
+                                </div>
+
                                 <div class="detail-group" *ngIf="method.headers">
                                     <span class="detail-label">Headers spécifiques</span>
                                     <div class="detail-value code-block">{{ method.headers }}</div>
@@ -101,7 +113,12 @@
                                         <mat-icon>compare_arrows</mat-icon>
                                         Field Mappings
                                     </h4>
+                                    <button mat-icon-button color="warn" matTooltip="Supprimer" (click)="deletefield(method.id)">
+                                        <mat-icon>delete</mat-icon>
+                                    </button>
                                     <table mat-table [dataSource]="method.fieldMappings" class="mapping-table">
+
+
                                         <ng-container matColumnDef="target">
                                             <th mat-header-cell *matHeaderCellDef>Target</th>
                                             <td mat-cell *matCellDef="let mapping">{{ mapping.target }}</td>
@@ -110,6 +127,7 @@
                                             <th mat-header-cell *matHeaderCellDef>Source</th>
                                             <td mat-cell *matCellDef="let mapping">{{ mapping.source }}</td>
                                         </ng-container>
+
                                         <tr mat-header-row *matHeaderRowDef="['target', 'source']"></tr>
                                         <tr mat-row *matRowDef="let row; columns: ['target', 'source']"></tr>
                                     </table>
@@ -120,7 +138,7 @@
                                     <span>Aucun field mapping défini pour cette méthode</span>
                                 </div>
 
-                                <!-- Information de pagination -->
+                                <!-- Pagination Information -->
                                 <div class="pagination-info" *ngIf="method.paginated">
                                     <h4>
                                         <mat-icon>pages</mat-icon>
@@ -155,21 +173,6 @@
                     </div>
                 </div>
             </mat-card-content>
-
-            <mat-card-actions align="end">
-                <button mat-button style="color: rgb(10, 10, 99);">
-            <mat-icon>edit</mat-icon>
-            Modifier
-          </button>
-                <button mat-button style="color: rgb(5, 104, 5);">
-            <mat-icon>play_arrow</mat-icon>
-            Tester
-          </button>
-                <button mat-button color="warn">
-            <mat-icon>delete</mat-icon>
-            Supprimer
-          </button>
-            </mat-card-actions>
         </mat-card>
     </div>
 </div>

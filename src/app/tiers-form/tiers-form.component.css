@@ -1,101 +1,195 @@
-::ng-deep .mat-step-header .mat-step-label {
-    font-weight: bold;
+/* Styles généraux */
+
+
+/* .custom-stepper::before {
+    content: "Ajouter un Tiers";
+    display: block;
+    color: #060500;
+    font-size: 28px;
+    margin-bottom: 30px;
+    font-weight: 400;
+    padding-top: 24px;
+} */
+
+.custom-stepper {
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
- ::ng-deep .mat-step-header.mat-active .mat-step-icon {
-    /* Icône active jaune */
-    color: #f0e912 !important;
-    /* Noir sur fond jaune */
+
+/* Contenu de chaque étape */
+
+.step-content {
+    padding: 16px 8px;
 }
 
- ::ng-deep .mat-step-header .mat-step-icon {
-    background-color: #000000;
-    /* Gris clair icône inactive */
-    color: #ffffff;
+.step-description {
+    color: #666;
+    margin-bottom: 24px;
+    font-size: 16px;
+}
+
+.form-row {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 16px;
+    align-items: flex-start;
+}
+
+.align-center {
+    align-items: center;
+}
+
+.half-width {
+    flex: 1;
+    min-width: 0;
 }
 
 .full-width {
     width: 100%;
 }
 
-.half-width {
-    width: 48%;
-    margin-right: 2%;
+.pagination-section {
+    margin-top: 8px;
+    margin-bottom: 16px;
+    align-items: center;
+}
+
+.pagination-config {
+    background-color: #ffffff;
+    background: #ffffff;
+    /* Fond jaune clair */
+    padding: 16px;
+    border-radius: 8px;
+    margin-bottom: 24px;
+    border-left: 4px solid #ffc107;
+    /* Bordure jaune */
+}
+
+.hint-text {
+    color: #666;
+    font-size: 14px;
+    margin-left: 8px;
+}
+
+
+/* Styles pour les actions (boutons) */
+
+.step-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 32px;
+}
+
+
+/* Styles pour le bouton d'aide */
+
+.help-button {
+    color: #ffc107;
+    /* Couleur jaune */
+    transform: scale(1.2);
+}
+
+
+/* Styles pour la section des mappings */
+
+.field-mappings-section {
+    background-color: #fff;
+    border-radius: 8px;
+    border: 1px solid #e0e0e0;
+    margin-bottom: 24px;
+    overflow: hidden;
+}
+
+.mapping-header {
+    display: flex;
+    background-color: #fff9c4;
+    /* Fond jaune clair */
+    padding: 12px 16px;
+    font-weight: 500;
+    color: #555;
+    border-bottom: 1px solid #e0e0e0;
 }
 
 .mapping-row {
-    display: flex;
+    padding: 8px 16px;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.mapping-row:last-child {
+    border-bottom: none;
+}
+
+.mapping-fields {
     align-items: center;
-    margin-bottom: 16px;
 }
 
-mat-form-field {
-    margin-bottom: 16px;
-}
-
-button.mat-button {
-    margin-right: 8px;
-}
-
-button.mat-stroked-button {
-    margin-top: 16px;
-}
-
-.container {
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    background: #ffffff;
-    border-radius: 12px;
-}
-
-h2 {
-    margin-bottom: 24px;
-}
-
-mat-vertical-stepper {
-    /* background-color: #fafafa; */
-    border-radius: 12px;
-    padding: 16px;
-}
-
-button.mat-button,
-button.mat-stroked-button {
-    font-weight: 600;
-}
-
-.form-row {
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    /* Important si l’écran est plus petit */
+.action-width {
+    width: 48px;
 }
 
 .delete-button {
-    height: 40px;
-    width: 40px;
-    min-width: 40px;
-    background-color: #ffe5e5;
-    border-radius: 50%;
-    transition: background-color 0.3s ease;
+    margin-top: 10px;
 }
 
-.delete-button:hover {
-    background-color: #ffcccc;
+.no-mappings-message {
+    padding: 24px;
+    text-align: center;
+    color: #888;
+    font-style: italic;
 }
 
-.button-group {
-    margin-top: 2rem;
+.add-mapping-section {
     display: flex;
-    gap: 1rem;
-}
-
-.add-mapping-button {
     justify-content: center;
+    margin: 24px 0;
 }
 
-.justify-space-between {
-    justify-content: space-between;
+ ::ng-deep .mat-step-header .mat-step-icon-selected {
+    background-color: #ffc107 !important;
+    /* Couleur jaune pour l'étape active */
 }
 
-button[mat-raised-button] {
-    font-weight: 600;
+ ::ng-deep .mat-stepper-horizontal-line {
+    border-top-color: #ffc107 !important;
+    /* Couleur jaune pour les lignes */
+}
+
+ ::ng-deep .mat-form-field.mat-focused .mat-form-field-ripple {
+    background-color: #ffc107 !important;
+    /* Couleur jaune pour les champs actifs */
+}
+
+::ng-deep .mat-step-header .mat-step-icon-state-done {
+    background-color: #ffc107 !important;
+}
+
+::ng-deep .mat-step-header .mat-step-icon-state-edit {
+    background-color: #ffc107 !important;
+}
+
+ ::ng-deep .mat-form-field.mat-focused .mat-form-field-label {
+    color: #ffc107 !important;
+}
+
+
+/* Responsive design */
+
+@media (max-width: 768px) {
+    .form-row {
+        flex-direction: column;
+        gap: 0;
+    }
+    .half-width,
+    .full-width {
+        width: 100%;
+    }
+    .step-actions {
+        flex-direction: column;
+        gap: 16px;
+    }
+    .step-actions button {
+        width: 100%;
+    }
 }

@@ -13,6 +13,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { Router } from '@angular/router';
 import { HelpMappingComponent } from '../help-mapping/help-mapping.component';
 import { MatDialog } from '@angular/material/dialog';
+import { TestComponent } from '../test/test.component';
+import { Product } from '../Product';
 @Component({
   selector: 'app-tiers-form',
   standalone: true,
@@ -34,6 +36,8 @@ export class TiersFormComponent {
   tiersInfoForm: FormGroup;
   configForm: FormGroup;
   fieldMappingsForm: FormGroup;
+  produits: Product[] = [];
+  
 
   constructor(private fb: FormBuilder, private tiersService: TiersService, private router: Router,private dialog: MatDialog) {
     this.tiersInfoForm = this.fb.group({
@@ -43,19 +47,18 @@ export class TiersFormComponent {
     });
 
     this.configForm = this.fb.group({
-      configName: ['', Validators.required],
-      url: ['', Validators.required],
+      configName: [''],
+      url: [''],
       headers: [''],
       // httpMethod: ['', Validators.required],
       httpMethod: [''],
-      endpoint: ['', Validators.required],
+      endpoint: [''],
       methodHeaders: [''],
       paginated: [false],
       paginationParamName: [''],
       pageSizeParamName: [''],
       totalPagesFieldInResponse: [''],
       contentFieldInResponse: [''],
-      //type: ['', Validators.required]
       type: ['']
 
     });
@@ -83,7 +86,8 @@ export class TiersFormComponent {
   }
 
   onSubmit() {
-    if (this.tiersInfoForm.invalid || this.configForm.invalid || this.fieldMappingsForm.invalid) {
+    //  if (this.tiersInfoForm.invalid || this.configForm.invalid || this.fieldMappingsForm.invalid) {
+      if (this.tiersInfoForm.invalid || this.configForm.invalid ) {
       alert('Formulaire incomplet !');
       return;
     }
@@ -98,7 +102,9 @@ export class TiersFormComponent {
     this.tiersService.createTiers(request).subscribe({
       next: (response) => {
         alert('Tiers ajouté avec succès !');
-        this.resetForms();
+        this.router.navigate(['adminhome/tiers']);
+
+        // this.resetForms();
       },
       error: (err) => {
         alert('Erreur lors de l\'ajout du tiers : ' + (err.error?.message || 'Erreur inconnue'));
@@ -116,4 +122,49 @@ export class TiersFormComponent {
       width: '1800px',
       height:'650px'
     });
-}}
+}
+onTestClick() {
+  const requestData = {
+    ...this.configForm.value,
+    ...this.fieldMappingsForm.value
+  };
+
+  this.tiersService.importProducts(requestData).subscribe({
+    next: (response) => {
+      this.produits = response || [];
+
+      // Prendre les 5 premiers produits comme exemple
+      const exampleProducts = response.slice(0, 5);
+      
+      // Ouvrir le dialog avec les résultats
+      const dialogRef = this.dialog.open(TestComponent, {
+        width: '800px',
+        data: {
+          success: exampleProducts.length > 0,
+          message: exampleProducts.length > 0 
+            ? `Test réussi : ${this.produits.length} produits ont été trouvés pour cette configuration, voici quelques exemples : ` 
+            : 'Aucun produit n\'a pu être importé.',
+          products: exampleProducts
+        }
+      });
+
+      dialogRef.afterClosed().subscribe(result => {
+        if (result === true) {
+          this.onSubmit();
+        }
+      });
+    },
+    error: (error) => {
+      this.dialog.open(TestComponent, {
+        width: '800px',
+        data: {
+          success: false,
+          message: 'Erreur lors de l\'importation des produits. Vérifiez votre configuration.',
+          products: []
+        }
+      });
+    }
+  });
+}
+
+}

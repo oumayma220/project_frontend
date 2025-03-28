@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { TiersService } from '../Service/tiers.service';
-import { Config } from '../Config';
+import { ApiMethod, Config } from '../Config';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
@@ -15,6 +15,10 @@ import { MatBadgeModule } from '@angular/material/badge';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { RouterModule } from '@angular/router';
+import { UpdateConfigComponent } from '../update-config/update-config.component';
+import { UpdateMethodComponent } from '../update-method/update-method.component';
+
 
 
 
@@ -33,12 +37,12 @@ import { MatSnackBar } from '@angular/material/snack-bar';
     MatMenuModule,
     MatExpansionModule,
     
+    
   ],
   templateUrl: './config-list.component.html',
   styleUrl: './config-list.component.css'
 })
 export class ConfigListComponent implements OnInit {
-
   tiersId!: number;
   tiersNom!: string;
   configs: Config[] = [];
@@ -49,7 +53,8 @@ export class ConfigListComponent implements OnInit {
     private route: ActivatedRoute,
     private tiersConfigService: TiersService,
     private dialog: MatDialog,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private router:Router
   ) {}
 
   ngOnInit(): void {
@@ -60,7 +65,7 @@ export class ConfigListComponent implements OnInit {
   getTiersNom(): void {
     this.tiersConfigService.getTiersById(this.tiersId).subscribe({
       next: (tiers) => {
-        this.tiersNom = tiers.nom; // adapte le nom de la propriété selon ton modèle
+        this.tiersNom = tiers.nom; 
         console.log('Nom du tiers récupéré:', this.tiersNom);
       },
       error: (error) => {
@@ -99,11 +104,7 @@ export class ConfigListComponent implements OnInit {
     console.log('Édition de la configuration:', config);
   }
 
-  deleteConfig(config: Config): void {
-    if (confirm(`Êtes-vous sûr de vouloir supprimer la configuration "${config.configName}" ?`)) {
-      console.log('Suppression de la configuration:', config);
-    }
-  }
+ 
 
   testConfig(config: Config): void {
     console.log('Test de la configuration:', config);
@@ -114,7 +115,6 @@ export class ConfigListComponent implements OnInit {
       { duration: 3000 }
     );
   }
-
   copyConfig(config: Config): void {
     console.log('Duplication de la configuration:', config);
     
@@ -124,8 +124,83 @@ export class ConfigListComponent implements OnInit {
       { duration: 3000 }
     );
   }
-
-  addNewConfig(): void {
-   
+  redirectToAddConfig(tiersId: number): void {
+    this.router.navigate([`adminhome/ajoutconfig`, tiersId]);
   }
+  redirectToAddMethod(configId: number): void {
+    this.router.navigate([`adminhome/ajoutapimethod`, configId]);
+    }
+    redirectToAddMapping(methodId: number) {
+      this.router.navigate([`adminhome/ajoutmapping`, methodId]);
+    }
+  addNewConfig(): void {
+    }
+
+    deleteConfig(configId: number): void {
+      if (confirm('Voulez-vous vraiment supprimer cette configuration ?')) {
+        this.tiersConfigService.deleteconfig(configId).subscribe({
+          next: () => {
+            console.log('configuration supprimé avec succès !');
+            this.getConfigs();
+          },
+          error: (error) => {
+            console.error('Erreur lors de la suppression du configuration', error);
+          }
+        });
+      }
+    }
+    deleteapimethod(methodId: number):void {
+      if (confirm('Voulez-vous vraiment supprimer cette api methode ?')) {
+        this.tiersConfigService.deleteapimethod(methodId).subscribe({
+          next: () => {
+            console.log('apimethod supprimé avec succès !');
+            this.getConfigs();
+          },
+          error: (error) => {
+            console.error('Erreur lors de la suppression du apimethod', error);
+          }
+        });
+      }
+}
+deletefield(methodId: number):void {
+  if (confirm('Voulez-vous vraiment supprimer cette fieldmapping ?')) {
+    this.tiersConfigService.deletefieldmapping(methodId).subscribe({
+      next: () => {
+        console.log('fieldmapping supprimé avec succès !');
+        this.getConfigs();
+      },
+      error: (error) => {
+        console.error('Erreur lors de la suppression du fieldmapping', error);
+      }
+    });
+  }  }
+  openSettingsDialog(config: any): void {
+      const dialogRef = this.dialog.open(UpdateConfigComponent, {
+        width: '400px',
+        data: config  
+      });
+  
+      dialogRef.afterClosed().subscribe((result: any) => {
+        if (result) {
+          console.log('Le dialogue a été fermé avec des données:', result);
+        }
+        this.getConfigs();
+      });
+    }
+    openSettingsDialogmethod(method: any): void {
+      const dialogRef = this.dialog.open(UpdateMethodComponent, {
+        width: '700px',
+        data: method  
+      });
+  
+      dialogRef.afterClosed().subscribe((result: any) => {
+        if (result) {
+          console.log('Le dialogue a été fermé avec des données:', result);
+        }
+        this.getConfigs();
+      });
+    }
+  
+
+
 }

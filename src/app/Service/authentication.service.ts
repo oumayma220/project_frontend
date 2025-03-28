@@ -20,13 +20,12 @@ export class AuthenticationService {
     return this.http.post<AuthenticationResponse>(`${this.apiUrl}/authenticate`, request);
   }
   getPrincipal(): Observable<User> {
-    if (isPlatformBrowser(this.platformId)) {  // Check if running in browser
+    if (isPlatformBrowser(this.platformId)) {  
       const token = localStorage.getItem('accessToken');  
       const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
       return this.http.get<User>(`${this.api}/me`, { headers });
     } else {
-      // Handle the case when not in the browser (SSR)
-      return new Observable<User>(); // Return an empty observable or handle the case appropriately
+      return new Observable<User>(); 
     }
   }
 
@@ -58,8 +57,4 @@ isLoggedIn(): boolean {
     return !!localStorage.getItem('accessToken');
   }
   return false; 
-}
-
-  
-
-}
+} }

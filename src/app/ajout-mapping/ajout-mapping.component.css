@@ -1,0 +1,78 @@
+.mapping-action-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+
+/* Error Message Styles */
+
+.mat-error {
+    color: #f44336;
+    font-size: 0.75rem;
+    margin-top: 0.25rem;
+}
+
+
+/* Success and Error Message Styles */
+
+.message-container {
+    margin-top: 1rem;
+    padding: 1rem;
+    border-radius: 4px;
+    font-size: 0.875rem;
+}
+
+.success-message {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+}
+
+.error-message {
+    background-color: #ffebee;
+    color: #d32f2f;
+}
+
+
+/* Responsive Adjustments */
+
+@media (max-width: 600px) {
+    .field-mapping-row {
+        grid-template-columns: 1fr;
+        gap: 0.5rem;
+    }
+    .mapping-action-buttons {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+}
+
+
+/* Animation for Add/Remove Actions */
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.field-mapping-row {
+    animation: fadeIn var(--transition-speed) ease-out;
+}
+
+
+/* Focus and Active States */
+
+.mat-form-field.ng-focused .mat-form-field-label {
+    color: var(--primary-color);
+}
+
+.mat-form-field.ng-focused .mat-form-field-outline {
+    border-color: var(--primary-color);
+}

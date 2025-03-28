@@ -273,6 +273,63 @@
 }
 
 
+/* Styles pour les actions rapides de configuration */
+
+.config-quick-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-left: auto;
+}
+
+.config-quick-actions button {
+    transition: background-color 0.2s ease;
+}
+
+.config-quick-actions button:hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+
+.config-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.config-quick-actions {
+    display: flex;
+    gap: 10px;
+    /* Réduit l’espace entre les boutons Modifier et Supprimer */
+}
+
+.api-methods-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    /* Réduit l’espace entre les boutons Ajouter et Supprimer */
+}
+
+
+/* Amélioration de l'en-tête des méthodes API */
+
+.api-methods-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.method-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 16px;
+}
+
+.method-actions button {
+    margin-left: auto;
+}
+
+
 /* Styles pour le texte d'avertissement */
 
 .warn-text {
@@ -295,4 +352,14 @@ body,
 .detail-value {
     color: #424242;
     /* Gris foncé (peut être modifié en noir #000000) */
+}
+
+@media (max-width: 768px) {
+    .config-header {
+        flex-direction: column;
+        text-align: center;
+    }
+    .config-list {
+        grid-template-columns: 1fr;
+    }
 }

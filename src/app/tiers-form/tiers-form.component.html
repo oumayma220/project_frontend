@@ -1,72 +1,79 @@
-<div class="container">
-    <pre></pre>
-    <h2 style="color: black;">Ajouter un Tiers</h2>
+<mat-horizontal-stepper [linear]="true" #stepper class="custom-stepper">
 
-    <mat-vertical-stepper [linear]="true" #stepper>
-        <!-- STEP 1 : Infos Tiers -->
-        <mat-step [stepControl]="tiersInfoForm">
-            <form [formGroup]="tiersInfoForm">
-                <ng-template matStepLabel>Informations du Tiers</ng-template>
-                <pre></pre>
-
-                <!-- Container Flex -->
+    <!-- STEP 1 : Infos Tiers -->
+    <mat-step [stepControl]="tiersInfoForm">
+        <form [formGroup]="tiersInfoForm">
+            <ng-template matStepLabel>Informations du Tiers</ng-template>
+            <div class="step-content">
+                <p class="step-description">Veuillez renseigner les informations de contact du tiers.</p>
                 <div class="form-row">
-                    <mat-form-field class="half-width">
+                    <mat-form-field appearance="outline" class="half-width">
                         <mat-label>Nom du Tiers</mat-label>
                         <input matInput formControlName="nom" required>
+                        <mat-icon matSuffix>business</mat-icon>
+                        <mat-error *ngIf="tiersInfoForm.get('nom')?.invalid">Nom obligatoire</mat-error>
                     </mat-form-field>
 
-                    <mat-form-field class="half-width">
+                    <mat-form-field appearance="outline" class="half-width">
                         <mat-label>Email du Tiers</mat-label>
                         <input matInput formControlName="email" required type="email">
+                        <mat-icon matSuffix>email</mat-icon>
+                        <mat-error *ngIf="tiersInfoForm.get('email')?.invalid">Email invalide</mat-error>
                     </mat-form-field>
                 </div>
-
-                <!-- Deuxième ligne -->
                 <div class="form-row">
-                    <mat-form-field class="half-width">
+                    <mat-form-field appearance="outline" class="half-width">
                         <mat-label>Téléphone du Tiers</mat-label>
                         <input matInput formControlName="numero" required>
+                        <mat-icon matSuffix>phone</mat-icon>
+                        <mat-error *ngIf="tiersInfoForm.get('numero')?.invalid">Numéro de téléphone obligatoire</mat-error>
                     </mat-form-field>
                 </div>
 
-                <div>
-                    <button mat-button color="primary" matStepperNext [disabled]="tiersInfoForm.invalid">
-                  Suivant <mat-icon>arrow_forward</mat-icon>
-                </button>
+                <div class="step-actions">
+                    <button mat-raised-button color="accent" matStepperNext [disabled]="tiersInfoForm.invalid">
+                        Suivant <mat-icon>arrow_forward</mat-icon>
+                    </button>
+
                 </div>
-            </form>
-        </mat-step>
+            </div>
+        </form>
+    </mat-step>
 
 
-        <!-- STEP 2 : Configuration -->
-        <!-- STEP 2 : Configuration -->
-        <mat-step [stepControl]="configForm">
-            <form [formGroup]="configForm">
-                <ng-template matStepLabel>Configuration</ng-template>
-                <pre></pre>
+    <!-- STEP 2 : Configuration -->
+    <mat-step [stepControl]="configForm">
+        <form [formGroup]="configForm">
+            <ng-template matStepLabel>Configuration</ng-template>
+
+            <div class="step-content">
+                <p class="step-description">Configurez les paramètres de l'API du tiers.</p>
 
                 <!-- Première ligne -->
                 <div class="form-row">
-                    <mat-form-field class="half-width">
+                    <mat-form-field appearance="outline" class="half-width">
                         <mat-label>Nom de la Configuration</mat-label>
-                        <input matInput formControlName="configName" required>
+                        <input matInput formControlName="configName" required="">
+                        <mat-icon matSuffix>settings</mat-icon>
+                        <mat-error *ngIf="configForm.get('configName')?.invalid">Nom de configuration obligatoire</mat-error>
                     </mat-form-field>
 
-                    <mat-form-field class="half-width">
+                    <mat-form-field appearance="outline" class="half-width">
                         <mat-label>URL</mat-label>
-                        <input matInput formControlName="url" required>
+                        <input matInput formControlName="url" placeholder="https://" required>
+                        <mat-icon matSuffix>link</mat-icon>
+                        <mat-error *ngIf="configForm.get('url')?.invalid">URL obligatoire</mat-error>
                     </mat-form-field>
                 </div>
-
                 <!-- Deuxième ligne -->
                 <div class="form-row">
-                    <mat-form-field class="half-width">
+                    <mat-form-field appearance="outline" class="half-width">
                         <mat-label>Headers</mat-label>
-                        <input matInput formControlName="headers">
+                        <input matInput formControlName="headers" placeholder="Content-Type: application/json">
+                        <mat-icon matSuffix>code</mat-icon>
                     </mat-form-field>
 
-                    <mat-form-field class="half-width">
+                    <mat-form-field appearance="outline" class="half-width">
                         <mat-label>Méthode HTTP</mat-label>
                         <mat-select formControlName="httpMethod" required>
                             <mat-option value="GET">GET</mat-option>
@@ -74,110 +81,121 @@
                             <mat-option value="PUT">PUT</mat-option>
                             <mat-option value="DELETE">DELETE</mat-option>
                         </mat-select>
+                        <mat-icon matSuffix>http</mat-icon>
+                        <mat-error *ngIf="configForm.get('httpMethod')?.invalid">Méthode HTTP obligatoire</mat-error>
                     </mat-form-field>
                 </div>
-
                 <!-- Troisième ligne -->
                 <div class="form-row">
-                    <mat-form-field class="half-width">
+                    <mat-form-field appearance="outline" class="half-width">
                         <mat-label>Endpoint</mat-label>
-                        <input matInput formControlName="endpoint" required>
+                        <input matInput formControlName="endpoint" placeholder="/api/v1/products" required>
+                        <mat-icon matSuffix>send</mat-icon>
+                        <mat-error *ngIf="configForm.get('endpoint')?.invalid">Endpoint obligatoire</mat-error>
                     </mat-form-field>
 
-                    <mat-form-field class="half-width">
+                    <mat-form-field appearance="outline" class="half-width">
                         <mat-label>Method Headers</mat-label>
                         <input matInput formControlName="methodHeaders">
+                        <mat-icon matSuffix>settings_ethernet</mat-icon>
                     </mat-form-field>
                 </div>
-                <div class="form-row">
-                    <mat-form-field class="half-width">
+
+                <div class="form-row align-center" *ngIf="configForm.get('httpMethod')?.value === 'GET'">
+                    <mat-form-field appearance="outline" class="half-width">
                         <mat-label>Type Mapping</mat-label>
                         <mat-select formControlName="type" required>
                             <mat-option value="jsonPath">jsonPath</mat-option>
                             <mat-option value="reflection">reflection</mat-option>
                         </mat-select>
+                        <mat-icon matSuffix>transform</mat-icon>
+                        <mat-error *ngIf="configForm.get('type')?.invalid">Type mapping obligatoire</mat-error>
                     </mat-form-field>
 
-                    <button mat-icon-button style="color: rgb(237, 245, 21);" (click)="openHelpDialog()">
+                    <button mat-icon-button class="help-button" (click)="openHelpDialog()" matTooltip="Aide sur les types de mapping">
                         <mat-icon>help_outline</mat-icon>
-                      </button>
-
-
+                    </button>
                 </div>
 
-                <!-- Checkbox Pagination -->
-                <div class="form-row">
-                    <mat-checkbox formControlName="paginated">Pagination activée</mat-checkbox>
+                <!-- Checkbox Pagination avec explication -->
+                <div class="form-row pagination-section" *ngIf="configForm.get('httpMethod')?.value === 'GET'">
+                    <mat-checkbox formControlName="paginated" color="accent">Pagination activée</mat-checkbox>
+                    <span class="hint-text">Activez cette option si l'API utilise la pagination</span>
                 </div>
 
                 <!-- Champs pagination affichés uniquement si la case est cochée -->
-                <div *ngIf="configForm.get('paginated')?.value">
+                <div *ngIf="configForm.get('paginated')?.value" class="pagination-config">
                     <div class="form-row">
-                        <mat-form-field class="half-width">
+                        <mat-form-field appearance="outline" class="half-width">
                             <mat-label>Pagination Param Name</mat-label>
-                            <input matInput formControlName="paginationParamName">
+                            <input matInput formControlName="paginationParamName" placeholder="page">
+                            <mat-icon matSuffix>pages</mat-icon>
                         </mat-form-field>
 
-                        <mat-form-field class="half-width">
+                        <mat-form-field appearance="outline" class="half-width">
                             <mat-label>Page Size Param Name</mat-label>
-                            <input matInput formControlName="pageSizeParamName">
+                            <input matInput formControlName="pageSizeParamName" placeholder="size">
+                            <mat-icon matSuffix>format_list_numbered</mat-icon>
                         </mat-form-field>
                     </div>
 
-                    <div class="form-row">
-                        <mat-form-field class="full-width">
+                    <div class="form-row" *ngIf="configForm.get('httpMethod')?.value === 'GET'">
+                        <mat-form-field appearance="outline" class="full-width">
                             <mat-label>Total Pages Field In Response</mat-label>
-                            <input matInput formControlName="totalPagesFieldInResponse">
+                            <input matInput formControlName="totalPagesFieldInResponse" [placeholder]="configForm.get('type')?.value === 'reflection' ? 'totalpages' : '$.totalpages'">
+                            <mat-icon matSuffix>all_inclusive</mat-icon>
                         </mat-form-field>
                     </div>
                 </div>
 
                 <!-- Dernière ligne -->
-                <div class="form-row">
-                    <mat-form-field class="half-width">
+                <div class="form-row" *ngIf="configForm.get('httpMethod')?.value === 'GET'">
+                    <mat-form-field appearance="outline" class="full-width">
                         <mat-label>Content Field In Response</mat-label>
-                        <input matInput formControlName="contentFieldInResponse">
+                        <input matInput formControlName="contentFieldInResponse" [placeholder]="configForm.get('type')?.value === 'reflection' ? 'content' : '$.content[*]'">
+                        <mat-icon matSuffix>data_object</mat-icon>
                     </mat-form-field>
-
-                    <!-- <mat-form-field class="half-width">
-                        <mat-label>Type Mapping</mat-label>
-                        <mat-select formControlName="type" required>
-                            <mat-option value="jsonPath">jsonPath</mat-option>
-                            <mat-option value="reflection">reflection</mat-option>
-                        </mat-select>
-                    </mat-form-field> -->
                 </div>
 
                 <!-- Boutons navigation -->
-                <div class="button-group">
-                    <button mat-button color="primary" matStepperPrevious>
-          <mat-icon>arrow_back</mat-icon> Retour
-        </button>
+                <div class="step-actions">
+                    <button mat-stroked-button color="accent" matStepperPrevious>
+                        <mat-icon>arrow_back</mat-icon> Retour
+                    </button>
+                    <button mat-raised-button color="accent" matStepperNext>
+                        Suivant <mat-icon>arrow_forward</mat-icon>
+                    </button>
 
-                    <button mat-button color="primary" matStepperNext [disabled]="configForm.invalid">
-          Suivant <mat-icon>arrow_forward</mat-icon>
-        </button>
                 </div>
-            </form>
-        </mat-step>
+            </div>
+        </form>
+    </mat-step>
 
-        <!-- STEP 3 : Field Mappings -->
-        <mat-step [stepControl]="fieldMappingsForm">
-            <form [formGroup]="fieldMappingsForm">
-                <ng-template matStepLabel>Field Mappings</ng-template>
+    <!-- STEP 3 : Field Mappings -->
+    <mat-step [stepControl]="fieldMappingsForm" *ngIf="configForm.get('httpMethod')?.value === 'GET'">
+        <form [formGroup]="fieldMappingsForm">
+            <ng-template matStepLabel>Field Mappings</ng-template>
 
-                <div formArrayName="fieldMappings">
+            <div class="step-content">
+                <p class="step-description">Définissez comment les champs de l'API sont mappés vers votre système.</p>
+
+                <div class="field-mappings-section" formArrayName="fieldMappings">
+                    <div class="mapping-header">
+                        <div class="half-width">Source (API)</div>
+                        <div class="half-width">Target (Système)</div>
+                        <div class="action-width"></div>
+                    </div>
 
                     <!-- Itération sur les mappings -->
                     <div *ngFor="let mapping of fieldMappings.controls; let i = index" [formGroupName]="i" class="mapping-row">
-
-                        <div class="form-row">
-                            <mat-form-field class="half-width">
+                        <div class="form-row mapping-fields">
+                            <mat-form-field appearance="outline" class="half-width">
                                 <mat-label>Source</mat-label>
-                                <input matInput formControlName="source" required>
+                                <input matInput formControlName="source" required [placeholder]="configForm.get('type')?.value === 'reflection' ? 'name' : '$.name'">
+                                <mat-error *ngIf="mapping.get('source')?.invalid">Source obligatoire</mat-error>
                             </mat-form-field>
 
-                            <mat-form-field class="half-width">
+                            <mat-form-field appearance="outline" class="half-width">
                                 <mat-label>Target</mat-label>
                                 <mat-select formControlName="target" required>
                                     <mat-option value="name">name</mat-option>
@@ -186,36 +204,44 @@
                                     <mat-option value="url">url</mat-option>
                                     <mat-option value="reference">reference</mat-option>
                                 </mat-select>
+                                <mat-error *ngIf="mapping.get('target')?.invalid">Target obligatoire</mat-error>
                             </mat-form-field>
 
                             <!-- Bouton suppression -->
-                            <button mat-icon-button color="warn" (click)="removeFieldMapping(i)" type="button" aria-label="Supprimer le mapping" class="delete-button">
+                            <button mat-icon-button color="warn" (click)="removeFieldMapping(i)" type="button" aria-label="Supprimer le mapping" class="delete-button" matTooltip="Supprimer ce mapping">
                                 <mat-icon>delete</mat-icon>
-                              </button>
+                            </button>
                         </div>
                     </div>
+
+                    <!-- Message si aucun mapping -->
+                    <div *ngIf="fieldMappings.controls.length === 0" class="no-mappings-message">
+                        Aucun mapping défini.
+                    </div>
                 </div>
+
                 <!-- Bouton ajouter un mapping -->
-
-
-                <!-- Boutons navigation -->
-                <div class="button-group add-mapping-button">
+                <div class="add-mapping-section">
                     <button mat-raised-button color="accent" type="button" (click)="addFieldMapping()">
-                      <mat-icon>add_circle_outline</mat-icon>
-                      Ajouter un Mapping
+                        <mat-icon>add_circle_outline</mat-icon>
+                        Ajouter un Mapping
                     </button>
                 </div>
 
                 <!-- Navigation Buttons -->
-                <div class="button-group justify-space-between">
-                    <button mat-button color="primary" matStepperPrevious>
-                      <mat-icon>arrow_back</mat-icon> Retour
+                <div class="step-actions">
+                    <button type="button" mat-stroked-button class="me-3" (click)="onTestClick()" color="accent">
+                            <mat-icon>play_arrow</mat-icon> tester
+                        </button>
+                    <button mat-stroked-button color="accent" matStepperPrevious>
+                        <mat-icon>arrow_back</mat-icon> Retour
                     </button>
 
-                    <button mat-raised-button color="primary" (click)="onSubmit()">
-                      <mat-icon>save</mat-icon> Enregistrer
+                    <button mat-raised-button color="accent" (click)="onSubmit()" [disabled]="fieldMappingsForm.invalid">
+                        <mat-icon>save</mat-icon> Enregistrer
                     </button>
                 </div>
-
-            </form>
-        </mat-step>
+            </div>
+        </form>
+    </mat-step>
+</mat-horizontal-stepper>

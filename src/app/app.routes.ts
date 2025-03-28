@@ -19,6 +19,12 @@ import { HelpMappingComponent } from './help-mapping/help-mapping.component';
 import { TiersComponent } from './tiers/tiers.component';
 import { UpdateTiersComponent } from './update-tiers/update-tiers.component';
 import { ConfigListComponent } from './config-list/config-list.component';
+import { AjoutConfigurationComponent } from './ajout-configuration/ajout-configuration.component';
+import { AjoutApimethodComponent } from './ajout-apimethod/ajout-apimethod.component';
+import { AjoutMappingComponent } from './ajout-mapping/ajout-mapping.component';
+import { TestComponent } from './test/test.component';
+import { UpdateConfigComponent } from './update-config/update-config.component';
+import { UpdateMethodComponent } from './update-method/update-method.component';
 
 export const routes: Routes = [
 {
@@ -94,12 +100,15 @@ export const routes: Routes = [
         { path:'tiers', component:TiersComponent},
         { path:'updatetiers', component:UpdateTiersComponent},
         { path: 'configlist/:tiersId', component:ConfigListComponent},
-
-
-
-
-
-      ] 
+        { path: 'ajoutconfig/:tiersId', component:AjoutConfigurationComponent},
+        { path: 'ajoutapimethod/:configId', component:AjoutApimethodComponent},
+        { path: 'ajoutmapping/:methodId', component:AjoutMappingComponent},
+        { path: 'test', component:TestComponent},    
+        { path: 'updateconfig', component:UpdateConfigComponent},   
+        { path: 'updatemethod', component:UpdateMethodComponent},      
+   
+  
+     ] 
 },
 {
     path:'clienthome',

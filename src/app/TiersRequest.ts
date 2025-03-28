@@ -1,3 +1,5 @@
+import { FieldMapping } from "./FieldMapping";
+
 export interface TiersRequest {
     nom: string;
     email: string;
@@ -15,8 +17,4 @@ export interface TiersRequest {
     contentFieldInResponse: string;
     type: string;
     fieldMappings: FieldMapping[];
-}
-export interface FieldMapping {
-    source: string;
-    target: string;
 }

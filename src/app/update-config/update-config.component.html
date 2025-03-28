@@ -1,0 +1,44 @@
+<mat-card class="form-container">
+    <mat-card-title class="title">Modifier la Configuration</mat-card-title>
+
+    <mat-card-content>
+        <form [formGroup]="configForm" fxLayout="column" fxLayoutGap="20px">
+
+            <!-- Nom -->
+            <mat-form-field appearance="outline" class="full-width">
+                <mat-label>configName</mat-label>
+                <input matInput formControlName="configName" placeholder="configName" required>
+                <mat-error *ngIf="configForm.get('configName')?.hasError('required')">
+                    Le nom est obligatoire.
+                </mat-error>
+            </mat-form-field>
+
+            <!-- Email -->
+            <mat-form-field appearance="outline" class="full-width">
+                <mat-label>url</mat-label>
+                <input matInput formControlName="url" placeholder="url" type="url" required>
+                <mat-error *ngIf="configForm.get('url')?.hasError('required')">
+                    L'url est obligatoire.
+                </mat-error>
+            </mat-form-field>
+
+            <!-- Numéro -->
+            <mat-form-field appearance="outline" class="full-width">
+                <mat-label>headers</mat-label>
+                <input matInput formControlName="headers" placeholder="headers" required>
+
+            </mat-form-field>
+
+            <!-- Actions -->
+            <div class="buttons" fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="10px">
+                <button mat-stroked-button color="warn" (click)="onCancel()">
+            <mat-icon>close</mat-icon> Annuler
+          </button>
+                <button mat-raised-button color="accent" type="submit" [disabled]="!configForm.valid" (click)="onSubmit() ">
+            <mat-icon>save</mat-icon> Sauvegarder
+          </button>
+            </div>
+
+        </form>
+    </mat-card-content>
+</mat-card>
