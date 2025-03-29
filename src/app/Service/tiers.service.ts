@@ -64,6 +64,13 @@ export class TiersService {
       responseType: 'text' as 'json'  
     });
   }
+  updatemapping(id: number, request: FieldMapping[]): Observable<string> {
+    const url = `${this.base}/${id}/update-mapping`;  
+    return this.http.put<string>(url, request, {
+      headers: this.getAuthHeaders(),
+      responseType: 'text' as 'json'  
+    });
+  }
   getConfigsByTiersId(tiersId: number): Observable<Config[]> {
     return this.http.get<Config[]>(`${this.base}/tiers/configs/${tiersId}`, {
       headers: this.getAuthHeaders()
@@ -122,7 +129,4 @@ export class TiersService {
         const importUrl = `${this.baseapi}/import`; 
         return this.http.post<Product[]>(importUrl, request, { headers: this.getAuthHeaders() });
       }
-  
-
-  
-}
+  }

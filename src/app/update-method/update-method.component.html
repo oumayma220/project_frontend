@@ -1,87 +1,88 @@
 <mat-card class="form-container">
-    <mat-card-title class="title">Modifier la Configuration</mat-card-title>
+    <mat-card-title class="title">Modifier la Méthode</mat-card-title>
 
     <mat-card-content>
-        <form [formGroup]="configForm" fxLayout="column" fxLayoutGap="20px">
+        <form [formGroup]="configForm">
+            <div class="form-row">
+                <mat-form-field appearance="outline">
+                    <mat-label>Méthode HTTP</mat-label>
+                    <input matInput formControlName="httpMethod" placeholder="Ex: GET, POST, PUT" required>
+                    <mat-error *ngIf="configForm.get('httpMethod')?.hasError('required')">
+                        Ce champ est obligatoire.
+                    </mat-error>
+                </mat-form-field>
 
-            <!-- Nom -->
-            <mat-form-field appearance="outline" class="full-width">
-                <mat-label>httpMethod</mat-label>
-                <input matInput formControlName="httpMethod" placeholder="httpMethod" required>
-                <mat-error *ngIf="configForm.get('httpMethod')?.hasError('required')">
-                    Le champ est obligatoire.
-                </mat-error>
-            </mat-form-field>
-
-            <!-- Email -->
-            <mat-form-field appearance="outline" class="full-width">
-                <mat-label>endpoint</mat-label>
-                <input matInput formControlName="endpoint" placeholder="endpoint" type="endpoint" required>
-                <mat-error *ngIf="configForm.get('endpoint')?.hasError('required')">
-                    Le champ est obligatoire.
-                </mat-error>
-            </mat-form-field>
-
-            <!-- Numéro -->
-            <mat-form-field appearance="outline" class="full-width">
-                <mat-label>headers</mat-label>
-                <input matInput formControlName="methodHeaders" placeholder="headers">
-            </mat-form-field>
-            <div class="row mt-3">
-                <div class="col-12">
-                    <mat-checkbox formControlName="paginated" color="primary">
-                        Activer la pagination
-                        <mat-icon matTooltip="Active le mode paginé pour les requêtes GET" class="ms-2">info</mat-icon>
-                    </mat-checkbox>
-                </div>
+                <mat-form-field appearance="outline">
+                    <mat-label>Endpoint</mat-label>
+                    <input matInput formControlName="endpoint" placeholder="Ex: /api/v1/users" required>
+                    <mat-error *ngIf="configForm.get('endpoint')?.hasError('required')">
+                        Ce champ est obligatoire.
+                    </mat-error>
+                </mat-form-field>
             </div>
 
-            <!-- Configuration pagination -->
+            <div class="form-row">
+                <mat-form-field appearance="outline">
+                    <mat-label>Headers</mat-label>
+                    <input matInput formControlName="methodHeaders" placeholder="Ex: Authorization, Content-Type">
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                    <mat-label>Type</mat-label>
+                    <input matInput formControlName="type">
+                </mat-form-field>
+            </div>
+
+            <div class="checkbox-container">
+                <mat-checkbox formControlName="paginated" color="primary">
+                    Activer la pagination
+                </mat-checkbox>
+            </div>
+
             <ng-container *ngIf="configForm.get('paginated')?.value">
-                <h4 class="subsection-title mt-4 mb-3">Paramètres de pagination</h4>
-                <div class="row g-4">
-                    <div class="col-md-6">
-                        <mat-form-field appearance="outline" class="w-100">
+                <div class="pagination-section">
+                    <h4 class="subsection-title">Paramètres de pagination</h4>
+
+                    <div class="form-row">
+                        <mat-form-field appearance="outline">
                             <mat-label>Paramètre de page</mat-label>
-                            <input matInput formControlName="paginationParamName" placeholder="Par défaut: page">
-                            <mat-icon matSuffix>first_page</mat-icon>
+                            <input matInput formControlName="paginationParamName" placeholder="Par défaut: page" required>
+                            <mat-error *ngIf="configForm.get('paginationParamName')?.hasError('required')">
+                                Le champ est requis
+                            </mat-error>
                         </mat-form-field>
-                    </div>
-                    <div class="col-md-6">
-                        <mat-form-field appearance="outline" class="w-100">
+
+                        <mat-form-field appearance="outline">
                             <mat-label>Paramètre de taille</mat-label>
                             <input matInput formControlName="pageSizeParamName" placeholder="Par défaut: size">
-                            <mat-icon matSuffix>last_page</mat-icon>
                         </mat-form-field>
                     </div>
-                    <div class="col-md-12">
-                        <mat-form-field appearance="outline" class="w-100">
-                            <mat-label>Champ "Total Pages"</mat-label>
-                            <input matInput formControlName="totalPagesFieldInResponse" [placeholder]="configForm.get('type')?.value === 'reflection' ? 'totalpages' : '$.totalpages'">
-                            <mat-icon matSuffix>numbers</mat-icon>
+
+                    <div class="form-row">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Champ 'Total Pages'</mat-label>
+                            <input matInput formControlName="totalPagesFieldInResponse" placeholder="Ex: totalPages" required>
+                            <mat-error *ngIf="configForm.get('totalPagesFieldInResponse')?.hasError('required')">
+                                Le champ est requis
+                            </mat-error>
                         </mat-form-field>
                     </div>
                 </div>
             </ng-container>
-            <mat-form-field appearance="outline" class="full-width">
-                <mat-label>contentFieldInResponse</mat-label>
-                <input matInput formControlName="contentFieldInResponse" placeholder="contentFieldInResponse" required>
-            </mat-form-field>
-            <mat-form-field appearance="outline" class="full-width">
-                <mat-label>type</mat-label>
-                <input matInput formControlName="type" placeholder="type" required>
+
+            <mat-form-field appearance="outline">
+                <mat-label>Champ de contenu</mat-label>
+                <input matInput formControlName="contentFieldInResponse" placeholder="Ex: data">
             </mat-form-field>
 
-            <!-- Actions -->
-            <div class="buttons" fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="10px">
+            <div class="buttons">
                 <button mat-stroked-button color="warn" (click)="onCancel()">
-            <mat-icon>close</mat-icon> Annuler
-          </button>
-                <button mat-raised-button color="accent" type="submit" [disabled]="!configForm.valid" (click)="onSubmit() ">
-            <mat-icon>save</mat-icon> Sauvegarder
-          </button>
+                    <mat-icon>close</mat-icon> Annuler
+                </button>
+                <button mat-raised-button color="accent" type="submit" [disabled]="!configForm.valid" (click)="onSubmit()">
+                    <mat-icon>save</mat-icon> Sauvegarder
+                </button>
             </div>
-
         </form>
     </mat-card-content>
 </mat-card>

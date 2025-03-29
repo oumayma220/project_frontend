@@ -1,0 +1,52 @@
+<div class="mapping-list">
+    <h2 mat-dialog-title>Modifier les mappings de champs</h2>
+    <mat-dialog-content>
+        <form [formGroup]="mappingForm">
+            <div formArrayName="mappings">
+                <div class="mapping-controls">
+                    <button mat-raised-button color="accent" type="button" (click)="addMapping()">
+                    <mat-icon>add</mat-icon> Ajouter un mapping
+                </button>
+                </div>
+
+                <div *ngIf="mappingsArray.controls.length > 0">
+                    <div class="mapping-card" *ngFor="let mapping of mappingsArray.controls; let i = index" [formGroupName]="i">
+                        <div class="mapping-header">
+                            <div class="mapping-fields">
+                                <div class="field-container">
+                                    <div class="field-label">Source</div>
+                                    <input class="field-input" formControlName="source" placeholder="Champ dans le format JSON reçu">
+                                </div>
+
+                                <div class="arrow-container">
+                                    <mat-icon>arrow_forward</mat-icon>
+                                </div>
+
+                                <div class="field-container">
+                                    <div class="field-label">Target</div>
+                                    <div class="target-field">
+                                        <input class="field-input" formControlName="target" placeholder="Champ dans votre système">
+                                        <button class="delete-btn" mat-icon-button color="warn" type="button" (click)="removeMapping(i)">
+                                        <mat-icon>delete</mat-icon>
+                                    </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="no-mappings" *ngIf="mappingsArray.controls.length === 0">
+                    <p>Aucun mapping défini. Cliquez sur "Ajouter un mapping" pour commencer.</p>
+                </div>
+            </div>
+        </form>
+    </mat-dialog-content>
+
+    <mat-dialog-actions align="end">
+        <button mat-button mat-dialog-close>Annuler</button>
+        <button mat-raised-button color="accent" (click)="saveChanges()" [disabled]="mappingForm.invalid">
+        Enregistrer
+    </button>
+    </mat-dialog-actions>
+</div>

@@ -10,6 +10,8 @@ import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatOption } from '@angular/material/core';
 
 @Component({
   selector: 'app-update-method',
@@ -24,7 +26,9 @@ import { MatDialogModule } from '@angular/material/dialog';
                 MatCardModule,
                 MatButtonModule ,
                 MatIconModule,
-                MatDialogModule
+                MatDialogModule,
+                MatCheckboxModule
+                
   ],
   templateUrl: './update-method.component.html',
   styleUrl: './update-method.component.css'
@@ -32,17 +36,18 @@ import { MatDialogModule } from '@angular/material/dialog';
 export class UpdateMethodComponent implements OnInit {
   configForm: FormGroup;
 
+
   constructor(
     private fb: FormBuilder,
-    private tiersService: TiersService,  // Assure-toi d'avoir un service tiers
-    private dialogRef: MatDialogRef<UpdateMethodComponent>,  // Pour fermer le dialogue
-    @Inject(MAT_DIALOG_DATA) public data: any  // Injecte les données passées dans le dialogue
+    private tiersService: TiersService,  
+    private dialogRef: MatDialogRef<UpdateMethodComponent>,  
+    @Inject(MAT_DIALOG_DATA) public data: any  
   ) {
     this.configForm = this.fb.group({
       httpMethod: [this.data.httpMethod, Validators.required],
       endpoint: [this.data.endpoint, Validators.required,],
       methodHeaders: [this.data.methodHeaders],
-      paginated: [this.data.paginated],
+      paginated: [this.data.paginated || false],
       paginationParamName: [this.data.paginationParamName],
       pageSizeParamName: [this.data.pageSizeParamName],
       totalPagesFieldInResponse: [this.data.totalPagesFieldInResponse],
@@ -51,8 +56,20 @@ export class UpdateMethodComponent implements OnInit {
       type: [this.data.type]
 
 
-
     });
+    this.configForm.get('paginated')?.valueChanges.subscribe(paginated => {
+      if (paginated) {
+        this.configForm.get('paginationParamName')?.setValidators(Validators.required);
+        this.configForm.get('totalPagesFieldInResponse')?.setValidators(Validators.required);
+      } else {
+        this.configForm.get('paginationParamName')?.clearValidators();
+        this.configForm.get('totalPagesFieldInResponse')?.clearValidators();
+      }
+      this.configForm.get('paginationParamName')?.updateValueAndValidity();
+      this.configForm.get('totalPagesFieldInResponse')?.updateValueAndValidity();
+    });
+  
+    
   }
 
   ngOnInit(): void {

@@ -18,6 +18,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { RouterModule } from '@angular/router';
 import { UpdateConfigComponent } from '../update-config/update-config.component';
 import { UpdateMethodComponent } from '../update-method/update-method.component';
+import { UpdateMappingComponent } from '../update-mapping/update-mapping.component';
 
 
 
@@ -200,6 +201,22 @@ deletefield(methodId: number):void {
         this.getConfigs();
       });
     }
+    openSettingsDialogmethodmapping(method: any) :void{
+      const dialogRef = this.dialog.open(UpdateMappingComponent, {
+        width: '900px',
+        data: {
+          methodId: method.id,
+          fieldMappings: method.fieldMappings
+        }
+      });
+      dialogRef.afterClosed().subscribe((result: any) => {
+        if (result) {
+          console.log('Mappings mis à jour:', result);
+        }
+        this.getConfigs();
+      });
+    }
+          
   
 
 

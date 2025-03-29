@@ -40,7 +40,7 @@ export class UpdateConfigComponent implements OnInit {
   ) {
     this.configForm = this.fb.group({
       configName: [this.data.configName, Validators.required],
-      url: [this.data.configName, Validators.required,],
+      url: [this.data.url, Validators.required,],
       headers: [this.data.headers]
     });
   }
