@@ -25,6 +25,8 @@ import { AjoutMappingComponent } from './ajout-mapping/ajout-mapping.component';
 import { TestComponent } from './test/test.component';
 import { UpdateConfigComponent } from './update-config/update-config.component';
 import { UpdateMethodComponent } from './update-method/update-method.component';
+import { UpdateMappingComponent } from './update-mapping/update-mapping.component';
+import { ProductListComponent } from './product-list/product-list.component';
 
 export const routes: Routes = [
 {
@@ -105,9 +107,11 @@ export const routes: Routes = [
         { path: 'ajoutmapping/:methodId', component:AjoutMappingComponent},
         { path: 'test', component:TestComponent},    
         { path: 'updateconfig', component:UpdateConfigComponent},   
-        { path: 'updatemethod', component:UpdateMethodComponent},      
-   
-  
+        { path: 'updatemethod', component:UpdateMethodComponent},
+        { path: 'updatemapping', component:UpdateMappingComponent},
+        { path: 'productlist', component:ProductListComponent}      
+      
+      
      ] 
 },
 {

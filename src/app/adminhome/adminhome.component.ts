@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { MatSidenavModule } from '@angular/material/sidenav';
+import { Component, ViewChild } from '@angular/core';
+import { MatSidenav, MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
@@ -22,7 +22,8 @@ import { UserService } from '../Service/user.service';
   styleUrl: './adminhome.component.css'
 })
 export class AdminhomeComponent {
-  isExpanded = true; // Permet de gérer l'expansion du menu
+  // @ViewChild('sidenav') sidenav!: MatSidenav;
+  isExpanded = true; 
   constructor(private userService: UserService, private router: Router) {}
   logout(): void {
     this.userService.logout();

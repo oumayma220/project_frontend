@@ -125,8 +125,12 @@ export class TiersService {
           responseType: 'text'
         });
       }
-      importProducts(request: TiersRequest): Observable<Product[]> {
+      importtestProducts(request: TiersRequest): Observable<Product[]> {
         const importUrl = `${this.baseapi}/import`; 
         return this.http.post<Product[]>(importUrl, request, { headers: this.getAuthHeaders() });
+      }
+      importAllProducts(): Observable<Product[]> {
+        const url = `${this.baseapi}/import/all`; // Endpoint Java
+        return this.http.get<Product[]>(url, { headers: this.getAuthHeaders() });
       }
   }

@@ -10,7 +10,6 @@
         </button>
     </header>
 
-    <!-- État vide -->
     <div *ngIf="configs.length === 0" class="empty-state">
         <mat-icon class="empty-icon">settings_applications</mat-icon>
         <h2>Aucune configuration trouvée</h2>
@@ -21,21 +20,16 @@
         </button>
     </div>
 
-    <!-- Liste des configurations -->
     <div class="config-list" *ngIf="configs.length > 0">
         <mat-card *ngFor="let config of configs" class="config-card">
             <mat-card-header>
                 <mat-card-title-group>
                     <mat-card-title>{{ config.configName }}</mat-card-title>
                 </mat-card-title-group>
-
                 <div class="config-quick-actions">
                     <button mat-icon-button style="color: rgb(37, 37, 89);" matTooltip="Modifier" (click)="openSettingsDialog(config)">
                         <mat-icon>edit</mat-icon>
                     </button>
-                    <!-- <button mat-icon-button color="accent" matTooltip="Tester">
-                        <mat-icon>play_arrow</mat-icon>
-                    </button> -->
                     <button mat-icon-button color="warn" matTooltip="Supprimer" (click)="deleteConfig(config.id)">
                         <mat-icon>delete</mat-icon>
                     </button>
@@ -55,7 +49,6 @@
                     </div>
                 </div>
 
-                <!-- Section des méthodes API -->
                 <div class="api-methods-section">
                     <div class="api-methods-header">
                         <h3>
@@ -66,23 +59,16 @@
                             <mat-icon>add</mat-icon>
                             Nouvelle méthode
                         </button>
-
                     </div>
 
                     <mat-accordion>
                         <mat-expansion-panel *ngFor="let method of config.apiMethods; let i = index">
                             <mat-expansion-panel-header>
                                 <mat-panel-title>
-                                    <button mat-icon-button color="warn" matTooltip="Supprimer" (click)="deleteapimethod(method.id)">
-                                        <mat-icon>delete</mat-icon>
-                                    </button>
-                                    <button mat-icon-button style="color: rgb(37, 37, 89);" matTooltip="Modifier" (click)="openSettingsDialogmethod(method)">
-                                        <mat-icon>edit</mat-icon>
-                                    </button>
                                     <span [ngClass]="{'method-get': method.httpMethod === 'GET', 
-                                     'method-post': method.httpMethod === 'POST',
-                                     'method-put': method.httpMethod === 'PUT',
-                                     'method-delete': method.httpMethod === 'DELETE'}">
+                                    'method-post': method.httpMethod === 'POST',
+                                    'method-put': method.httpMethod === 'PUT',
+                                    'method-delete': method.httpMethod === 'DELETE'}">
                                         {{ method.httpMethod }}
                                     </span>
                                 </mat-panel-title>
@@ -90,19 +76,22 @@
                                     {{ method.endpoint }}
                                     <span class="method-type-badge" *ngIf="method.type">{{ method.type }}</span>
                                 </mat-panel-description>
+                                <div class="config-quick-actions">
+                                    <button mat-icon-button style="color: rgb(37, 37, 89);" matTooltip="Modifier" (click)="openSettingsDialogmethod(method)">
+                                        <mat-icon>edit</mat-icon>
+                                    </button>
+                                    <button mat-icon-button color="warn" matTooltip="Supprimer" (click)="deleteapimethod(method.id)">
+                                        <mat-icon>delete</mat-icon>
+                                    </button>
+                                </div>
                             </mat-expansion-panel-header>
 
-                            <!-- Contenu du panneau d'expansion -->
                             <div class="method-details">
                                 <div class="method-actions">
                                     <button mat-stroked-button color="accent" (click)="redirectToAddMapping(method.id)">
                                         <mat-icon>add</mat-icon>
                                         Ajouter un mapping
                                     </button>
-                                    <button mat-icon-button style="color: rgb(37, 37, 89);" matTooltip="Modifier" (click)="openSettingsDialogmethodmapping(method)">
-                                        <mat-icon>edit</mat-icon>
-                                    </button>
-
                                 </div>
 
                                 <div class="detail-group" *ngIf="method.headers">
@@ -110,18 +99,23 @@
                                     <div class="detail-value code-block">{{ method.headers }}</div>
                                 </div>
 
-                                <!-- Field Mappings avec tableau amélioré -->
                                 <div class="field-mappings-section" *ngIf="method.fieldMappings && method.fieldMappings.length > 0">
-                                    <h4>
-                                        <mat-icon>compare_arrows</mat-icon>
-                                        Field Mappings
-                                    </h4>
-                                    <button mat-icon-button color="warn" matTooltip="Supprimer" (click)="deletefield(method.id)">
-                                        <mat-icon>delete</mat-icon>
-                                    </button>
+                                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                                        <h4>
+                                            <mat-icon>compare_arrows</mat-icon>
+                                            Field Mappings
+                                        </h4>
+                                        <div class="config-quick-actions">
+                                            <button mat-icon-button style="color: rgb(37, 37, 89);" matTooltip="Modifier" (click)="openSettingsDialogmethodmapping(method)">
+                                                <mat-icon>edit</mat-icon>
+                                            </button>
+                                            <button mat-icon-button color="warn" matTooltip="Supprimer" (click)="deletefield(method.id)">
+                                            <mat-icon>delete</mat-icon>
+                                        </button>
+                                        </div>
+                                    </div>
+
                                     <table mat-table [dataSource]="method.fieldMappings" class="mapping-table">
-
-
                                         <ng-container matColumnDef="target">
                                             <th mat-header-cell *matHeaderCellDef>Target</th>
                                             <td mat-cell *matCellDef="let mapping">{{ mapping.target }}</td>
@@ -141,7 +135,6 @@
                                     <span>Aucun field mapping défini pour cette méthode</span>
                                 </div>
 
-                                <!-- Pagination Information -->
                                 <div class="pagination-info" *ngIf="method.paginated">
                                     <h4>
                                         <mat-icon>pages</mat-icon>

@@ -41,12 +41,19 @@ mat-icon {
     color: hsl(0, 0%, 100%);
     padding: 10px 10px;
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-    /* margin-top: 20px; */
 }
 
 .content {
     margin-left: 10px;
-    /* Ajuste la valeur selon la largeur de ta sidebar */
     padding: 10px;
-    /* Optionnel, pour ajouter du padding autour du contenu */
+}
+
+@media (max-width: 768px) {
+    .sidenav {
+        /* width: 100%; */
+        width: 100px;
+    }
+    .menu-button {
+        display: block;
+    }
 }

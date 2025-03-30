@@ -84,6 +84,30 @@ export class TiersFormComponent {
   removeFieldMapping(index: number) {
     this.fieldMappings.removeAt(index);
   }
+  onSubmittiers() {
+    //  if (this.tiersInfoForm.invalid || this.configForm.invalid || this.fieldMappingsForm.invalid) {
+      if (this.tiersInfoForm.invalid  ) {
+      alert('Formulaire incomplet !');
+      return;
+    }
+    const request: TiersRequest = {
+      ...this.tiersInfoForm.value,
+    };
+
+    console.log(request);
+
+    this.tiersService.createTiers(request).subscribe({
+      next: (response) => {
+        alert('Tiers ajouté avec succès !');
+         this.router.navigate(['adminhome/tiers'])
+
+         this.resetForms();
+      },
+      error: (err) => {
+        alert('Erreur lors de l\'ajout du tiers : ' + (err.error?.message || 'Erreur inconnue'));
+      }
+    });
+  }
 
   onSubmit() {
     //  if (this.tiersInfoForm.invalid || this.configForm.invalid || this.fieldMappingsForm.invalid) {
@@ -102,9 +126,9 @@ export class TiersFormComponent {
     this.tiersService.createTiers(request).subscribe({
       next: (response) => {
         alert('Tiers ajouté avec succès !');
-        this.router.navigate(['adminhome/tiers']);
+         this.router.navigate(['adminhome/tiers'])
 
-        // this.resetForms();
+         this.resetForms();
       },
       error: (err) => {
         alert('Erreur lors de l\'ajout du tiers : ' + (err.error?.message || 'Erreur inconnue'));
@@ -129,7 +153,7 @@ onTestClick() {
     ...this.fieldMappingsForm.value
   };
 
-  this.tiersService.importProducts(requestData).subscribe({
+  this.tiersService.importtestProducts(requestData).subscribe({
     next: (response) => {
       this.produits = response || [];
 

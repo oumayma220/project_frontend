@@ -163,7 +163,7 @@ targetFields = ['name', 'description', 'price', 'url', 'reference'];
   
   onTestClick() {
     const requestData = this.configForm.value;
-    this.tiersService.importProducts(requestData).subscribe({
+    this.tiersService.importtestProducts(requestData).subscribe({
       next: (response) => {
         this.produits = response || [];
 

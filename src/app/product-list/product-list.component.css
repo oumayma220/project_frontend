@@ -1,0 +1,26 @@
+.loading-container,
+.error-container,
+.no-products-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 20px;
+}
+
+.error-message {
+    color: red;
+}
+
+.product-image {
+    max-width: 100px;
+    max-height: 100px;
+}
+
+table {
+    width: 100%;
+}
+
+.mat-column-image {
+    width: 120px;
+}
