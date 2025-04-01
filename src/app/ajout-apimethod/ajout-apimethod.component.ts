@@ -16,6 +16,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { HelpMappingComponent } from '../help-mapping/help-mapping.component';
 import { MatDialog } from '@angular/material/dialog';
+import { TestComponent } from '../test/test.component';
+import { Product } from '../Product';
 
 @Component({
   selector: 'app-ajout-apimethod',
@@ -41,6 +43,10 @@ export class AjoutApimethodComponent implements OnInit {
   errorMessage = '';
   tiersNom!: string;
   httpMethods = ['GET', 'POST', 'PUT', 'DELETE'];
+  parentConfig: any;
+  produits: Product[] = [];
+
+
 
 
   constructor(
@@ -53,6 +59,14 @@ export class AjoutApimethodComponent implements OnInit {
 
   ngOnInit(): void {
     this.configId = Number(this.route.snapshot.paramMap.get('configId'));
+    this.tiersService.getConfigsById(this.configId).subscribe({
+      next: (config) => {
+        this.parentConfig = config;
+      },
+      error: (err) => {
+        console.error('Erreur lors de la récupération de la configuration :', err);
+      }
+    });
 
     this.ApiMethodForm = this.fb.group({
       httpMethod: ['', Validators.required],
@@ -124,4 +138,54 @@ export class AjoutApimethodComponent implements OnInit {
     });
   }
  
+  onTestClick() {
+    if (!this.parentConfig || !this.parentConfig.url) {
+      this.snackBar.open('Impossible de tester: URL de configuration non disponible', 'Fermer', { duration: 3000 });
+      return;
+    }
+
+    const methodData = this.ApiMethodForm.value;
+    
+    // Créer un objet combiné avec les données du formulaire et l'URL de la configuration parente
+    const requestData = {
+      ...methodData,
+      url: this.parentConfig.url,
+      // Si nécessaire, ajoutez d'autres champs de la configuration parente
+      headers: this.parentConfig.headers || ''
+    };
+
+    this.tiersService.importtestProducts(requestData).subscribe({
+      next: (response) => {
+        this.produits = response || [];
+        const exampleProducts = response.slice(0, 5);
+        
+        const dialogRef = this.dialog.open(TestComponent, {
+          width: '800px',
+          data: {
+            success: exampleProducts.length > 0,
+            message: exampleProducts.length > 0 
+              ? `Test réussi : ${this.produits.length} produits ont été trouvés pour cette configuration, voici quelques exemples : ` 
+              : 'Aucun produit n\'a pu être importé.',
+            products: exampleProducts
+          }
+        });
+  
+        dialogRef.afterClosed().subscribe(result => {
+          if (result === true) {
+            this.onSubmit();
+          }
+        });
+      },
+      error: (error) => {
+        this.dialog.open(TestComponent, {
+          width: '800px',
+          data: {
+            success: false,
+            message: 'Erreur lors de l\'importation des produits. Vérifiez votre configuration.',
+            products: []
+          }
+        });
+      }
+    });
+  }
 }

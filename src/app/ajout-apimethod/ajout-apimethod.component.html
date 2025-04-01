@@ -170,6 +170,9 @@
 
             <!-- Boutons d'action -->
             <div class="form-actions mt-5 pt-3 border-top">
+                <button type="button" mat-stroked-button class="me-3" (click)="onTestClick()" color="accent" [disabled]="ApiMethodForm.invalid">
+                    <mat-icon>play_arrow</mat-icon> tester
+                </button>
                 <button type="button" mat-stroked-button class="me-3">
                         <mat-icon>cancel</mat-icon> Annuler
                     </button>
