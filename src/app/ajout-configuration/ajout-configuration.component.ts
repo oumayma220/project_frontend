@@ -87,6 +87,16 @@ targetFields = ['name', 'description', 'price', 'url', 'reference'];
       type: [''],
       fieldMappings: this.fb.array([])
     });
+    this.configForm.get('paginated')?.valueChanges.subscribe(paginated => {
+      if (paginated) {
+        this.configForm.get('paginationParamName')?.setValidators(Validators.required);
+        this.configForm.get('totalPagesFieldInResponse')?.setValidators(Validators.required);
+      } else {
+        this.configForm.get('paginationParamName')?.clearValidators();
+        this.configForm.get('totalPagesFieldInResponse')?.clearValidators();
+      }
+      
+    });
 
     // Ajout d'un mapping par défaut
     this.addFieldMapping();
@@ -143,7 +153,7 @@ targetFields = ['name', 'description', 'price', 'url', 'reference'];
       next: () => {
         this.successMessage = 'Configuration ajoutée avec succès !';
         this.snackBar.open('Configuration enregistrée', 'Fermer', { duration: 3000 });
-        this.router.navigate(['adminhome/configlist', this.tiersId]);
+        this.router.navigate(['success/configlist', this.tiersId]);
       },
       error: (error) => {
         console.error(error);
@@ -158,7 +168,7 @@ targetFields = ['name', 'description', 'price', 'url', 'reference'];
       });
   }
   onCancel() {
-    this.router.navigate(['adminhome/configlist', this.tiersId]);
+    this.router.navigate(['success/configlist', this.tiersId]);
   }
   
   onTestClick() {
@@ -167,10 +177,8 @@ targetFields = ['name', 'description', 'price', 'url', 'reference'];
       next: (response) => {
         this.produits = response || [];
 
-        // Prendre les 5 premiers produits comme exemple
         const exampleProducts = response.slice(0, 5);
         
-        // Ouvrir le dialog avec les résultats
         const dialogRef = this.dialog.open(TestComponent, {
           width: '800px',
           data: {

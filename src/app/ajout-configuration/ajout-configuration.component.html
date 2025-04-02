@@ -85,10 +85,12 @@
                     <div class="col-md-6">
                         <mat-form-field appearance="outline" class="w-100">
                             <mat-label>Type de mapping</mat-label>
-                            <mat-select formControlName="type">
+                            <mat-select formControlName="type" required>
                                 <mat-option value="jsonPath">JSON Path</mat-option>
                                 <mat-option value="reflection">Reflection</mat-option>
                             </mat-select>
+                            <mat-error *ngIf="configForm.get('type')?.invalid">Type mapping obligatoire</mat-error>
+
                         </mat-form-field>
                     </div>
                     <div class="col-md-6">
@@ -212,7 +214,6 @@
                     </button> -->
             </div>
         </form>
-        <!-- Messages -->
         <div *ngIf="successMessage" class="alert alert-success mt-4 d-flex align-items-center">
             <mat-icon class="me-2">check_circle</mat-icon>
             {{ successMessage }}

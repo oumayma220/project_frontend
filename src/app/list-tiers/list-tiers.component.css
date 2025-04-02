@@ -1,0 +1,119 @@
+.container {
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+    color: #333;
+}
+
+.page-title {
+    font-size: 28px;
+    font-weight: 500;
+    color: #2c3e50;
+    margin-bottom: 30px;
+    border-bottom: 2px solid #0c036e;
+    padding-bottom: 10px;
+}
+
+.tiers-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 25px;
+    margin-top: 20px;
+}
+
+.tiers-card {
+    height: 100%;
+    transition: transform 0.3s, box-shadow 0.3s;
+    border-radius: 8px;
+    overflow: hidden;
+    background-color: white;
+    /* Fond blanc pour une meilleure lisibilité */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    position: relative;
+}
+
+.card-banner {
+    height: 8px;
+    background: linear-gradient(90deg, #10184c, #34407c);
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+}
+
+.tiers-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 20px rgba(63, 81, 181, 0.2);
+}
+
+.tiers-avatar {
+    background-color: #3f51b5;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+}
+
+.card-title {
+    color: #2c3e50;
+    font-size: 20px;
+    font-weight: 500;
+    margin-top: 8px;
+}
+
+.card-subtitle {
+    color: #7f8c8d !important;
+    /* Gris foncé pour la lisibilité */
+    font-size: 14px;
+}
+
+.card-content {
+    padding: 16px;
+    color: #34495e;
+    /* Gris très foncé pour le contenu */
+}
+
+.info-item {
+    margin: 8px 0;
+    display: flex;
+    align-items: center;
+}
+
+.info-item strong {
+    margin-right: 6px;
+    color: #34495e;
+}
+
+.card-actions {
+    display: flex;
+    justify-content: flex-end;
+    padding: 12px 16px 16px;
+    border-top: 1px solid #f0f0f0;
+}
+
+.mat-mdc-raised-button {
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-weight: 500;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    grid-column: 1 / -1;
+    color: #95a5a6;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.empty-state mat-icon {
+    font-size: 48px;
+    height: 48px;
+    width: 48px;
+    margin-bottom: 16px;
+    color: #bdc3c7;
+}

@@ -52,11 +52,10 @@
             <div class="step-content">
                 <p class="step-description">Configurez les paramètres de l'API du tiers.</p>
 
-                <!-- Première ligne -->
                 <div class="form-row">
                     <mat-form-field appearance="outline" class="half-width">
                         <mat-label>Nom de la Configuration</mat-label>
-                        <input matInput formControlName="configName" required="">
+                        <input matInput formControlName="configName" required>
                         <mat-icon matSuffix>settings</mat-icon>
                         <mat-error *ngIf="configForm.get('configName')?.invalid">Nom de configuration obligatoire</mat-error>
                     </mat-form-field>
@@ -68,7 +67,6 @@
                         <mat-error *ngIf="configForm.get('url')?.invalid">URL obligatoire</mat-error>
                     </mat-form-field>
                 </div>
-                <!-- Deuxième ligne -->
                 <div class="form-row">
                     <mat-form-field appearance="outline" class="half-width">
                         <mat-label>Headers</mat-label>
@@ -88,7 +86,6 @@
                         <mat-error *ngIf="configForm.get('httpMethod')?.invalid">Méthode HTTP obligatoire</mat-error>
                     </mat-form-field>
                 </div>
-                <!-- Troisième ligne -->
                 <div class="form-row">
                     <mat-form-field appearance="outline" class="half-width">
                         <mat-label>Endpoint</mat-label>
@@ -120,19 +117,19 @@
                     </button>
                 </div>
 
-                <!-- Checkbox Pagination avec explication -->
                 <div class="form-row pagination-section" *ngIf="configForm.get('httpMethod')?.value === 'GET'">
                     <mat-checkbox formControlName="paginated" color="accent">Pagination activée</mat-checkbox>
                     <span class="hint-text">Activez cette option si l'API utilise la pagination</span>
                 </div>
 
-                <!-- Champs pagination affichés uniquement si la case est cochée -->
                 <div *ngIf="configForm.get('paginated')?.value" class="pagination-config">
                     <div class="form-row">
                         <mat-form-field appearance="outline" class="half-width">
                             <mat-label>Pagination Param Name</mat-label>
-                            <input matInput formControlName="paginationParamName" placeholder="page">
+                            <input matInput formControlName="paginationParamName" placeholder="page" required>
                             <mat-icon matSuffix>pages</mat-icon>
+                            <mat-error *ngIf="configForm.get('paginationParamName')?.invalid">le champ est obligatoire</mat-error>
+
                         </mat-form-field>
 
                         <mat-form-field appearance="outline" class="half-width">
@@ -145,8 +142,10 @@
                     <div class="form-row" *ngIf="configForm.get('httpMethod')?.value === 'GET'">
                         <mat-form-field appearance="outline" class="full-width">
                             <mat-label>Total Pages Field In Response</mat-label>
-                            <input matInput formControlName="totalPagesFieldInResponse" [placeholder]="configForm.get('type')?.value === 'reflection' ? 'totalpages' : '$.totalpages'">
+                            <input matInput formControlName="totalPagesFieldInResponse" [placeholder]="configForm.get('type')?.value === 'reflection' ? 'totalpages' : '$.totalpages'" required>
                             <mat-icon matSuffix>all_inclusive</mat-icon>
+                            <mat-error *ngIf="configForm.get('totalPagesFieldInResponse')?.invalid">le champ est obligatoire</mat-error>
+
                         </mat-form-field>
                     </div>
                 </div>

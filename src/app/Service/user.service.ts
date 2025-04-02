@@ -32,7 +32,7 @@ export class UserService {
               localStorage.setItem('currentUser', JSON.stringify(user));
 
               if (user.roles && user.roles.includes('ADMIN')) {
-                this._router.navigate(['/adminhome']);
+                this._router.navigate(['/success']);
               } 
               else if (user.roles && user.roles.includes('EMPLOYEE')) {
                 this._router.navigate(['/success']);

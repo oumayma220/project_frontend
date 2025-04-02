@@ -1,0 +1,24 @@
+<div class="container">
+    <h2 class="page-title">Liste des Tiers</h2>
+
+    <div class="tiers-grid">
+        @for (tiers of tiersList; track tiers.id) {
+        <mat-card class="tiers-card">
+            <div class="card-banner"></div>
+            <mat-card-header>
+                <mat-card-title class="card-title">{{ tiers.nom }}</mat-card-title>
+                <mat-card-subtitle class="card-subtitle" *ngIf="tiers.email">{{ tiers.email }}</mat-card-subtitle>
+            </mat-card-header>
+            <mat-card-content class="card-content">
+                <p *ngIf="tiers.numero" class="info-item"><strong>Numéro:</strong> {{ tiers.numero }}</p>
+                <!-- Ajoutez ici d'autres informations si nécessaire -->
+            </mat-card-content>
+            <mat-card-actions class="card-actions">
+                <button mat-raised-button color="accent" [routerLink]="['/success/produits-tiers', tiers.id]">Consulter liste des produits</button>
+            </mat-card-actions>
+        </mat-card>
+        }
+
+
+    </div>
+</div>

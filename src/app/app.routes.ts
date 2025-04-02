@@ -27,6 +27,8 @@ import { UpdateConfigComponent } from './update-config/update-config.component';
 import { UpdateMethodComponent } from './update-method/update-method.component';
 import { UpdateMappingComponent } from './update-mapping/update-mapping.component';
 import { ProductListComponent } from './product-list/product-list.component';
+import { ListTiersComponent } from './list-tiers/list-tiers.component';
+import { ProduitsTiersComponent } from './produits-tiers/produits-tiers.component';
 
 export const routes: Routes = [
 {
@@ -50,7 +52,29 @@ export const routes: Routes = [
     path:'success',
     title:'Success',
     component: SuccessComponent,
-    canActivate: [employeeGuard],  
+    canActivate: [employeeGuard],
+    children: [
+        { path: 'crudemployee', component: CrudemployeeComponent , canActivate: [adminGuard] },
+        { path:'addemployee', component:AddEmployeeComponent,canActivate: [adminGuard]},
+        { path:'editemployee', component:EditEmployeeComponent,canActivate: [adminGuard]},
+        { path:'tiersform', component:TiersFormComponent,canActivate: [adminGuard]},
+        { path:'helpmapping', component:HelpMappingComponent, canActivate: [adminGuard]},
+        { path:'tiers', component:TiersComponent, canActivate: [adminGuard]},
+        { path:'updatetiers', component:UpdateTiersComponent ,canActivate: [adminGuard]},
+        { path: 'configlist/:tiersId', component:ConfigListComponent, canActivate: [adminGuard]},
+        { path: 'ajoutconfig/:tiersId', component:AjoutConfigurationComponent,canActivate: [adminGuard]},
+        { path: 'ajoutapimethod/:configId', component:AjoutApimethodComponent,canActivate: [adminGuard]},
+        { path: 'ajoutmapping/:methodId', component:AjoutMappingComponent,canActivate: [adminGuard]},
+        { path: 'test', component:TestComponent,canActivate: [adminGuard]},    
+        { path: 'updateconfig', component:UpdateConfigComponent,canActivate: [adminGuard]},   
+        { path: 'updatemethod', component:UpdateMethodComponent,canActivate: [adminGuard]},
+        { path: 'updatemapping', component:UpdateMappingComponent,canActivate: [adminGuard]},
+        { path: 'productlist', component:ProductListComponent},
+        { path: 'list-tiers', component:ListTiersComponent},
+        { path: 'produits-tiers/:tiersId', component:ProduitsTiersComponent}      
+      
+     
+    ]  
 
 },
 {
@@ -93,26 +117,7 @@ export const routes: Routes = [
     title:'AdminHome',
     component:AdminhomeComponent,
     canActivate: [adminGuard],
-    children: [
-        { path: 'crudemployee', component: CrudemployeeComponent },
-        { path:'addemployee', component:AddEmployeeComponent},
-        { path:'editemployee', component:EditEmployeeComponent},
-        { path:'tiersform', component:TiersFormComponent},
-        { path:'helpmapping', component:HelpMappingComponent},
-        { path:'tiers', component:TiersComponent},
-        { path:'updatetiers', component:UpdateTiersComponent},
-        { path: 'configlist/:tiersId', component:ConfigListComponent},
-        { path: 'ajoutconfig/:tiersId', component:AjoutConfigurationComponent},
-        { path: 'ajoutapimethod/:configId', component:AjoutApimethodComponent},
-        { path: 'ajoutmapping/:methodId', component:AjoutMappingComponent},
-        { path: 'test', component:TestComponent},    
-        { path: 'updateconfig', component:UpdateConfigComponent},   
-        { path: 'updatemethod', component:UpdateMethodComponent},
-        { path: 'updatemapping', component:UpdateMappingComponent},
-        { path: 'productlist', component:ProductListComponent}      
-      
-      
-     ] 
+   
 },
 {
     path:'clienthome',

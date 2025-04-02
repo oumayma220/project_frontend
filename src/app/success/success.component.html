@@ -1,1 +1,40 @@
-<p>success works!</p>
+<mat-sidenav-container class="sidenav-container">
+    <!-- <button mat-icon-button (click)="sidenav.toggle()" color="accent">
+        <mat-icon>menu</mat-icon>
+      </button> -->
+    <mat-sidenav #sidenav mode="side" [(opened)]="isExpanded" class="sidenav">
+
+        <mat-nav-list>
+
+            <a *ngIf="isAdmin" mat-list-item>
+                <mat-icon>dashboard</mat-icon>
+                <span>Tableau de bord</span>
+            </a>
+            <a *ngIf="isAdmin" mat-list-item routerLink="/success/crudemployee">
+                <mat-icon>group</mat-icon>
+                <span>Employés</span>
+            </a>
+            <a mat-list-item routerLink="/success/list-tiers">
+                <mat-icon>group</mat-icon>
+                <span>Liste des tiers</span>
+            </a>
+            <a mat-list-item routerLink="/success/productlist">
+                <mat-icon>inventory_2</mat-icon>
+                <span>Produits</span>
+            </a>
+            <a mat-list-item routerLink="/success/tiers" *ngIf="isAdmin">
+                <mat-icon>settings</mat-icon>
+                <span>Tiers&Configuration</span>
+            </a>
+
+
+            <a mat-list-item (click)="logout()">
+                <mat-icon>logout</mat-icon>
+                <span>Déconnexion</span>
+            </a>
+        </mat-nav-list>
+    </mat-sidenav>
+    <div class="content">
+        <router-outlet></router-outlet>
+    </div>
+</mat-sidenav-container>

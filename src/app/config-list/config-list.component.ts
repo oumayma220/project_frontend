@@ -126,13 +126,13 @@ export class ConfigListComponent implements OnInit {
     );
   }
   redirectToAddConfig(tiersId: number): void {
-    this.router.navigate([`adminhome/ajoutconfig`, tiersId]);
+    this.router.navigate([`success/ajoutconfig`, tiersId]);
   }
   redirectToAddMethod(configId: number): void {
-    this.router.navigate([`adminhome/ajoutapimethod`, configId]);
+    this.router.navigate([`success/ajoutapimethod`, configId]);
     }
     redirectToAddMapping(methodId: number) {
-      this.router.navigate([`adminhome/ajoutmapping`, methodId]);
+      this.router.navigate([`success/ajoutmapping`, methodId]);
     }
   addNewConfig(): void {
     }

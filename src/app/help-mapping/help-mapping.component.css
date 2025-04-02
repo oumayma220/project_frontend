@@ -55,24 +55,15 @@
     font-size: 18px;
 }
 
-
-/* Paragraphes */
-
 .help-content p {
     margin-bottom: 16px;
     font-size: 15px;
 }
 
-
-/* Mise en évidence du texte important */
-
 .help-content strong {
     color: #2c3e50;
     font-weight: 500;
 }
-
-
-/* Style pour les exemples de code */
 
 .help-content pre {
     background-color: #d1cdee;

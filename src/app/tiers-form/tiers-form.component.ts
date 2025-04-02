@@ -50,7 +50,6 @@ export class TiersFormComponent {
       configName: [''],
       url: [''],
       headers: [''],
-      // httpMethod: ['', Validators.required],
       httpMethod: [''],
       endpoint: [''],
       methodHeaders: [''],
@@ -60,7 +59,16 @@ export class TiersFormComponent {
       totalPagesFieldInResponse: [''],
       contentFieldInResponse: [''],
       type: ['']
-
+    });
+    this.configForm.get('paginated')?.valueChanges.subscribe(paginated => {
+      if (paginated) {
+        this.configForm.get('paginationParamName')?.setValidators(Validators.required);
+        this.configForm.get('totalPagesFieldInResponse')?.setValidators(Validators.required);
+      } else {
+        this.configForm.get('paginationParamName')?.clearValidators();
+        this.configForm.get('totalPagesFieldInResponse')?.clearValidators();
+      }
+    
     });
 
     this.fieldMappingsForm = this.fb.group({
@@ -85,7 +93,6 @@ export class TiersFormComponent {
     this.fieldMappings.removeAt(index);
   }
   onSubmittiers() {
-    //  if (this.tiersInfoForm.invalid || this.configForm.invalid || this.fieldMappingsForm.invalid) {
       if (this.tiersInfoForm.invalid  ) {
       alert('Formulaire incomplet !');
       return;
@@ -99,7 +106,7 @@ export class TiersFormComponent {
     this.tiersService.createTiers(request).subscribe({
       next: (response) => {
         alert('Tiers ajouté avec succès !');
-         this.router.navigate(['adminhome/tiers'])
+         this.router.navigate(['success/tiers'])
 
          this.resetForms();
       },
@@ -126,7 +133,7 @@ export class TiersFormComponent {
     this.tiersService.createTiers(request).subscribe({
       next: (response) => {
         alert('Tiers ajouté avec succès !');
-         this.router.navigate(['adminhome/tiers'])
+         this.router.navigate(['success/tiers'])
 
          this.resetForms();
       },
@@ -157,10 +164,8 @@ onTestClick() {
     next: (response) => {
       this.produits = response || [];
 
-      // Prendre les 5 premiers produits comme exemple
       const exampleProducts = response.slice(0, 5);
       
-      // Ouvrir le dialog avec les résultats
       const dialogRef = this.dialog.open(TestComponent, {
         width: '800px',
         data: {

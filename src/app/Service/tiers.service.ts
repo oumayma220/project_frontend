@@ -135,7 +135,13 @@ export class TiersService {
         return this.http.post<Product[]>(importUrl, request, { headers: this.getAuthHeaders() });
       }
       importAllProducts(): Observable<Product[]> {
-        const url = `${this.baseapi}/import/all`; // Endpoint Java
+        const url = `${this.baseapi}/import/all`; 
         return this.http.get<Product[]>(url, { headers: this.getAuthHeaders() });
+      }
+      getProductsForTier(tierId: number): Observable<Product[]> {
+        const url = `${this.baseapi}/products/${tierId}`;
+        return this.http.get<Product[]>(url, { 
+          headers: this.getAuthHeaders() 
+        });
       }
   }

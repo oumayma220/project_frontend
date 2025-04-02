@@ -14,7 +14,6 @@ import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
-
 @Component({
   selector: 'app-ajout-mapping',
   standalone: true,
@@ -47,19 +46,14 @@ export class AjoutMappingComponent implements OnInit {
     ) { }
   ngOnInit(): void {
     this.methodId = Number(this.route.snapshot.paramMap.get('methodId'));
-
     this.ApiMethodForm = this.fb.group({
-    
       fieldMappings: this.fb.array([])
     });
-
     this.addFieldMapping();
-
   }  
   get fieldMappings(): FormArray {
     return this.ApiMethodForm.get('fieldMappings') as FormArray;
   }
-
   addFieldMapping(): void {
     const mappingGroup = this.fb.group({
       source: ['',Validators.required],
@@ -67,22 +61,17 @@ export class AjoutMappingComponent implements OnInit {
     });
     this.fieldMappings.push(mappingGroup);
   }
-
   removeFieldMapping(index: number): void {
     this.fieldMappings.removeAt(index);
   }
-
   onSubmit(): void {
     if (this.ApiMethodForm.invalid) {
       // this.ApiMethodForm.markAllAsTouched();
       // this.errorMessage = 'Veuillez remplir tous les champs obligatoires.';
       return;
     }
-
     const configData = this.ApiMethodForm.value.fieldMappings; 
-
     console.log('Configuration envoyée:', configData);
-
     this.tiersService.addFieldMappings(this.methodId, configData).subscribe({
       next: () => {
         this.successMessage = 'Configuration ajoutée avec succès !';

@@ -96,14 +96,10 @@ mat-dialog-content {
 
 mat-dialog-actions {
     margin: 0;
-    /* Supprimer les marges */
     padding: 0;
-    /* Supprimer les paddings */
     align-items: center;
-    /* Aligner les éléments verticalement au centre */
 }
 
 .mat-dialog-container {
     padding: 0;
-    /* Supprimer les paddings */
 }

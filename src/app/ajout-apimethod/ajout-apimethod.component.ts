@@ -80,11 +80,19 @@ export class AjoutApimethodComponent implements OnInit {
       type: [''],
       fieldMappings: this.fb.array([])
     });
+    this.ApiMethodForm.get('paginated')?.valueChanges.subscribe(paginated => {
+      if (paginated) {
+        this.ApiMethodForm.get('paginationParamName')?.setValidators(Validators.required);
+        this.ApiMethodForm.get('totalPagesFieldInResponse')?.setValidators(Validators.required);
+      } else {
+        this.ApiMethodForm.get('paginationParamName')?.clearValidators();
+        this.ApiMethodForm.get('totalPagesFieldInResponse')?.clearValidators();
+      }
+      
+    });
 
-    // Ajout d'un mapping par défaut
     this.addFieldMapping();
 
-    // Gérer l'affichage conditionnel des champs de pagination
     this.ApiMethodForm.get('paginated')?.valueChanges.subscribe((paginated: boolean) => {
       if (!paginated) {
         this.ApiMethodForm.get('paginationParamName')?.reset('');
