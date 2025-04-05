@@ -76,7 +76,6 @@ export class ConfigListComponent implements OnInit {
     });
   }
   
-
   getConfigs(): void {
     this.isLoading = true;
     this.error = null;
@@ -86,6 +85,7 @@ export class ConfigListComponent implements OnInit {
         this.configs = response;
         this.isLoading = false;
         console.log('Configurations récupérées:', this.configs);
+
       },
       error: (error) => {
         this.isLoading = false;
@@ -188,11 +188,27 @@ deletefield(methodId: number):void {
         this.getConfigs();
       });
     }
-    openSettingsDialogmethod(method: any): void {
+    // openSettingsDialogmethod(method: any): void {
+    //   const dialogRef = this.dialog.open(UpdateMethodComponent, {
+    //     width: '700px',
+    //     data: method  
+    //   });
+  
+    //   dialogRef.afterClosed().subscribe((result: any) => {
+    //     if (result) {
+    //       console.log('Le dialogue a été fermé avec des données:', result);
+    //     }
+    //     this.getConfigs();
+    //   });
+    // }
+    openSettingsDialogmethod(method: any, config: Config): void {
+      console.log('Config transmis :', config); 
       const dialogRef = this.dialog.open(UpdateMethodComponent, {
         width: '700px',
-        data: method  
-      });
+        data: {
+          ...method,
+          config: config
+        }      });
   
       dialogRef.afterClosed().subscribe((result: any) => {
         if (result) {

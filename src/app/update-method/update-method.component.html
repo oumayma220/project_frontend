@@ -51,14 +51,6 @@
                                 Le champ est requis
                             </mat-error>
                         </mat-form-field>
-
-                        <mat-form-field appearance="outline">
-                            <mat-label>Paramètre de taille</mat-label>
-                            <input matInput formControlName="pageSizeParamName" placeholder="Par défaut: size">
-                        </mat-form-field>
-                    </div>
-
-                    <div class="form-row">
                         <mat-form-field appearance="outline">
                             <mat-label>Champ 'Total Pages'</mat-label>
                             <input matInput formControlName="totalPagesFieldInResponse" placeholder="Ex: totalPages" required>
@@ -66,6 +58,7 @@
                                 Le champ est requis
                             </mat-error>
                         </mat-form-field>
+
                     </div>
                 </div>
             </ng-container>
@@ -81,6 +74,9 @@
                 </button>
                 <button mat-raised-button color="accent" type="submit" [disabled]="!configForm.valid" (click)="onSubmit()">
                     <mat-icon>save</mat-icon> Sauvegarder
+                </button>
+                <button type="button" mat-stroked-button class="me-3" (click)="onTestClick()" color="accent" [disabled]="configForm.invalid">
+                    <mat-icon>play_arrow</mat-icon> tester
                 </button>
             </div>
         </form>

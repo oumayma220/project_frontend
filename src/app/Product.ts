@@ -4,4 +4,5 @@ export class Product {
     url!: string;
     price!: number;
     reference!: string;
+    tierName!: string;
   }

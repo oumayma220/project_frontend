@@ -77,7 +77,7 @@
                                     <span class="method-type-badge" *ngIf="method.type">{{ method.type }}</span>
                                 </mat-panel-description>
                                 <div class="config-quick-actions">
-                                    <button mat-icon-button style="color: rgb(37, 37, 89);" matTooltip="Modifier" (click)="openSettingsDialogmethod(method)">
+                                    <button mat-icon-button style="color: rgb(37, 37, 89);" matTooltip="Modifier" (click)="openSettingsDialogmethod(method,config)">
                                         <mat-icon>edit</mat-icon>
                                     </button>
                                     <button mat-icon-button color="warn" matTooltip="Supprimer" (click)="deleteapimethod(method.id)">
@@ -145,14 +145,14 @@
                                             <span class="detail-label">Paramètre de page</span>
                                             <span class="detail-value">{{ method.paginationParamName }}</span>
                                         </div>
-                                        <div class="detail-group">
+                                        <!-- <div class="detail-group">
                                             <span class="detail-label">Paramètre de taille</span>
                                             <span class="detail-value">{{ method.pageSizeParamName }}</span>
                                         </div>
                                         <div class="detail-group">
                                             <span class="detail-label">Taille de page</span>
                                             <span class="detail-value">{{ method.pageSize }}</span>
-                                        </div>
+                                        </div> -->
                                         <div class="detail-group">
                                             <span class="detail-label">Champ total pages</span>
                                             <span class="detail-value">{{ method.totalPagesFieldInResponse }}</span>

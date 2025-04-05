@@ -98,14 +98,14 @@
                                 </mat-error>
                             </mat-form-field>
                         </div>
-                        <div class="col-md-6">
+                        <!-- <div class="col-md-6">
                             <mat-form-field appearance="outline" class="w-100">
                                 <mat-label>Taille de page</mat-label>
                                 <input matInput formControlName="pageSizeParamName" placeholder="Ex: size">
                                 <mat-icon matSuffix>format_list_numbered</mat-icon>
                             </mat-form-field>
-                        </div>
-                        <div class="col-md-12">
+                        </div> -->
+                        <div class="col-md-6">
                             <mat-form-field appearance="outline" class="w-100">
                                 <mat-label>Champ "Total Pages" dans la réponse</mat-label>
                                 <input matInput formControlName="totalPagesFieldInResponse" [placeholder]="ApiMethodForm.get('type')?.value === 'reflection' ? 'totalpages' : '$.totalpages'" required>
@@ -146,23 +146,19 @@
                             <mat-form-field appearance="outline" class="w-100">
                                 <mat-label>Source</mat-label>
                                 <input matInput formControlName="source" [placeholder]="ApiMethodForm.get('type')?.value === 'reflection' ? 'name' : '$.name'">
-                                <mat-error *ngIf="mapping.get('source')?.invalid && mapping.get('source')?.touched">
-                                    La source est requise
-                                </mat-error>
+
                             </mat-form-field>
                         </div>
                         <div class="col-md-5">
                             <mat-form-field appearance="outline" class="w-100">
                                 <mat-label>Cible</mat-label>
                                 <mat-select formControlName="target">
-                                    <mat-option value="name">name</mat-option>
-                                    <mat-option value="description">description</mat-option>
-                                    <mat-option value="price">price</mat-option>
-                                    <mat-option value="url">url</mat-option>
-                                    <mat-option value="reference">reference</mat-option>
+                                    <mat-option *ngFor="let field of getAvailableTargets(i)" [value]="field">
+                                        {{ field }}
+                                    </mat-option>
                                 </mat-select>
-                                <mat-error *ngIf="mapping.get('target')?.invalid && mapping.get('target')?.touched">
-                                    La cible est requise
+                                <mat-error *ngIf="mapping.get('target')?.invalid">
+                                    Sélection requise
                                 </mat-error>
                             </mat-form-field>
                         </div>

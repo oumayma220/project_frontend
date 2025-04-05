@@ -37,6 +37,8 @@ export class AjoutMappingComponent implements OnInit {
   ApiMethodForm!: FormGroup;
   successMessage = '';
   errorMessage = '';
+  targetFields = ['name', 'description', 'price', 'url', 'reference'];
+
   constructor(
       private fb: FormBuilder,
       private route: ActivatedRoute,
@@ -66,8 +68,6 @@ export class AjoutMappingComponent implements OnInit {
   }
   onSubmit(): void {
     if (this.ApiMethodForm.invalid) {
-      // this.ApiMethodForm.markAllAsTouched();
-      // this.errorMessage = 'Veuillez remplir tous les champs obligatoires.';
       return;
     }
     const configData = this.ApiMethodForm.value.fieldMappings; 
@@ -82,7 +82,13 @@ export class AjoutMappingComponent implements OnInit {
         this.errorMessage = "Une erreur s'est produite lors de l'ajout de la configuration.";
       }
     });
-    
+    }
+  getAvailableTargets(index: number): string[] {
+    const selectedTargets = this.ApiMethodForm.get('fieldMappings')?.value
+      .map((mapping: any, i: number) => i !== index ? mapping.target : null)
+      .filter((target: string | null) => target !== null);
+  
+    return this.targetFields.filter(field => !selectedTargets.includes(field));
   }
 
 }

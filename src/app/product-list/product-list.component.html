@@ -1,52 +1,57 @@
-<mat-card>
+<mat-card class="main-card">
     <mat-toolbar>
         <span>Liste des Produits</span>
         <span class="spacer"></span>
+        <span class="product-count">{{filteredProducts.length}} produits</span>
     </mat-toolbar>
+
+    <!-- Filtre par tiers -->
+    <div class="filter-section">
+        <mat-form-field appearance="outline" class="tier-filter">
+            <mat-label>Filtrer par Tiers</mat-label>
+            <mat-select [(ngModel)]="selectedTier" (selectionChange)="applyTierFilter()">
+                <mat-option [value]="null">Tous les tiers</mat-option>
+                <mat-option *ngFor="let tier of tiersList" [value]="tier.nom">
+                    {{ tier.nom }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+
+    <!-- États -->
     <div *ngIf="loading" class="loading-container">
-        <mat-spinner></mat-spinner>
+        <mat-spinner diameter="50"></mat-spinner>
         <p>Chargement des produits...</p>
     </div>
 
     <div *ngIf="error" class="error-container">
-        <mat-icon color="warn">error</mat-icon>
+        <mat-icon color="warn">error_outline</mat-icon>
         <p class="error-message">{{ error }}</p>
     </div>
 
-    <div *ngIf="!loading && !error && products.length > 0">
-        <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
-            <pre></pre>
-            <ng-container matColumnDef="name">
-                <th mat-header-cell *matHeaderCellDef>Nom</th>
-                <td mat-cell *matCellDef="let product">{{ product.name }}</td>
-            </ng-container>
+    <!-- Liste des produits -->
+    <div *ngIf="!loading && !error && paginatedProducts.length > 0">
+        <div class="card-grid">
+            <mat-card *ngFor="let product of paginatedProducts" class="product-card mat-elevation-z2">
+                <div class="image-wrapper">
+                    <img [src]="product.url" (error)="onImageError($event)" alt="{{ product.name }}" class="product-image">
+                </div>
+                <mat-card-content class="card-body">
+                    <div class="product-header">
+                        <h3 class="product-name">{{ product.name }}</h3>
+                        <span class="product-tier">{{ product.tierName }}</span>
+                    </div>
+                    <p class="product-description">{{ product.description }}</p>
+                    <div class="product-footer">
+                        <span class="product-price">{{ product.price }} DT</span>
+                        <span class="product-reference">Ref: {{ product.reference }}</span>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+        </div>
 
-            <ng-container matColumnDef="description">
-                <th mat-header-cell *matHeaderCellDef>Description</th>
-                <td mat-cell *matCellDef="let product">{{ product.description }}</td>
-            </ng-container>
-
-            <ng-container matColumnDef="image">
-                <th mat-header-cell *matHeaderCellDef>Image</th>
-                <td mat-cell *matCellDef="let product">
-                    <img [src]="product.url" alt="Image de {{ product.name }}" class="product-image" />
-                </td>
-            </ng-container>
-
-            <ng-container matColumnDef="price">
-                <th mat-header-cell *matHeaderCellDef>Prix</th>
-                <td mat-cell *matCellDef="let product">{{ product.price }} DT</td>
-            </ng-container>
-
-            <ng-container matColumnDef="reference">
-                <th mat-header-cell *matHeaderCellDef>Référence</th>
-                <td mat-cell *matCellDef="let product">{{ product.reference }}</td>
-            </ng-container>
-
-            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-        </table>
-        <mat-paginator [pageSizeOptions]="[10, 15, 20]" showFirstLastButtons></mat-paginator>
+        <mat-paginator [length]="filteredProducts.length" [pageSize]="pageSize" [pageSizeOptions]="[12, 16, 20]" (page)="onPageChange($event)" showFirstLastButtons>
+        </mat-paginator>
     </div>
 
     <div *ngIf="!loading && !error && products.length === 0" class="no-products-container">

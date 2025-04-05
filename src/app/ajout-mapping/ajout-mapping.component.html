@@ -18,16 +18,14 @@
                         </div>
                         <div class="col-md-5">
                             <mat-form-field appearance="outline" class="w-100">
-                                <mat-label>Target</mat-label>
-                                <mat-select formControlName="target" required>
-                                    <mat-option value="name">name</mat-option>
-                                    <mat-option value="description">description</mat-option>
-                                    <mat-option value="price">price</mat-option>
-                                    <mat-option value="url">url</mat-option>
-                                    <mat-option value="reference">reference</mat-option>
+                                <mat-label>Cible</mat-label>
+                                <mat-select formControlName="target">
+                                    <mat-option *ngFor="let field of getAvailableTargets(i)" [value]="field">
+                                        {{ field }}
+                                    </mat-option>
                                 </mat-select>
-                                <mat-error *ngIf="mapping.get('target')?.invalid && mapping.get('target')?.touched">
-                                    Target field is required
+                                <mat-error *ngIf="mapping.get('target')?.invalid">
+                                    Sélection requise
                                 </mat-error>
                             </mat-form-field>
                         </div>

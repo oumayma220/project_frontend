@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, NgZone, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TiersService } from '../Service/tiers.service';
@@ -43,7 +43,7 @@ import { TestComponent } from '../test/test.component';
   templateUrl: './ajout-configuration.component.html',
   styleUrl: './ajout-configuration.component.css'
 })
-export class AjoutConfigurationComponent implements OnInit {
+export class AjoutConfigurationComponent implements OnInit, AfterViewInit {
 
   tiersId!: number;
   configForm!: FormGroup;
@@ -54,7 +54,6 @@ export class AjoutConfigurationComponent implements OnInit {
 
   httpMethods = ['GET', 'POST', 'PUT', 'DELETE'];
 targetFields = ['name', 'description', 'price', 'url', 'reference'];
-//displayedColumns: string[] = ['name', 'description', 'price', 'reference', 'url'];
 
 
 
@@ -64,9 +63,13 @@ targetFields = ['name', 'description', 'price', 'url', 'reference'];
     private router: Router,
     private tiersService: TiersService,
     private snackBar: MatSnackBar,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private cdr: ChangeDetectorRef,
+    private zone: NgZone
 
   ) { }
+  ngAfterViewInit(): void {
+  }
 
   ngOnInit(): void {
     this.tiersId = Number(this.route.snapshot.paramMap.get('tiersId'));
@@ -81,32 +84,45 @@ targetFields = ['name', 'description', 'price', 'url', 'reference'];
       methodHeaders: [''],
       paginated: [false],
       paginationParamName: [''],
-      pageSizeParamName: [''],
+      // pageSizeParamName: [''],
       totalPagesFieldInResponse: [''],
       contentFieldInResponse: [''],
       type: [''],
       fieldMappings: this.fb.array([])
     });
-    this.configForm.get('paginated')?.valueChanges.subscribe(paginated => {
-      if (paginated) {
-        this.configForm.get('paginationParamName')?.setValidators(Validators.required);
-        this.configForm.get('totalPagesFieldInResponse')?.setValidators(Validators.required);
-      } else {
-        this.configForm.get('paginationParamName')?.clearValidators();
-        this.configForm.get('totalPagesFieldInResponse')?.clearValidators();
-      }
-      
+   this.configForm.get('paginated')?.valueChanges.subscribe(paginated => {
+    this.zone.run(() => {
+      this.updatePaginationValidators(paginated);
     });
+  });
+}
 
-    // Ajout d'un mapping par défaut
+private updatePaginationValidators(paginated: boolean): void {
+  const paginationControls = [
+    'paginationParamName',
+    'totalPagesFieldInResponse'
+  ];
+
+  paginationControls.forEach(controlName => {
+    const control = this.configForm.get(controlName);
+    if (control) {
+      // Désactiver les événements pour éviter les cycles de détection supplémentaires
+      if (paginated) {
+        control.setValidators(Validators.required);
+      } else {
+        control.clearValidators();
+        control.setValue('', { emitEvent: false });
+      }
+      control.updateValueAndValidity({ emitEvent: false });
+    }
+  });
+
     this.addFieldMapping();
 
-    // Gérer l'affichage conditionnel des champs de pagination
     this.configForm.get('paginated')?.valueChanges.subscribe((paginated: boolean) => {
       if (!paginated) {
-        // Si la pagination est désactivée, on nettoie les champs
         this.configForm.get('paginationParamName')?.reset('');
-        this.configForm.get('pageSizeParamName')?.reset('');
+        // this.configForm.get('pageSizeParamName')?.reset('');
         this.configForm.get('totalPagesFieldInResponse')?.reset('');
       }
     });
@@ -142,6 +158,7 @@ targetFields = ['name', 'description', 'price', 'url', 'reference'];
   onSubmit(): void {
     if (this.configForm.invalid) {
       this.configForm.markAllAsTouched();
+      
       this.errorMessage = 'Veuillez remplir tous les champs obligatoires.';
       return;
     }
@@ -170,7 +187,6 @@ targetFields = ['name', 'description', 'price', 'url', 'reference'];
   onCancel() {
     this.router.navigate(['success/configlist', this.tiersId]);
   }
-  
   onTestClick() {
     const requestData = this.configForm.value;
     this.tiersService.importtestProducts(requestData).subscribe({
@@ -207,4 +223,14 @@ targetFields = ['name', 'description', 'price', 'url', 'reference'];
         });
       }
     });
-  }}
+  }
+  getAvailableTargets(index: number): string[] {
+    const selectedTargets = this.configForm.get('fieldMappings')?.value
+      .map((mapping: any, i: number) => i !== index ? mapping.target : null)
+      .filter((target: string | null) => target !== null);
+  
+    return this.targetFields.filter(field => !selectedTargets.includes(field));
+  }
+  
+
+}

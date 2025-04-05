@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TiersService } from '../Service/tiers.service';
@@ -18,6 +18,10 @@ import { HelpMappingComponent } from '../help-mapping/help-mapping.component';
 import { MatDialog } from '@angular/material/dialog';
 import { TestComponent } from '../test/test.component';
 import { Product } from '../Product';
+import { ChangeDetectorRef } from '@angular/core';
+import { NgZone } from '@angular/core'; // Ajoutez cette importation
+
+
 
 @Component({
   selector: 'app-ajout-apimethod',
@@ -36,7 +40,7 @@ import { Product } from '../Product';
   templateUrl: './ajout-apimethod.component.html',
   styleUrl: './ajout-apimethod.component.css'
 })
-export class AjoutApimethodComponent implements OnInit {
+export class AjoutApimethodComponent implements OnInit, AfterViewInit  {
   configId!: number;
   ApiMethodForm!: FormGroup;
   successMessage = '';
@@ -45,6 +49,8 @@ export class AjoutApimethodComponent implements OnInit {
   httpMethods = ['GET', 'POST', 'PUT', 'DELETE'];
   parentConfig: any;
   produits: Product[] = [];
+  targetFields = ['name', 'description', 'price', 'url', 'reference'];
+
 
 
 
@@ -54,11 +60,18 @@ export class AjoutApimethodComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private tiersService: TiersService,
+    private cdr: ChangeDetectorRef,
+    private zone: NgZone, 
+
+
     private snackBar: MatSnackBar,private dialog: MatDialog
   ) { }
+  ngAfterViewInit(): void {
+  }
 
   ngOnInit(): void {
     this.configId = Number(this.route.snapshot.paramMap.get('configId'));
+
     this.tiersService.getConfigsById(this.configId).subscribe({
       next: (config) => {
         this.parentConfig = config;
@@ -68,39 +81,54 @@ export class AjoutApimethodComponent implements OnInit {
       }
     });
 
+    this.initializeForm();
+    
+    this.addFieldMapping();
+  }
+
+  private initializeForm(): void {
     this.ApiMethodForm = this.fb.group({
       httpMethod: ['', Validators.required],
       endpoint: ['', Validators.required],
       methodHeaders: [''],
       paginated: [false],
-      paginationParamName: [''],
+      paginationParamName: [''],  
       pageSizeParamName: [''],
-      totalPagesFieldInResponse: [''],
+      totalPagesFieldInResponse: [''],  
       contentFieldInResponse: [''],
       type: [''],
       fieldMappings: this.fb.array([])
     });
+
+    // Utilisation de zone.run pour éviter les problèmes de détection
     this.ApiMethodForm.get('paginated')?.valueChanges.subscribe(paginated => {
-      if (paginated) {
-        this.ApiMethodForm.get('paginationParamName')?.setValidators(Validators.required);
-        this.ApiMethodForm.get('totalPagesFieldInResponse')?.setValidators(Validators.required);
-      } else {
-        this.ApiMethodForm.get('paginationParamName')?.clearValidators();
-        this.ApiMethodForm.get('totalPagesFieldInResponse')?.clearValidators();
-      }
-      
+      this.zone.run(() => {
+        this.updatePaginationValidators(paginated);
+      });
     });
+  }
 
-    this.addFieldMapping();
+  private updatePaginationValidators(paginated: boolean): void {
+    const paginationControls = [
+      'paginationParamName',
+      'totalPagesFieldInResponse'
+    ];
 
-    this.ApiMethodForm.get('paginated')?.valueChanges.subscribe((paginated: boolean) => {
-      if (!paginated) {
-        this.ApiMethodForm.get('paginationParamName')?.reset('');
-        this.ApiMethodForm.get('pageSizeParamName')?.reset('');
-        this.ApiMethodForm.get('totalPagesFieldInResponse')?.reset('');
+    paginationControls.forEach(controlName => {
+      const control = this.ApiMethodForm.get(controlName);
+      if (control) {
+        // Désactiver les événements pour éviter les cycles de détection supplémentaires
+        if (paginated) {
+          control.setValidators(Validators.required);
+        } else {
+          control.clearValidators();
+          control.setValue('', { emitEvent: false });
+        }
+        control.updateValueAndValidity({ emitEvent: false });
       }
     });
   }
+  
   get fieldMappings(): FormArray {
     return this.ApiMethodForm.get('fieldMappings') as FormArray;
   }
@@ -116,16 +144,17 @@ export class AjoutApimethodComponent implements OnInit {
   removeFieldMapping(index: number): void {
     this.fieldMappings.removeAt(index);
   }
+
   openHelpDialog() {
     this.dialog.open(HelpMappingComponent, {
       width: '1800px',
-      height:'650px'
+      height: '650px'
     });
-}
+  }
 
   onSubmit(): void {
     if (this.ApiMethodForm.invalid) {
-      this.ApiMethodForm.markAllAsTouched();
+      this.markFormGroupTouched(this.ApiMethodForm);
       this.errorMessage = 'Veuillez remplir tous les champs obligatoires.';
       return;
     }
@@ -137,11 +166,19 @@ export class AjoutApimethodComponent implements OnInit {
       next: () => {
         this.successMessage = 'Configuration ajoutée avec succès !';
         this.snackBar.open('Configuration enregistrée', 'Fermer', { duration: 3000 });
-        this.router.navigate(['/tiers', this.configId]);
       },
       error: (error) => {
         console.error(error);
         this.errorMessage = "Une erreur s'est produite lors de l'ajout de la configuration.";
+      }
+    });
+  }
+
+  private markFormGroupTouched(formGroup: FormGroup) {
+    Object.values(formGroup.controls).forEach(control => {
+      control.markAsTouched();
+      if (control instanceof FormGroup) {
+        this.markFormGroupTouched(control);
       }
     });
   }
@@ -154,11 +191,9 @@ export class AjoutApimethodComponent implements OnInit {
 
     const methodData = this.ApiMethodForm.value;
     
-    // Créer un objet combiné avec les données du formulaire et l'URL de la configuration parente
     const requestData = {
       ...methodData,
       url: this.parentConfig.url,
-      // Si nécessaire, ajoutez d'autres champs de la configuration parente
       headers: this.parentConfig.headers || ''
     };
 
@@ -195,5 +230,13 @@ export class AjoutApimethodComponent implements OnInit {
         });
       }
     });
+  }
+
+  getAvailableTargets(index: number): string[] {
+    const selectedTargets = this.ApiMethodForm.get('fieldMappings')?.value
+      .map((mapping: any, i: number) => i !== index ? mapping.target : null)
+      .filter((target: string | null) => target !== null);
+  
+    return this.targetFields.filter(field => !selectedTargets.includes(field));
   }
 }

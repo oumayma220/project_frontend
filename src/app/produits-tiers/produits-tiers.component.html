@@ -17,7 +17,7 @@
             <div class="product-banner"></div>
             <mat-card-header>
                 <mat-card-title class="product-title">{{ product.name }}</mat-card-title>
-                <img src="{{ product.url }}" alt="{{ product.name }}" class="product-image"> @if (product.price) {
+                <img [src]="product.url" (error)="onImageError($event)" alt="{{ product.name }}" class="product-image"> @if (product.price) {
                 <mat-card-subtitle class="price">{{ product.price }} DT</mat-card-subtitle>
                 }
             </mat-card-header>

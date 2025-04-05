@@ -73,6 +73,11 @@ export class ProduitsTiersComponent implements OnInit {
       }
     });
   }
+  
+  onImageError(event: any) {
+    event.target.src = '../../assets/default.jpg';
+  }
+  
 
    retourListeTiers() {
      this.router.navigate(['success/list-tiers']);

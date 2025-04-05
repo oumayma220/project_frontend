@@ -37,6 +37,8 @@ export class TiersFormComponent {
   configForm: FormGroup;
   fieldMappingsForm: FormGroup;
   produits: Product[] = [];
+  targetFields = ['name', 'description', 'price', 'url', 'reference'];
+
   
 
   constructor(private fb: FormBuilder, private tiersService: TiersService, private router: Router,private dialog: MatDialog) {
@@ -55,7 +57,7 @@ export class TiersFormComponent {
       methodHeaders: [''],
       paginated: [false],
       paginationParamName: [''],
-      pageSizeParamName: [''],
+      // pageSizeParamName: [''],
       totalPagesFieldInResponse: [''],
       contentFieldInResponse: [''],
       type: ['']
@@ -195,5 +197,13 @@ onTestClick() {
     }
   });
 }
+getAvailableTargets(index: number): string[] {
+  const selectedTargets = this.fieldMappings.controls
+    .map((control, i) => i !== index ? control.get('target')?.value : null)
+    .filter(target => target !== null);
+
+  return this.targetFields.filter(field => !selectedTargets.includes(field));
+}
+
 
 }

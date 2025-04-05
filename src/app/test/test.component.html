@@ -17,29 +17,37 @@
             <table mat-table [dataSource]="data.products" class="mat-elevation-z2 w-100">
                 <ng-container matColumnDef="name">
                     <th mat-header-cell *matHeaderCellDef>Nom</th>
-                    <td mat-cell *matCellDef="let product">{{ product.name }}</td>
+                    <td mat-cell *matCellDef="let product" [ngClass]="{'text-danger': !product.name}">
+                        {{ product.name || 'Non spécifié' }}
+                    </td>
                 </ng-container>
 
                 <ng-container matColumnDef="description">
                     <th mat-header-cell *matHeaderCellDef>Description</th>
-                    <td mat-cell *matCellDef="let product">{{ product.description || 'N/A' }}</td>
+                    <td mat-cell *matCellDef="let product" [ngClass]="{'text-danger': !product.description}">
+                        {{ product.description || 'Non spécifié' }}
+                    </td>
                 </ng-container>
 
                 <ng-container matColumnDef="price">
                     <th mat-header-cell *matHeaderCellDef>Prix</th>
-                    <td mat-cell *matCellDef="let product">{{ product.price | currency:'TND' }}</td>
+                    <td mat-cell *matCellDef="let product" [ngClass]="{'text-danger': !product.price}">
+                        {{ product.price ? (product.price | currency:'TND') : 'Non spécifié' }}
+                    </td>
                 </ng-container>
 
                 <ng-container matColumnDef="reference">
                     <th mat-header-cell *matHeaderCellDef>Référence</th>
-                    <td mat-cell *matCellDef="let product">{{ product.reference || 'N/A' }}</td>
+                    <td mat-cell *matCellDef="let product" [ngClass]="{'text-danger': !product.reference}">
+                        {{ product.reference || 'Non spécifié' }}
+                    </td>
                 </ng-container>
 
                 <ng-container matColumnDef="url">
                     <th mat-header-cell *matHeaderCellDef>URL</th>
-                    <td mat-cell *matCellDef="let product">
+                    <td mat-cell *matCellDef="let product" [ngClass]="{'text-danger': !product.url}">
                         <a *ngIf="product.url" [href]="product.url" target="_blank">Lien</a>
-                        <span *ngIf="!product.url">N/A</span>
+                        <span *ngIf="!product.url" class="text-danger">Non spécifié</span>
                     </td>
                 </ng-container>
 

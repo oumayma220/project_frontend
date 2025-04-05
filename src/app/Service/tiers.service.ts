@@ -81,6 +81,13 @@ export class TiersService {
       headers: this.getAuthHeaders()
     });
   }
+  getConfigByApiMethod(apiMethodId: number): Observable<Config> {
+    const url = `${this.base}/config/apimethod/${apiMethodId}`;
+    return this.http.get<Config>(url, {
+      headers: this.getAuthHeaders()
+    });
+  }
+  
   getTiersById(id: number): Observable<Tiers> {
     return this.http.get<Tiers>(`${this.baseUrl}/${id}`, {
         headers: this.getAuthHeaders()

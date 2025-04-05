@@ -9,14 +9,12 @@
 
     <mat-card-content class="p-4">
         <form [formGroup]="configForm" (ngSubmit)="onSubmit()" class="config-form">
-            <!-- Section Configuration de base -->
             <h3 class="section-title mb-4" style="color: rgb(8, 8, 71);">
                 <mat-icon class="me-2">info</mat-icon>
                 Configuration de base
             </h3>
 
             <div class="row g-4">
-                <!-- Colonne gauche -->
                 <div class="col-md-6">
                     <mat-form-field appearance="outline" class="w-100">
                         <mat-label>Nom de la configuration</mat-label>
@@ -123,14 +121,14 @@
                                 </mat-error>
                             </mat-form-field>
                         </div>
-                        <div class="col-md-6">
+                        <!-- <div class="col-md-6">
                             <mat-form-field appearance="outline" class="w-100">
                                 <mat-label>Paramètre de taille</mat-label>
                                 <input matInput formControlName="pageSizeParamName" placeholder="Par défaut: size">
                                 <mat-icon matSuffix>last_page</mat-icon>
                             </mat-form-field>
-                        </div>
-                        <div class="col-md-12">
+                        </div> -->
+                        <div class="col-md-6">
                             <mat-form-field appearance="outline" class="w-100">
                                 <mat-label>Champ "Total Pages"</mat-label>
                                 <input matInput formControlName="totalPagesFieldInResponse" [placeholder]="configForm.get('type')?.value === 'reflection' ? 'totalpages' : '$.totalpages'" required>
@@ -180,7 +178,7 @@
                             <mat-form-field appearance="outline" class="w-100">
                                 <mat-label>Cible</mat-label>
                                 <mat-select formControlName="target">
-                                    <mat-option *ngFor="let field of targetFields" [value]="field">
+                                    <mat-option *ngFor="let field of getAvailableTargets(i)" [value]="field">
                                         {{ field }}
                                     </mat-option>
                                 </mat-select>
