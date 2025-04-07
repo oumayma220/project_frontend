@@ -196,6 +196,7 @@ export class AjoutApimethodComponent implements OnInit, AfterViewInit  {
       url: this.parentConfig.url,
       headers: this.parentConfig.headers || ''
     };
+  
 
     this.tiersService.importtestProducts(requestData).subscribe({
       next: (response) => {

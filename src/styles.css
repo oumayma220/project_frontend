@@ -5,6 +5,11 @@
 @tailwind components;
 @tailwind utilities; */
 
+
+/* .jsoneditor .jsoneditor-menu {
+    background-image: url('/assets/jsoneditor/img/jsoneditor-icons.svg') !important;
+} */
+
 html,
 body {
     height: 100%;

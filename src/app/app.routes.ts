@@ -29,6 +29,7 @@ import { UpdateMappingComponent } from './update-mapping/update-mapping.componen
 import { ProductListComponent } from './product-list/product-list.component';
 import { ListTiersComponent } from './list-tiers/list-tiers.component';
 import { ProduitsTiersComponent } from './produits-tiers/produits-tiers.component';
+import { JsonPathViewerComponent } from './json-path-viewer/json-path-viewer.component';
 
 export const routes: Routes = [
 {
@@ -71,9 +72,10 @@ export const routes: Routes = [
         { path: 'updatemapping', component:UpdateMappingComponent,canActivate: [adminGuard]},
         { path: 'productlist', component:ProductListComponent},
         { path: 'list-tiers', component:ListTiersComponent},
-        { path: 'produits-tiers/:tiersId', component:ProduitsTiersComponent}      
+        { path: 'produits-tiers/:tiersId', component:ProduitsTiersComponent},
+        { path: 'jsonpathviewer', component:JsonPathViewerComponent,canActivate: [adminGuard]}
       
-     
+         
     ]  
 
 },

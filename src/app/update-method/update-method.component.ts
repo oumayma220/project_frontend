@@ -105,24 +105,25 @@ export class UpdateMethodComponent implements OnInit {
     const requestData = {
       ...methodData,
       url: this.config.url,
-      headers: this.config.headers || ''
+      headers: this.config.headers || '',
+      fieldMappings: [{
+        source: "",
+        target: ""
+      }],
     };
-    console.log('URL utilisée pour le test :', requestData.url);
-    console.log('endpint utilisée pour le test :', requestData.endpoint);
 
     this.tiersService.importtestProducts(requestData).subscribe({
       next: (response) => {
         this.produits = response || [];
-        const exampleProducts = this.produits.slice(0, 5);
 
         const dialogRef = this.dialog.open(TestComponent, {
           width: '800px',
           data: {
-            success: exampleProducts.length > 0,
-            message: exampleProducts.length > 0
+            success: this.produits.length > 0,
+            message: this.produits.length > 0
               ? `Test réussi : ${this.produits.length} produits ont été trouvés.`
               : 'Aucun produit n\'a été trouvé.',
-            products: exampleProducts
+            products: [] // Ne pas envoyer d'exemples de produits
           }
         });
 
@@ -138,16 +139,12 @@ export class UpdateMethodComponent implements OnInit {
           data: {
             success: false,
             message: 'Erreur lors de l\'importation des produits. Vérifiez votre configuration.',
-            products: []
+            products: [] // Ne pas envoyer d'exemples de produits
           }
         });
       }
     });
   }
-
-
-  
-
   onCancel() {
     this.dialogRef.close();  
   }}

@@ -1,32 +1,26 @@
-import { Component } from '@angular/core';
-import { Router } from '@angular/router';
-import { MatButtonModule } from '@angular/material/button';
-import { MatDialogRef } from '@angular/material/dialog';
-import { MatTabsModule } from '@angular/material/tabs'; 
-import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-
-
-
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatTabsModule } from '@angular/material/tabs';
 
 @Component({
-  selector: 'app-help-mapping',
+  selector: 'app-json-path-viewer',
   standalone: true,
-  imports: [MatButtonModule , MatTabsModule, FormsModule, CommonModule ],
-  templateUrl: './help-mapping.component.html',
-  styleUrl: './help-mapping.component.css'
+  imports: [CommonModule,
+    FormsModule,
+    MatButtonModule , MatTabsModule
+  ],
+  templateUrl: './json-path-viewer.component.html',
+  styleUrl: './json-path-viewer.component.css'
 })
-export class HelpMappingComponent {
+export class JsonPathViewerComponent {
   jsonInput: string = '';
   parsedJson: any = null;
   error: string = '';
   selectedPath: string = '';
   expandedPaths: Set<string> = new Set(['$']);
-  constructor(private dialogRef: MatDialogRef<HelpMappingComponent>) {}
-  close() {
-    this.dialogRef.close();
-  }
- 
+
   parseJson(): void {
     if (!this.jsonInput.trim()) {
       this.error = 'Veuillez entrer du JSON';
@@ -124,5 +118,4 @@ export class HelpMappingComponent {
     return parts.map(p => isNaN(Number(p)) ? p : Number(p));
   }
 }
-
 

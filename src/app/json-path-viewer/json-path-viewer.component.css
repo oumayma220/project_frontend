@@ -1,4 +1,4 @@
-.docs-tabs {
+.mat-tab-group {
     font-family: 'Roboto', sans-serif;
     width: 100%;
     max-width: 1200px;
@@ -6,10 +6,9 @@
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
     overflow: hidden;
-    background-color: #fafafa;
 }
 
-::ng-deep .mat-tab-label {
+ ::ng-deep .mat-tab-label {
     font-weight: 500;
     font-size: 16px;
     height: 54px;
@@ -17,129 +16,36 @@
     transition: all 0.3s ease;
 }
 
-::ng-deep .mat-tab-label-active {
+ ::ng-deep .mat-tab-label-active {
     background-color: rgba(0, 0, 0, 0.05);
     color: #3f51b5;
 }
 
-.help-content {
+
+/* Style du JSON Path Viewer */
+
+.container {
     padding: 24px;
-    line-height: 1.6;
-    color: #333;
-    background-color: #f9f9f9;
 }
 
-.help-content h3,
-.help-content h4 {
-    color: #3f51b5;
-    margin-top: 20px;
-    margin-bottom: 12px;
-    font-weight: 500;
-}
-
-.help-content h3 {
-    font-size: 22px;
-    border-bottom: 1px solid #e0e0e0;
-    padding-bottom: 8px;
-}
-
-.help-content h4 {
-    font-size: 18px;
-}
-
-.help-content p {
-    margin-bottom: 16px;
-    font-size: 15px;
-}
-
-.help-content strong {
-    color: #2c3e50;
-    font-weight: 500;
-}
-
-.help-content pre {
-    background-color: #d1cdee;
-    color: #000000;
-    padding: 16px;
-    border-radius: 6px;
-    overflow-x: auto;
-    font-family: 'Courier New', monospace;
-    font-size: 14px;
-    margin: 16px 0;
-    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
-}
-
-.help-content code {
-    background-color: #f0f0f0;
-    color: #e74c3c;
-    padding: 2px 6px;
-    border-radius: 4px;
-    font-family: 'Courier New', monospace;
-    font-size: 14px;
-}
-
-.help-content .flex-container {
+.flex-container {
     display: flex;
     justify-content: space-between;
     gap: 24px;
 }
 
-.help-content .flex-column {
+.flex-column {
     width: 48%;
-    overflow-y: auto;
     background-color: white;
     padding: 16px;
     border-radius: 6px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
-button.mat-raised-button {
-    padding: 8px 24px;
-    font-weight: 500;
-    letter-spacing: 0.5px;
-    transition: all 0.3s ease;
-    background-color: #3498db;
-    color: white;
-    border-radius: 4px;
-}
-
-.result-section>h3:first-child {
-    font-size: 16px;
-}
-
-.result-section h3 {
-    font-size: 16px;
-    font-weight: 500;
-    font-weight: bold;
-}
-
-.selected-path h3 {
-    font-size: 16px;
-    font-weight: bold;
-}
-
-button.mat-raised-button:hover {
-    background-color: #2980b9;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-
-.help-content .note {
-    background-color: #fef9e7;
-    border-left: 4px solid #f1c40f;
-    padding: 12px 16px;
-    margin: 16px 0;
-    border-radius: 0 4px 4px 0;
-}
-
-@media (max-width: 768px) {
-    .help-content .flex-container {
-        flex-direction: column;
-    }
-    .help-content .flex-column {
-        width: 100%;
-        margin-bottom: 16px;
-    }
+h2,
+h3 {
+    color: #2c3e50;
+    margin-bottom: 15px;
 }
 
 .input-section {
@@ -168,6 +74,21 @@ textarea {
     resize: vertical;
     min-height: 150px;
     background-color: #fafafa;
+}
+
+button {
+    background-color: #3498db;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #2980b9;
 }
 
 .error {
@@ -201,7 +122,7 @@ textarea {
     padding: 15px;
     background-color: #f0f7ff;
     border-radius: 4px;
-    border-left: 4px solid #ece808;
+    border-left: 4px solid #3498db;
 }
 
 .path-box {
@@ -303,4 +224,108 @@ button:active {
 .property-key:active,
 .object-symbol:active {
     opacity: 0.8;
+}
+
+
+/* Style du Help Content */
+
+.help-content {
+    padding: 24px;
+    line-height: 1.6;
+    color: #333;
+    background-color: #f9f9f9;
+}
+
+.help-content h3,
+.help-content h4 {
+    color: #3f51b5;
+    margin-top: 20px;
+    margin-bottom: 12px;
+    font-weight: 500;
+}
+
+.help-content h3 {
+    font-size: 22px;
+    border-bottom: 1px solid #e0e0e0;
+    padding-bottom: 8px;
+}
+
+.help-content h4 {
+    font-size: 18px;
+}
+
+.help-content p {
+    margin-bottom: 16px;
+    font-size: 15px;
+}
+
+.help-content strong {
+    color: #2c3e50;
+    font-weight: 500;
+}
+
+.help-content pre {
+    background-color: #d1cdee;
+    color: #000000;
+    padding: 16px;
+    border-radius: 6px;
+    overflow-x: auto;
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+    margin: 16px 0;
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+}
+
+.help-content code {
+    background-color: #f0f0f0;
+    color: #e74c3c;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+}
+
+.help-content .flex-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 24px;
+}
+
+.help-content .flex-column {
+    width: 48%;
+    overflow-y: auto;
+    background-color: white;
+    padding: 16px;
+    border-radius: 6px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+button.mat-raised-button {
+    padding: 8px 24px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
+}
+
+button.mat-raised-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.help-content .note {
+    background-color: #fef9e7;
+    border-left: 4px solid #f1c40f;
+    padding: 12px 16px;
+    margin: 16px 0;
+    border-radius: 0 4px 4px 0;
+}
+
+@media (max-width: 768px) {
+    .help-content .flex-container {
+        flex-direction: column;
+    }
+    .help-content .flex-column {
+        width: 100%;
+        margin-bottom: 16px;
+    }
 }
