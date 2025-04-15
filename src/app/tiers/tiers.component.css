@@ -62,3 +62,30 @@ mat-cell {
         /* Réduit encore la taille du texte */
     }
 }
+
+.table-container {
+    overflow-x: auto;
+    width: 100%;
+}
+
+table {
+    width: 100%;
+    min-width: 600px;
+    /* Largeur minimale pour forcer le scroll horizontal si trop petit */
+}
+
+@media (max-width: 768px) {
+    mat-toolbar {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+    .table-container {
+        margin-top: 10px;
+    }
+    .mat-header-cell,
+    .mat-cell {
+        padding: 8px;
+        word-wrap: break-word;
+    }
+}

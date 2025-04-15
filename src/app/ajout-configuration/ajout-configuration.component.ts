@@ -17,10 +17,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { HelpMappingComponent } from '../help-mapping/help-mapping.component';
 import { MatDialog } from '@angular/material/dialog';
 import { Product } from '../Product';
-import { MatCell, MatHeaderCell, MatHeaderCellDef, MatHeaderRow, MatRow, MatTable, MatTableModule } from '@angular/material/table';
+import { MatTableModule } from '@angular/material/table';
 import { TestComponent } from '../test/test.component';
-
-
 
 @Component({
   selector: 'app-ajout-configuration',
@@ -38,24 +36,27 @@ import { TestComponent } from '../test/test.component';
     MatCardModule,
     MatFormFieldModule,
     MatTableModule,
-    MatInputModule
-        ],
+    MatInputModule,
+  ],
   templateUrl: './ajout-configuration.component.html',
   styleUrl: './ajout-configuration.component.css'
 })
 export class AjoutConfigurationComponent implements OnInit, AfterViewInit {
 
   tiersId!: number;
-  configForm!: FormGroup;
+  baseConfigForm!: FormGroup;
+  advancedConfigForm!: FormGroup;
+  fieldMappingForm!: FormGroup;
+  
+  completeForm!: FormGroup;
+  
   successMessage = '';
   errorMessage = '';
   tiersNom!: string;
   produits: Product[] = [];
 
   httpMethods = ['GET', 'POST', 'PUT', 'DELETE'];
-targetFields = ['name', 'description', 'price', 'url', 'reference'];
-
-
+  targetFields = ['name', 'description', 'price', 'url', 'reference'];
 
   constructor(
     private fb: FormBuilder,
@@ -66,70 +67,90 @@ targetFields = ['name', 'description', 'price', 'url', 'reference'];
     private dialog: MatDialog,
     private cdr: ChangeDetectorRef,
     private zone: NgZone
-
   ) { }
+
   ngAfterViewInit(): void {
   }
 
   ngOnInit(): void {
     this.tiersId = Number(this.route.snapshot.paramMap.get('tiersId'));
     this.getTiersNom();
+    this.initializeFormGroups();
+    
+    this.advancedConfigForm.get('paginated')?.valueChanges.subscribe(paginated => {
+      this.zone.run(() => {
+        this.updatePaginationValidators(paginated);
+      });
+    });
+    
+    this.baseConfigForm.get('httpMethod')?.valueChanges.subscribe(method => {
+      this.zone.run(() => {
+        if (method === 'GET') {
+          this.advancedConfigForm.get('type')?.setValidators(Validators.required);
+        } else {
+          this.advancedConfigForm.get('type')?.clearValidators();
+        }
+        this.advancedConfigForm.get('type')?.updateValueAndValidity();
+      });
+    });
+  }
 
-    this.configForm = this.fb.group({
+  private initializeFormGroups(): void {
+    this.baseConfigForm = this.fb.group({
       configName: ['', Validators.required],
       url: ['', Validators.required],
       headers: [''],
       httpMethod: ['', Validators.required],
       endpoint: ['', Validators.required],
-      methodHeaders: [''],
+      methodHeaders: ['']
+    });
+
+    this.advancedConfigForm = this.fb.group({
       paginated: [false],
       paginationParamName: [''],
-      // pageSizeParamName: [''],
       totalPagesFieldInResponse: [''],
       contentFieldInResponse: [''],
-      type: [''],
+      type: ['']
+    });
+
+    this.fieldMappingForm = this.fb.group({
       fieldMappings: this.fb.array([])
     });
-   this.configForm.get('paginated')?.valueChanges.subscribe(paginated => {
-    this.zone.run(() => {
-      this.updatePaginationValidators(paginated);
-    });
-  });
-}
-
-private updatePaginationValidators(paginated: boolean): void {
-  const paginationControls = [
-    'paginationParamName',
-    'totalPagesFieldInResponse'
-  ];
-
-  paginationControls.forEach(controlName => {
-    const control = this.configForm.get(controlName);
-    if (control) {
-      // Désactiver les événements pour éviter les cycles de détection supplémentaires
-      if (paginated) {
-        control.setValidators(Validators.required);
-      } else {
-        control.clearValidators();
-        control.setValue('', { emitEvent: false });
-      }
-      control.updateValueAndValidity({ emitEvent: false });
-    }
-  });
-
+    
     this.addFieldMapping();
+  }
 
-    this.configForm.get('paginated')?.valueChanges.subscribe((paginated: boolean) => {
-      if (!paginated) {
-        this.configForm.get('paginationParamName')?.reset('');
-        // this.configForm.get('pageSizeParamName')?.reset('');
-        this.configForm.get('totalPagesFieldInResponse')?.reset('');
+  private updatePaginationValidators(paginated: boolean): void {
+    const paginationControls = [
+      'paginationParamName',
+      'totalPagesFieldInResponse'
+    ];
+
+    paginationControls.forEach(controlName => {
+      const control = this.advancedConfigForm.get(controlName);
+      if (control) {
+        if (paginated) {
+          control.setValidators(Validators.required);
+        } else {
+          control.clearValidators();
+          control.setValue('', { emitEvent: false });
+        }
+        control.updateValueAndValidity({ emitEvent: false });
       }
     });
   }
 
   get fieldMappings(): FormArray {
-    return this.configForm.get('fieldMappings') as FormArray;
+    return this.fieldMappingForm.get('fieldMappings') as FormArray;
+  }
+
+  isGetMethod(): boolean {
+    return this.baseConfigForm.get('httpMethod')?.value === 'GET';
+  }
+
+  getSourcePlaceholder(): string {
+    const type = this.advancedConfigForm.get('type')?.value;
+    return type === 'reflection' ? 'name' : '$.name';
   }
 
   addFieldMapping(): void {
@@ -155,15 +176,28 @@ private updatePaginationValidators(paginated: boolean): void {
     });
   }
 
+  mergeFormData(): any {
+    return {
+      ...this.baseConfigForm.value,
+      ...this.advancedConfigForm.value,
+      ...this.fieldMappingForm.value
+    };
+  }
+
   onSubmit(): void {
-    if (this.configForm.invalid) {
-      this.configForm.markAllAsTouched();
+    if (this.baseConfigForm.invalid || 
+        (this.isGetMethod() && this.advancedConfigForm.invalid) ||
+        this.fieldMappingForm.invalid) {
+      
+      this.baseConfigForm.markAllAsTouched();
+      this.advancedConfigForm.markAllAsTouched();
+      this.fieldMappingForm.markAllAsTouched();
       
       this.errorMessage = 'Veuillez remplir tous les champs obligatoires.';
       return;
     }
 
-    const configData = this.configForm.value;
+    const configData = this.mergeFormData();
     console.log('Configuration envoyée:', configData);
 
     this.tiersService.addConfigToTiers(this.tiersId, configData).subscribe({
@@ -178,17 +212,9 @@ private updatePaginationValidators(paginated: boolean): void {
       }
     });
   }
-  openHelpDialog() {
-      this.dialog.open(HelpMappingComponent, {
-        width: '1800px',
-        height:'650px'
-      });
-  }
-  onCancel() {
-    this.router.navigate(['success/configlist', this.tiersId]);
-  }
+
   onTestClick() {
-    const requestData = this.configForm.value;
+    const requestData = this.mergeFormData();
     this.tiersService.importtestProducts(requestData).subscribe({
       next: (response) => {
         this.produits = response || [];
@@ -200,7 +226,7 @@ private updatePaginationValidators(paginated: boolean): void {
           data: {
             success: exampleProducts.length > 0,
             message: exampleProducts.length > 0 
-              ? `Test réussi : ${this.produits.length} produits ont été trouvés pour cette configuartion , voici quelques exemples : ` 
+              ? `Test réussi : ${this.produits.length} produits ont été trouvés pour cette configuration, voici quelques exemples : ` 
               : 'Aucun produit n\'a pu être importé.',
             products: exampleProducts
           }
@@ -224,13 +250,23 @@ private updatePaginationValidators(paginated: boolean): void {
       }
     });
   }
+
+  openHelpDialog() {
+    this.dialog.open(HelpMappingComponent, {
+      width: '1800px',
+      height:'650px'
+    });
+  }
+
+  onCancel() {
+    this.router.navigate(['success/configlist', this.tiersId]);
+  }
+
   getAvailableTargets(index: number): string[] {
-    const selectedTargets = this.configForm.get('fieldMappings')?.value
+    const selectedTargets = this.fieldMappingForm.get('fieldMappings')?.value
       .map((mapping: any, i: number) => i !== index ? mapping.target : null)
       .filter((target: string | null) => target !== null);
   
     return this.targetFields.filter(field => !selectedTargets.includes(field));
   }
-  
-
 }

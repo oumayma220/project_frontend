@@ -1,69 +1,87 @@
-/* ajout-configuration.component.css */
+/* Styles pour le stepper */
 
-.mat-form-field {
-    width: 100%;
-}
-
-.success-snackbar {
-    background-color: #4caf50;
-    color: white;
-}
-
-.error-snackbar {
-    background-color: #f44336;
-    color: white;
-}
-
-mat-card {
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+::ng-deep .mat-stepper-horizontal {
+    background-color: #f8f9fa;
     border-radius: 8px;
-    padding: 10px;
-}
-
-mat-card-header {
-    margin-bottom: 20px;
-    background-color: #f5f5f5;
-    padding: 16px;
-    border-radius: 8px 8px 0 0;
-}
-
-mat-card-title {
-    font-size: 1.5rem;
-    font-weight: 500;
-    color: #3f51b5;
-}
-
-.mapping-card {
-    border: 1px solid #eee;
-    padding: 10px;
-    margin-bottom: 10px;
-    border-radius: 4px;
-}
-
-.field-mappings-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 10px;
-}
-
-.field-mappings-container {
-    padding: 16px;
-    background-color: #f9f9f9;
-    border-radius: 8px;
-    margin-bottom: 20px;
-}
-
-.action-buttons {
-    margin-top: 20px;
-}
-
-.form-section {
     margin-bottom: 24px;
 }
 
+ ::ng-deep .mat-step-header {
+    padding: 12px !important;
+}
+
+
+/* Modification des couleurs des boutons du stepper en jaune */
+
+ ::ng-deep .mat-step-header .mat-step-icon {
+    background-color: #faea03 !important;
+    color: #333 !important;
+}
+
+ ::ng-deep .mat-step-header .mat-step-icon-selected {
+    background-color: #faea03 !important;
+    color: #333 !important;
+}
+
+ ::ng-deep .mat-step-header .mat-step-icon-state-done {
+    background-color: #eae553 !important;
+}
+
+.summary-card {
+    background-color: #e3e0f9;
+    border-left: 4px solid #f2ea03;
+}
+
+.summary-card h4 {
+    color: #333;
+    margin-bottom: 12px;
+    font-weight: 500;
+}
+
+.summary-card p {
+    margin-bottom: 6px;
+    padding-left: 12px;
+    color: #333 !important;
+    /* Assure que le texte est foncé */
+}
+
+
+/* Styles pour les sections */
+
 .section-title {
     font-weight: 500;
-    color: #3f51b5;
-    margin-bottom: 12px;
+    margin-top: 16px;
+    margin-bottom: 16px;
+    border-bottom: 1px solid #eaeaea;
+    padding-bottom: 8px;
+}
+
+.subsection-title {
+    font-weight: 400;
+    color: #555;
+}
+
+
+/* Styles pour les lignes de mapping */
+
+.mapping-row {
+    border-left: 3px solid #f0f0f0;
+    padding-left: 12px;
+    transition: border-color 0.3s;
+}
+
+.mapping-row:hover {
+    border-left-color: #faea03;
+}
+
+
+/* Assurer la lisibilité du texte dans l'étape de finalisation */
+
+.mat-card-content {
+    color: #333 !important;
+}
+
+.summary-card strong {
+    font-weight: 600;
+    color: #000;
 }

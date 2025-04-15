@@ -51,9 +51,14 @@ mat-icon {
 @media (max-width: 768px) {
     .sidenav {
         /* width: 100%; */
-        width: 100px;
+        width: 180px;
     }
     .menu-button {
         display: block;
     }
+}
+
+mat-nav-list a.active {
+    background-color: rgb(250, 239, 26);
+    font-weight: bold;
 }

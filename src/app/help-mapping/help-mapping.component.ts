@@ -5,10 +5,6 @@ import { MatDialogRef } from '@angular/material/dialog';
 import { MatTabsModule } from '@angular/material/tabs'; 
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-
-
-
-
 @Component({
   selector: 'app-help-mapping',
   standalone: true,
@@ -26,7 +22,7 @@ export class HelpMappingComponent {
   close() {
     this.dialogRef.close();
   }
- 
+  
   parseJson(): void {
     if (!this.jsonInput.trim()) {
       this.error = 'Veuillez entrer du JSON';
@@ -38,7 +34,7 @@ export class HelpMappingComponent {
       this.parsedJson = JSON.parse(this.jsonInput);
       this.error = '';
       this.selectedPath = '';
-      this.expandedPaths = new Set(['$']);  // Reset expanded state, but keep root expanded
+      this.expandedPaths = new Set(['$']);  
     } catch (e) {
       this.error = `Erreur de parsing JSON: ${e instanceof Error ? e.message : String(e)}`;
       this.parsedJson = null;

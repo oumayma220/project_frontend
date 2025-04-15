@@ -1,38 +1,32 @@
 <mat-sidenav-container class="sidenav-container">
-    <!-- <button mat-icon-button (click)="sidenav.toggle()" color="accent">
-        <mat-icon>menu</mat-icon>
-      </button> -->
-    <mat-sidenav #sidenav mode="side" [(opened)]="isExpanded" class="sidenav">
-
+    <mat-sidenav #sidenav [mode]="isMobile ? 'over' : 'side'" [opened]="!isMobile" [fixedInViewport]="isMobile" class="sidenav">
         <mat-nav-list>
-
-            <a *ngIf="isAdmin" mat-list-item routerLink="/success/jsonpathviewer">
+            <a *ngIf="isAdmin" mat-list-item routerLink="/success/dashboard" routerLinkActive="active">
                 <mat-icon>dashboard</mat-icon>
                 <span>Tableau de bord</span>
             </a>
-            <a *ngIf="isAdmin" mat-list-item routerLink="/success/crudemployee">
+            <a *ngIf="isAdmin" mat-list-item routerLink="/success/crudemployee" routerLinkActive="active">
                 <mat-icon>group</mat-icon>
                 <span>Employés</span>
             </a>
-            <a mat-list-item routerLink="/success/list-tiers">
+            <a mat-list-item routerLink="/success/list-tiers" routerLinkActive="active">
                 <mat-icon>group</mat-icon>
                 <span>Liste des tiers</span>
             </a>
-            <a mat-list-item routerLink="/success/productlist">
+            <a mat-list-item routerLink="/success/productlist" routerLinkActive="active">
                 <mat-icon>inventory_2</mat-icon>
                 <span>Produits</span>
             </a>
-            <a mat-list-item routerLink="/success/tiers" *ngIf="isAdmin">
+            <a mat-list-item routerLink="/success/tiers" *ngIf="isAdmin" routerLinkActive="active" [routerLinkActiveOptions]="{exact: false}">
                 <mat-icon>settings</mat-icon>
                 <span>Tiers&Configuration</span>
             </a>
-
-
             <a mat-list-item (click)="logout()">
                 <mat-icon>logout</mat-icon>
                 <span>Déconnexion</span>
             </a>
         </mat-nav-list>
+
     </mat-sidenav>
     <div class="content">
         <router-outlet></router-outlet>
