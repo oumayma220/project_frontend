@@ -1,3 +1,5 @@
+import { PayloadTemplate } from "./PayloadTemplate";
+
 export interface FieldMapping {
     id: number;
     target: string;
@@ -13,6 +15,9 @@ export interface FieldMapping {
     type: string;
     tenantid: number;
     fieldMappings: FieldMapping[];
+    payloadTemplates: PayloadTemplate[];
+    
+
     paginated: boolean;
     paginationParamName: string | null;
     pageSizeParamName: string | null;

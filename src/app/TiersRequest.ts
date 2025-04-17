@@ -1,4 +1,5 @@
 import { FieldMapping } from "./FieldMapping";
+import { PayloadTemplate } from "./PayloadTemplate";
 
 export interface TiersRequest {
     nom: string;
@@ -17,4 +18,5 @@ export interface TiersRequest {
     contentFieldInResponse: string;
     type: string;
     fieldMappings: FieldMapping[];
+    payloadTemplates: PayloadTemplate[];
 }

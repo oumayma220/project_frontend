@@ -1,0 +1,115 @@
+/* Styles généraux */
+
+.container {
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    padding: 24px;
+    font-family: 'Roboto', sans-serif;
+    background-color: white;
+}
+
+h2 {
+    color: #040d41;
+    margin-bottom: 24px;
+    font-weight: 500;
+    font-size: 24px;
+    border-bottom: 2px solid #e0e0e0;
+    padding-bottom: 12px;
+}
+
+mat-card {
+    margin-bottom: 20px;
+    border-left: 4px solid #ebd004;
+    border-radius: 4px;
+    padding: 20px;
+    transition: box-shadow 0.3s ease;
+}
+
+mat-card:hover {
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15) !important;
+}
+
+
+/* Styles des champs de formulaire */
+
+.full-width {
+    width: 100%;
+    margin-bottom: 16px;
+}
+
+textarea {
+    min-height: 120px;
+    font-family: 'Consolas', 'Monaco', monospace;
+}
+
+
+/* Organisation du template block */
+
+.template-block {
+    position: relative;
+    margin-bottom: 24px;
+}
+
+.template-block mat-card {
+    padding-bottom: 48px;
+}
+
+
+/* Positionnement du bouton supprimer */
+
+.template-block button[color="warn"] {
+    position: absolute;
+    bottom: 8px;
+    right: 8px;
+}
+
+
+/* Bouton d'enregistrement */
+
+button[type="submit"] {
+    margin-top: 16px;
+    padding: 8px 24px;
+    font-weight: 500;
+}
+
+
+/* Animation sur les boutons */
+
+button {
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+button:hover:enabled {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12);
+}
+
+button:disabled {
+    opacity: 0.7;
+}
+
+
+/* Styles de feedback */
+
+mat-error {
+    font-size: 12px;
+}
+
+
+/* Styles responsifs */
+
+@media (max-width: 768px) {
+    .container {
+        padding: 16px;
+    }
+    h2 {
+        font-size: 20px;
+    }
+    mat-card {
+        padding: 16px;
+    }
+    textarea {
+        min-height: 100px;
+    }
+}

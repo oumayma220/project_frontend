@@ -170,6 +170,23 @@
                     </div>
                 </div>
             </ng-container>
+            <div *ngIf="ApiMethodForm.get('httpMethod')?.value === 'POST'" formArrayName="payloadTemplates">
+                <h4 class="mt-4">Template du corps de la requête (POST)</h4>
+
+                <div *ngFor="let template of payloadTemplates.controls; let i = index" [formGroupName]="i" class="mb-4 p-3 border rounded">
+                    <mat-form-field appearance="outline" class="w-100">
+                        <mat-label>Path Param (optionnel)</mat-label>
+                        <input matInput formControlName="pathParam" placeholder="/data">
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline" class="w-100">
+                        <mat-label>Template JSON</mat-label>
+                        <textarea matInput formControlName="template" rows="6" placeholder='{"key": "value"}' required></textarea>
+                        <mat-error *ngIf="ApiMethodForm.get('template')?.invalid">le champ est obligatoire</mat-error>
+
+                    </mat-form-field>
+                </div>
+            </div>
 
             <!-- Boutons d'action -->
             <div class="form-actions mt-5 pt-3 border-top">
@@ -185,7 +202,6 @@
             </div>
         </form>
 
-        <!-- Messages de feedback -->
         <div *ngIf="successMessage" class="alert alert-success mt-4 d-flex align-items-center">
             <mat-icon class="me-2">check_circle</mat-icon>
             {{ successMessage }}

@@ -19,6 +19,7 @@ import { RouterModule } from '@angular/router';
 import { UpdateConfigComponent } from '../update-config/update-config.component';
 import { UpdateMethodComponent } from '../update-method/update-method.component';
 import { UpdateMappingComponent } from '../update-mapping/update-mapping.component';
+import { UpdateTemplateComponent } from '../update-template/update-template.component';
 
 
 
@@ -104,7 +105,7 @@ export class ConfigListComponent implements OnInit {
   editConfig(config: Config): void {
     console.log('Édition de la configuration:', config);
   }
-
+ 
  
 
   testConfig(config: Config): void {
@@ -125,6 +126,9 @@ export class ConfigListComponent implements OnInit {
       { duration: 3000 }
     );
   }
+  redirectToAddPayloadTemplate(methodId: number) {
+    this.router.navigate([`success/ajouttemplate`, methodId]);
+  }
   redirectToAddConfig(tiersId: number): void {
     this.router.navigate([`success/ajoutconfig`, tiersId]);
   }
@@ -134,6 +138,7 @@ export class ConfigListComponent implements OnInit {
     redirectToAddMapping(methodId: number) {
       this.router.navigate([`success/ajoutmapping`, methodId]);
     }
+   
   addNewConfig(): void {
     }
 
@@ -163,6 +168,18 @@ export class ConfigListComponent implements OnInit {
         });
       }
 }
+deletetemplate(methodId: number):void {
+  if (confirm('Voulez-vous vraiment supprimer cette template ?')) {
+    this.tiersConfigService.deletepayload(methodId).subscribe({
+      next: () => {
+        console.log('template supprimé avec succès !');
+        this.getConfigs();
+      },
+      error: (error) => {
+        console.error('Erreur lors de la suppression du template', error);
+      }
+    });
+  }  }
 deletefield(methodId: number):void {
   if (confirm('Voulez-vous vraiment supprimer cette fieldmapping ?')) {
     this.tiersConfigService.deletefieldmapping(methodId).subscribe({
@@ -228,6 +245,21 @@ deletefield(methodId: number):void {
       dialogRef.afterClosed().subscribe((result: any) => {
         if (result) {
           console.log('Mappings mis à jour:', result);
+        }
+        this.getConfigs();
+      });
+    }
+    openSettingsDialogtemplate(method: any) :void{
+      const dialogRef = this.dialog.open(UpdateTemplateComponent, {
+        width: '900px',
+        data: {
+          methodId: method.id,
+          payloadTemplates: method.payloadTemplates || []  
+        }
+      });
+      dialogRef.afterClosed().subscribe((result: any) => {
+        if (result) {
+          console.log('Template mis à jour:', result);
         }
         this.getConfigs();
       });

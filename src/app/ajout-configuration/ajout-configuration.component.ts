@@ -19,6 +19,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { Product } from '../Product';
 import { MatTableModule } from '@angular/material/table';
 import { TestComponent } from '../test/test.component';
+import { DragDropModule } from '@angular/cdk/drag-drop';
+
 
 @Component({
   selector: 'app-ajout-configuration',
@@ -37,6 +39,7 @@ import { TestComponent } from '../test/test.component';
     MatFormFieldModule,
     MatTableModule,
     MatInputModule,
+    DragDropModule
   ],
   templateUrl: './ajout-configuration.component.html',
   styleUrl: './ajout-configuration.component.css'
@@ -49,6 +52,8 @@ export class AjoutConfigurationComponent implements OnInit, AfterViewInit {
   fieldMappingForm!: FormGroup;
   
   completeForm!: FormGroup;
+  payloadTemplateForm!: FormGroup;
+
   
   successMessage = '';
   errorMessage = '';
@@ -93,6 +98,7 @@ export class AjoutConfigurationComponent implements OnInit, AfterViewInit {
         this.advancedConfigForm.get('type')?.updateValueAndValidity();
       });
     });
+    
   }
 
   private initializeFormGroups(): void {
@@ -116,9 +122,29 @@ export class AjoutConfigurationComponent implements OnInit, AfterViewInit {
     this.fieldMappingForm = this.fb.group({
       fieldMappings: this.fb.array([])
     });
-    
-    this.addFieldMapping();
+      this.addFieldMapping();
+      this.payloadTemplateForm = this.fb.group({
+        payloadTemplates: this.fb.array([])
+    });
+    this.addPayloadTemplate(); 
+
+
   }
+  get payloadTemplates(): FormArray {
+    return this.payloadTemplateForm.get('payloadTemplates') as FormArray;
+}
+
+addPayloadTemplate(template: string = '', pathParam: string = ''): void {
+    const templateGroup = this.fb.group({
+        template: [template, Validators.required],
+        pathParam: [pathParam]
+    });
+    this.payloadTemplates.push(templateGroup);
+}
+
+removePayloadTemplate(index: number): void {
+    this.payloadTemplates.removeAt(index);
+}
 
   private updatePaginationValidators(paginated: boolean): void {
     const paginationControls = [
@@ -147,6 +173,10 @@ export class AjoutConfigurationComponent implements OnInit, AfterViewInit {
   isGetMethod(): boolean {
     return this.baseConfigForm.get('httpMethod')?.value === 'GET';
   }
+  isPostMethod(): boolean {
+    return this.baseConfigForm.get('httpMethod')?.value === 'POST';
+  }
+
 
   getSourcePlaceholder(): string {
     const type = this.advancedConfigForm.get('type')?.value;
@@ -180,7 +210,8 @@ export class AjoutConfigurationComponent implements OnInit, AfterViewInit {
     return {
       ...this.baseConfigForm.value,
       ...this.advancedConfigForm.value,
-      ...this.fieldMappingForm.value
+      ...this.fieldMappingForm.value,
+      ...this.payloadTemplateForm.value
     };
   }
 

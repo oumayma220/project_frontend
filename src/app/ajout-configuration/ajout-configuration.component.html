@@ -82,6 +82,7 @@
                 </form>
             </mat-step>
 
+            <!-- Étape 2a: Configuration avancée pour GET -->
             <mat-step [stepControl]="advancedConfigForm" *ngIf="isGetMethod()">
                 <form [formGroup]="advancedConfigForm">
                     <ng-template matStepLabel>Configuration avancée</ng-template>
@@ -157,13 +158,12 @@
                 </form>
             </mat-step>
 
-            <!-- Étape 3: Mappings de champs -->
+            <!-- Étape 2b: Mappings de champs pour GET -->
             <mat-step [stepControl]="fieldMappingForm" *ngIf="isGetMethod()">
                 <form [formGroup]="fieldMappingForm">
                     <ng-template matStepLabel>Mappages de champs</ng-template>
 
                     <div class="d-flex justify-content-between align-items-center mb-3">
-                        <pre></pre>
                         <button type="button" mat-stroked-button style="color: rgb(13, 13, 69);" (click)="addFieldMapping()">
                             <mat-icon>add_circle</mat-icon> Nouveau mapping
                         </button>
@@ -211,7 +211,50 @@
                     </div>
                 </form>
             </mat-step>
-            >
+
+            <!-- Étape 2c: Configuration du payload pour POST/PUT -->
+            <mat-step [stepControl]="payloadTemplateForm" *ngIf="isPostMethod()">
+                <form [formGroup]="payloadTemplateForm">
+                    <ng-template matStepLabel>Configuration du Payload</ng-template>
+
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h4>Template du corps de la requête</h4>
+                        <!-- <button type="button" mat-stroked-button (click)="addPayloadTemplate()">
+                            <mat-icon>add</mat-icon> Ajouter un template
+                        </button> -->
+                    </div>
+
+                    <div formArrayName="payloadTemplates">
+                        <div *ngFor="let template of payloadTemplates.controls; let i = index" [formGroupName]="i" class="mb-4 p-3 border rounded">
+
+                            <mat-form-field appearance="outline" class="w-100">
+                                <mat-label>Path Param (optionnel)</mat-label>
+                                <input matInput formControlName="pathParam" placeholder="/data">
+                            </mat-form-field>
+
+                            <mat-form-field appearance="outline" class="w-100">
+                                <mat-label>Template JSON</mat-label>
+                                <textarea matInput formControlName="template" rows="8"></textarea>
+                            </mat-form-field>
+
+                            <!-- <button type="button" mat-icon-button color="warn" (click)="removePayloadTemplate(i)">
+                                <mat-icon>delete</mat-icon>
+                            </button> -->
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-between mt-4">
+                        <button mat-button matStepperPrevious>
+                            <mat-icon>navigate_before</mat-icon> Précédent
+                        </button>
+                        <button mat-raised-button color="accent" matStepperNext>
+                            Suivant <mat-icon>navigate_next</mat-icon>
+                        </button>
+                    </div>
+                </form>
+            </mat-step>
+
+            <!-- Étape finale -->
             <mat-step>
                 <ng-template matStepLabel>Finalisation</ng-template>
 
@@ -236,9 +279,18 @@
                                     <p style="color: #333;"><strong style="color: #000;">Pagination:</strong> {{ advancedConfigForm.get('paginated')?.value ? 'Activée' : 'Désactivée' }}</p>
                                 </div>
 
-                                <h4 class="mt-3" style="color: #170560; font-weight: 600;">Mappages de champs</h4>
-                                <div *ngFor="let mapping of fieldMappings.controls; let i = index">
-                                    <p style="color: #333;"><strong style="color: #000;">{{ mapping.get('source')?.value }}</strong> → {{ mapping.get('target')?.value }}</p>
+                                <div *ngIf="isGetMethod()">
+                                    <h4 class="mt-3" style="color: #170560; font-weight: 600;">Mappages de champs</h4>
+                                    <div *ngFor="let mapping of fieldMappings.controls; let i = index">
+                                        <p style="color: #333;"><strong style="color: #000;">{{ mapping.get('source')?.value }}</strong> → {{ mapping.get('target')?.value }}</p>
+                                    </div>
+                                </div>
+
+                                <div *ngIf="!isGetMethod()">
+                                    <h4 class="mt-3" style="color: #170560; font-weight: 600;">Template de payload</h4>
+                                    <div *ngFor="let template of payloadTemplates.controls; let i = index">
+                                        <pre style="background-color: white; padding: 10px; border-radius: 5px;">{{ template.get('template')?.value }}</pre>
+                                    </div>
                                 </div>
                             </mat-card-content>
                         </mat-card>
@@ -247,20 +299,20 @@
 
                 <div class="form-actions mt-4">
                     <button type="button" mat-stroked-button class="me-3" (click)="onTestClick()" color="accent">
-            <mat-icon>play_arrow</mat-icon> Tester
-        </button>
+                        <mat-icon>play_arrow</mat-icon> Tester
+                    </button>
                     <button type="button" mat-stroked-button class="me-3" (click)="onCancel()">
-            <mat-icon>cancel</mat-icon> Annuler
-        </button>
+                        <mat-icon>cancel</mat-icon> Annuler
+                    </button>
                     <button type="button" mat-raised-button color="accent" (click)="onSubmit()">
-            <mat-icon>save</mat-icon> Enregistrer
-        </button>
+                        <mat-icon>save</mat-icon> Enregistrer
+                    </button>
                 </div>
 
                 <div class="d-flex justify-content-start mt-4">
                     <button mat-button matStepperPrevious>
-            <mat-icon>navigate_before</mat-icon> Précédent
-        </button>
+                        <mat-icon>navigate_before</mat-icon> Précédent
+                    </button>
                 </div>
             </mat-step>
         </mat-stepper>

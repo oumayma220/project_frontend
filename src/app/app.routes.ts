@@ -30,6 +30,8 @@ import { ProductListComponent } from './product-list/product-list.component';
 import { ListTiersComponent } from './list-tiers/list-tiers.component';
 import { ProduitsTiersComponent } from './produits-tiers/produits-tiers.component';
 import { JsonPathViewerComponent } from './json-path-viewer/json-path-viewer.component';
+import { AjouttemplateComponent } from './ajouttemplate/ajouttemplate.component';
+import { UpdateTemplateComponent } from './update-template/update-template.component';
 
 export const routes: Routes = [
 {
@@ -66,16 +68,16 @@ export const routes: Routes = [
         { path: 'ajoutconfig/:tiersId', component:AjoutConfigurationComponent,canActivate: [adminGuard]},
         { path: 'ajoutapimethod/:configId', component:AjoutApimethodComponent,canActivate: [adminGuard]},
         { path: 'ajoutmapping/:methodId', component:AjoutMappingComponent,canActivate: [adminGuard]},
+        { path: 'ajouttemplate/:methodId', component:AjouttemplateComponent,canActivate: [adminGuard]},
         { path: 'test', component:TestComponent,canActivate: [adminGuard]},    
         { path: 'updateconfig', component:UpdateConfigComponent,canActivate: [adminGuard]},   
         { path: 'updatemethod', component:UpdateMethodComponent,canActivate: [adminGuard]},
         { path: 'updatemapping', component:UpdateMappingComponent,canActivate: [adminGuard]},
+        { path: 'updatetemplate', component:UpdateTemplateComponent,canActivate: [adminGuard]},
         { path: 'productlist', component:ProductListComponent},
         { path: 'list-tiers', component:ListTiersComponent},
         { path: 'produits-tiers/:tiersId', component:ProduitsTiersComponent},
         { path: 'jsonpathviewer', component:JsonPathViewerComponent,canActivate: [adminGuard]}
-      
-         
     ]  
 
 },

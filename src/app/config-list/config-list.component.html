@@ -88,9 +88,9 @@
 
                             <div class="method-details">
                                 <div class="method-actions">
-                                    <button mat-stroked-button color="accent" (click)="redirectToAddMapping(method.id)">
+                                    <button mat-stroked-button color="accent" (click)="method.httpMethod === 'GET' ? redirectToAddMapping(method.id) : redirectToAddPayloadTemplate(method.id)">
                                         <mat-icon>add</mat-icon>
-                                        Ajouter un mapping
+                                        {{ method.httpMethod === 'GET' ? 'Ajouter un mapping' : 'Ajouter un template' }}
                                     </button>
                                 </div>
 
@@ -99,64 +99,97 @@
                                     <div class="detail-value code-block">{{ method.headers }}</div>
                                 </div>
 
-                                <div class="field-mappings-section" *ngIf="method.fieldMappings && method.fieldMappings.length > 0">
-                                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                                <!-- Section pour les méthodes GET -->
+                                <div *ngIf="method.httpMethod === 'GET'">
+                                    <div class="field-mappings-section" *ngIf="method.fieldMappings && method.fieldMappings.length > 0">
+                                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                                            <h4>
+                                                <mat-icon>compare_arrows</mat-icon>
+                                                Field Mappings
+                                            </h4>
+                                            <div class="config-quick-actions">
+                                                <button mat-icon-button style="color: rgb(37, 37, 89);" matTooltip="Modifier" (click)="openSettingsDialogmethodmapping(method)">
+                                                    <mat-icon>edit</mat-icon>
+                                                </button>
+                                                <button mat-icon-button color="warn" matTooltip="Supprimer" (click)="deletefield(method.id)">
+                                                    <mat-icon>delete</mat-icon>
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        <table mat-table [dataSource]="method.fieldMappings" class="mapping-table">
+                                            <ng-container matColumnDef="target">
+                                                <th mat-header-cell *matHeaderCellDef>Target</th>
+                                                <td mat-cell *matCellDef="let mapping">{{ mapping.target }}</td>
+                                            </ng-container>
+                                            <ng-container matColumnDef="source">
+                                                <th mat-header-cell *matHeaderCellDef>Source</th>
+                                                <td mat-cell *matCellDef="let mapping">{{ mapping.source }}</td>
+                                            </ng-container>
+
+                                            <tr mat-header-row *matHeaderRowDef="['target', 'source']"></tr>
+                                            <tr mat-row *matRowDef="let row; columns: ['target', 'source']"></tr>
+                                        </table>
+                                    </div>
+
+                                    <div class="empty-mappings" *ngIf="!method.fieldMappings || method.fieldMappings.length === 0">
+                                        <mat-icon>info</mat-icon>
+                                        <span>Aucun field mapping défini pour cette méthode</span>
+                                    </div>
+
+                                    <div class="pagination-info" *ngIf="method.paginated">
                                         <h4>
-                                            <mat-icon>compare_arrows</mat-icon>
-                                            Field Mappings
+                                            <mat-icon>pages</mat-icon>
+                                            Configuration de pagination
                                         </h4>
-                                        <div class="config-quick-actions">
-                                            <button mat-icon-button style="color: rgb(37, 37, 89);" matTooltip="Modifier" (click)="openSettingsDialogmethodmapping(method)">
-                                                <mat-icon>edit</mat-icon>
-                                            </button>
-                                            <button mat-icon-button color="warn" matTooltip="Supprimer" (click)="deletefield(method.id)">
-                                            <mat-icon>delete</mat-icon>
-                                        </button>
+                                        <div class="pagination-details">
+                                            <div class="detail-group">
+                                                <span class="detail-label">Paramètre de page</span>
+                                                <span class="detail-value">{{ method.paginationParamName }}</span>
+                                            </div>
+                                            <div class="detail-group">
+                                                <span class="detail-label">Champ total pages</span>
+                                                <span class="detail-value">{{ method.totalPagesFieldInResponse }}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Section pour les méthodes POST/PUT -->
+                                <div *ngIf="method.httpMethod === 'POST' || method.httpMethod === 'PUT'">
+                                    <div class="payload-templates-section">
+                                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                                            <h4>
+                                                <mat-icon>code</mat-icon>
+                                                Templates de Payload
+                                            </h4>
+                                            <div class="config-quick-actions">
+                                                <button mat-icon-button style="color: rgb(37, 37, 89);" matTooltip="Modifier" (click)="openSettingsDialogtemplate(method)">
+                                                    <mat-icon>edit</mat-icon>
+                                                </button>
+                                                <button mat-icon-button color="warn" matTooltip="Supprimer" (click)="deletetemplate(method.id)">
+                                                    <mat-icon>delete</mat-icon>
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        <div *ngFor="let template of method.payloadTemplates; let i = index" class="template-block">
+                                            <div class="detail-group path-param-group">
+                                                <span class="detail-label" style="font-size: 16px;">
+                                                    Path Param
+                                                </span>
+                                                <span class="detail-value path-param-value">{{ template.pathParam || 'Aucun' }}</span>
+                                            </div>
+                                            <div class="detail-group">
+                                                <span class="detail-label">Template</span>
+                                                <pre class="detail-value code-block" style="border-left: 3px solid yellow;">{{ template.template }}</pre>
+                                            </div>
                                         </div>
                                     </div>
 
-                                    <table mat-table [dataSource]="method.fieldMappings" class="mapping-table">
-                                        <ng-container matColumnDef="target">
-                                            <th mat-header-cell *matHeaderCellDef>Target</th>
-                                            <td mat-cell *matCellDef="let mapping">{{ mapping.target }}</td>
-                                        </ng-container>
-                                        <ng-container matColumnDef="source">
-                                            <th mat-header-cell *matHeaderCellDef>Source</th>
-                                            <td mat-cell *matCellDef="let mapping">{{ mapping.source }}</td>
-                                        </ng-container>
-
-                                        <tr mat-header-row *matHeaderRowDef="['target', 'source']"></tr>
-                                        <tr mat-row *matRowDef="let row; columns: ['target', 'source']"></tr>
-                                    </table>
-                                </div>
-
-                                <div class="empty-mappings" *ngIf="!method.fieldMappings || method.fieldMappings.length === 0">
-                                    <mat-icon>info</mat-icon>
-                                    <span>Aucun field mapping défini pour cette méthode</span>
-                                </div>
-
-                                <div class="pagination-info" *ngIf="method.paginated">
-                                    <h4>
-                                        <mat-icon>pages</mat-icon>
-                                        Configuration de pagination
-                                    </h4>
-                                    <div class="pagination-details">
-                                        <div class="detail-group">
-                                            <span class="detail-label">Paramètre de page</span>
-                                            <span class="detail-value">{{ method.paginationParamName }}</span>
-                                        </div>
-                                        <!-- <div class="detail-group">
-                                            <span class="detail-label">Paramètre de taille</span>
-                                            <span class="detail-value">{{ method.pageSizeParamName }}</span>
-                                        </div>
-                                        <div class="detail-group">
-                                            <span class="detail-label">Taille de page</span>
-                                            <span class="detail-value">{{ method.pageSize }}</span>
-                                        </div> -->
-                                        <div class="detail-group">
-                                            <span class="detail-label">Champ total pages</span>
-                                            <span class="detail-value">{{ method.totalPagesFieldInResponse }}</span>
-                                        </div>
+                                    <div class="empty-templates" *ngIf="!method.payloadTemplates || method.payloadTemplates.length === 0">
+                                        <mat-icon>info</mat-icon>
+                                        <span>Aucun template de payload défini pour cette méthode</span>
                                     </div>
                                 </div>
                             </div>

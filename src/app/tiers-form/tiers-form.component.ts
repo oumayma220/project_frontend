@@ -38,16 +38,12 @@ export class TiersFormComponent {
   fieldMappingsForm: FormGroup;
   produits: Product[] = [];
   targetFields = ['name', 'description', 'price', 'url', 'reference'];
-
-  
-
   constructor(private fb: FormBuilder, private tiersService: TiersService, private router: Router,private dialog: MatDialog) {
     this.tiersInfoForm = this.fb.group({
       nom: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       numero: ['', Validators.required],
     });
-
     this.configForm = this.fb.group({
       configName: [''],
       url: [''],
@@ -60,7 +56,9 @@ export class TiersFormComponent {
       // pageSizeParamName: [''],
       totalPagesFieldInResponse: [''],
       contentFieldInResponse: [''],
-      type: ['']
+      type: [''],
+      payloadTemplates: this.fb.array([])
+
     });
     this.configForm.get('paginated')?.valueChanges.subscribe(paginated => {
       if (paginated) {
@@ -72,6 +70,19 @@ export class TiersFormComponent {
       }
     
     });
+    this.configForm.get('httpMethod')?.valueChanges.subscribe(method => {
+      if (method === 'POST' && this.payloadTemplates.length === 0) {
+        this.payloadTemplates.push(this.fb.group({
+          pathParam: [''],
+          template: ['']
+        }));
+      }
+    
+      if (method !== 'POST') {
+        this.payloadTemplates.clear();
+      }
+    });
+    
 
     this.fieldMappingsForm = this.fb.group({
       fieldMappings: this.fb.array([])
@@ -117,9 +128,34 @@ export class TiersFormComponent {
       }
     });
   }
+  onSubmit1() {
+    if (this.tiersInfoForm.invalid  ) {
+    alert('Formulaire incomplet !');
+    return;
+  }
+  const request: TiersRequest = {
+    ...this.tiersInfoForm.value,
+    ...this.configForm.value,
+    fieldMappings: this.fieldMappingsForm.value.fieldMappings
+  };
+
+  console.log(request);
+
+  this.tiersService.createTiers(request).subscribe({
+    next: (response) => {
+      alert('Tiers ajouté avec succès !');
+       this.router.navigate(['success/tiers'])
+
+       this.resetForms();
+    },
+    error: (err) => {
+      alert('Erreur lors de l\'ajout du tiers : ' + (err.error?.message || 'Erreur inconnue'));
+    }
+  });
+}
+  
 
   onSubmit() {
-    //  if (this.tiersInfoForm.invalid || this.configForm.invalid || this.fieldMappingsForm.invalid) {
       if (this.tiersInfoForm.invalid || this.configForm.invalid ) {
       alert('Formulaire incomplet !');
       return;
@@ -144,6 +180,10 @@ export class TiersFormComponent {
       }
     });
   }
+  get payloadTemplates(): FormArray {
+    return this.configForm.get('payloadTemplates') as FormArray;
+  }
+  
 
   resetForms() {
     this.tiersInfoForm.reset();

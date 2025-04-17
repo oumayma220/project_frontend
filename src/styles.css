@@ -10,6 +10,7 @@
     background-image: url('/assets/jsoneditor/img/jsoneditor-icons.svg') !important;
 } */
 
+@import 'ngx-toastr/toastr';
 html,
 body {
     height: 100%;

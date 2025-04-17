@@ -10,6 +10,7 @@ import { FieldMapping } from '../FieldMapping';
 import { Product } from '../Product';
 import { ConfigGeneralInfoRequest } from '../ConfigGeneralInfoRequest';
 import { ApiMethodGeneralInfoRequest } from '../ApiMethodGeneralInfoRequest';
+import { PayloadTemplate } from '../PayloadTemplate';
 
 @Injectable({
   providedIn: 'root'
@@ -71,6 +72,13 @@ export class TiersService {
       responseType: 'text' as 'json'  
     });
   }
+  updatetemplate(methodId: number, request: PayloadTemplate[]): Observable<string> {
+    const url = `${this.base}/${methodId}/update-payload`;  
+    return this.http.put<string>(url, request, {
+      headers: this.getAuthHeaders(),
+      responseType: 'text' as 'json'  
+    });
+  }
   getConfigsByTiersId(tiersId: number): Observable<Config[]> {
     return this.http.get<Config[]>(`${this.base}/tiers/configs/${tiersId}`, {
       headers: this.getAuthHeaders()
@@ -116,6 +124,13 @@ export class TiersService {
         responseType: 'text' as 'json'
       });
       }
+      addPayloadTemplate(methodId: number, request: PayloadTemplate[]): Observable<any> {
+        const url = `${this.base}/addtemplate/${methodId}`;
+        return this.http.post<any>(url, request,{
+          headers:this.getAuthHeaders(),
+          responseType: 'text' as 'json'
+        });
+        }
       deleteconfig(configId: number): Observable<string> {
         const url = `${this.base}/delete/config/${configId}`;
         return this.http.delete(url, {
@@ -132,6 +147,13 @@ export class TiersService {
       }
       deletefieldmapping(methodId: number): Observable<string> {
         const url = `${this.base}/delete/field/${methodId}`;
+        return this.http.delete(url, {
+          headers: this.getAuthHeaders(),
+          responseType: 'text'
+        });
+      }
+      deletepayload(methodId: number): Observable<string> {
+        const url = `${this.base}/delete/payload/${methodId}`;
         return this.http.delete(url, {
           headers: this.getAuthHeaders(),
           responseType: 'text'

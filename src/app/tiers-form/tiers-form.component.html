@@ -132,11 +132,6 @@
 
                         </mat-form-field>
 
-                        <!-- <mat-form-field appearance="outline" class="half-width">
-                            <mat-label>Page Size Param Name</mat-label>
-                            <input matInput formControlName="pageSizeParamName" placeholder="size">
-                            <mat-icon matSuffix>format_list_numbered</mat-icon>
-                        </mat-form-field> -->
                         <mat-form-field appearance="outline" class="half-width">
                             <mat-label>Total Pages Field In Response</mat-label>
                             <input matInput formControlName="totalPagesFieldInResponse" [placeholder]="configForm.get('type')?.value === 'reflection' ? 'totalpages' : '$.totalpages'" required>
@@ -155,19 +150,40 @@
                         <mat-icon matSuffix>data_object</mat-icon>
                     </mat-form-field>
                 </div>
+                <div *ngIf="configForm.get('httpMethod')?.value === 'POST'" formArrayName="payloadTemplates">
+                    <h4 class="mt-4">Template du corps de la requête (POST)</h4>
+
+                    <div *ngFor="let template of payloadTemplates.controls; let i = index" [formGroupName]="i" class="mb-4 p-3 border rounded">
+                        <mat-form-field appearance="outline" class="w-100">
+                            <mat-label>Path Param (optionnel)</mat-label>
+                            <input matInput formControlName="pathParam" placeholder="/data">
+                        </mat-form-field>
+
+                        <mat-form-field appearance="outline" class="w-100">
+                            <mat-label>Template JSON</mat-label>
+                            <textarea matInput formControlName="template" rows="6" placeholder='{"key": "value"}' required></textarea>
+                            <mat-error *ngIf="configForm.get('template')?.invalid">le champ est obligatoire</mat-error>
+
+                        </mat-form-field>
+                    </div>
+                </div>
 
                 <!-- Boutons navigation -->
                 <div class="step-actions">
                     <button mat-stroked-button color="accent" matStepperPrevious>
                         <mat-icon>arrow_back</mat-icon> Retour
                     </button>
-                    <button mat-raised-button color="accent" matStepperNext>
+                    <button mat-raised-button color="accent" matStepperNext *ngIf="configForm.get('httpMethod')?.value === 'GET'">
                         Suivant <mat-icon>arrow_forward</mat-icon>
+                    </button>
+                    <button mat-raised-button color="accent" (click)="onSubmit1()" *ngIf="configForm.get('httpMethod')?.value === 'POST'">
+                        <mat-icon>save</mat-icon> Enregistrer
                     </button>
 
                 </div>
             </div>
         </form>
+
     </mat-step>
 
     <!-- STEP 3 : Field Mappings -->

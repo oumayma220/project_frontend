@@ -10,8 +10,6 @@ import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialogModule } from '@angular/material/dialog';
-
-
 @Component({
   selector: 'app-update-tiers',
   standalone: true,
@@ -35,9 +33,9 @@ export class UpdateTiersComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private tiersService: TiersService,  // Assure-toi d'avoir un service tiers
-    private dialogRef: MatDialogRef<UpdateTiersComponent>,  // Pour fermer le dialogue
-    @Inject(MAT_DIALOG_DATA) public data: any  // Injecte les données passées dans le dialogue
+    private tiersService: TiersService,  
+    private dialogRef: MatDialogRef<UpdateTiersComponent>,  
+    @Inject(MAT_DIALOG_DATA) public data: any  
   ) {
     this.tiersForm = this.fb.group({
       nom: [this.data.nom, Validators.required],
@@ -47,7 +45,6 @@ export class UpdateTiersComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // Tu peux ajouter une logique d'initialisation si nécessaire.
   }
 
   onSubmit() {
@@ -55,7 +52,7 @@ export class UpdateTiersComponent implements OnInit {
       const updatedTiers: TiersGeneralInfoRequest = this.tiersForm.value;
       this.tiersService.updateTiersGeneralInfo(this.data.id, updatedTiers).subscribe({
         next: () => {
-          this.dialogRef.close();  // Ferme le dialogue après la soumission réussie
+          this.dialogRef.close();  
         },
         error: (err) => {
           console.error('Erreur lors de la mise à jour', err);
@@ -65,5 +62,5 @@ export class UpdateTiersComponent implements OnInit {
   }
 
   onCancel() {
-    this.dialogRef.close();  // Ferme le dialogue si l'utilisateur annule
+    this.dialogRef.close();  
   }}

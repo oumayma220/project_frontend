@@ -1,0 +1,32 @@
+<div class="container">
+
+    <form [formGroup]="ApiMethodForm" (ngSubmit)="onSubmit()">
+        <h2>Ajouter un Payload Template</h2>
+
+        <div formArrayName="payloadTemplates">
+            <div *ngFor="let group of payloadTemplates.controls; let i = index" [formGroupName]="i" class="template-block">
+                <mat-card class="mat-elevation-z2 mb-3">
+                    <mat-form-field appearance="outline" class="full-width">
+                        <mat-label>Path Param</mat-label>
+                        <input matInput formControlName="pathParam" required />
+                        <mat-error *ngIf="group.get('pathParam')?.invalid">Champ requis</mat-error>
+                    </mat-form-field>
+
+                    <mat-form-field appearance="outline" class="full-width">
+                        <mat-label>Template</mat-label>
+                        <textarea matInput formControlName="template" required></textarea>
+                        <mat-error *ngIf="group.get('template')?.invalid">Champ requis</mat-error>
+                    </mat-form-field>
+
+                    <button mat-icon-button color="warn" (click)="removePayload(i)" *ngIf="payloadTemplates.length > 1">
+              <mat-icon>delete</mat-icon>
+            </button>
+                </mat-card>
+            </div>
+        </div>
+
+        <button mat-raised-button color="accent" type="submit" [disabled]="ApiMethodForm.invalid">
+        Enregistrer
+      </button>
+    </form>
+</div>

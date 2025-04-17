@@ -27,19 +27,19 @@
                     <input matInput formControlName="methodHeaders" placeholder="Ex: Authorization, Content-Type">
                 </mat-form-field>
 
-                <mat-form-field appearance="outline">
+                <mat-form-field appearance="outline" *ngIf="configForm.get('httpmethod')?.value=== 'GET'">
                     <mat-label>Type</mat-label>
                     <input matInput formControlName="type">
                 </mat-form-field>
             </div>
 
-            <div class="checkbox-container">
+            <div class="checkbox-container" *ngIf="configForm.get('httpMethod')?.value === 'GET'">
                 <mat-checkbox formControlName="paginated" color="primary">
                     Activer la pagination
                 </mat-checkbox>
             </div>
 
-            <ng-container *ngIf="configForm.get('paginated')?.value">
+            <ng-container *ngIf="configForm.get('httpMethod')?.value === 'GET' && configForm.get('paginated')?.value">
                 <div class="pagination-section">
                     <h4 class="subsection-title">Paramètres de pagination</h4>
 
@@ -63,7 +63,7 @@
                 </div>
             </ng-container>
 
-            <mat-form-field appearance="outline">
+            <mat-form-field appearance="outline" *ngIf="configForm.get('httpmethod')?.value=== 'GET'">
                 <mat-label>Champ de contenu</mat-label>
                 <input matInput formControlName="contentFieldInResponse" placeholder="Ex: data">
             </mat-form-field>

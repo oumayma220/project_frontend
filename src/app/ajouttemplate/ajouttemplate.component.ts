@@ -13,11 +13,9 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { MatDialog } from '@angular/material/dialog';
 import { ToastrService } from 'ngx-toastr';
-
 @Component({
-  selector: 'app-ajout-mapping',
+  selector: 'app-ajouttemplate',
   standalone: true,
   imports: [FormsModule,
     ReactiveFormsModule,
@@ -29,75 +27,64 @@ import { ToastrService } from 'ngx-toastr';
     MatSelectModule,
     MatIconModule,
     MatCardModule,
-    MatFormFieldModule,
-    ],
-  templateUrl: './ajout-mapping.component.html',
-  styleUrl: './ajout-mapping.component.css'
+    MatFormFieldModule,],
+  templateUrl: './ajouttemplate.component.html',
+  styleUrl: './ajouttemplate.component.css'
 })
-export class AjoutMappingComponent implements OnInit {
+export class AjouttemplateComponent implements OnInit {
   methodId!: number;
   ApiMethodForm!: FormGroup;
   successMessage = '';
   errorMessage = '';
-  targetFields = ['name', 'description', 'price', 'url', 'reference'];
 
   constructor(
       private fb: FormBuilder,
       private route: ActivatedRoute,
       private router: Router,
       private tiersService: TiersService,
-      private snackBar: MatSnackBar,private dialog: MatDialog
+      private snackBar: MatSnackBar,
+      private toastr: ToastrService
     ) { }
   ngOnInit(): void {
     this.methodId = Number(this.route.snapshot.paramMap.get('methodId'));
     this.ApiMethodForm = this.fb.group({
-      fieldMappings: this.fb.array([])
+      payloadTemplates: this.fb.array([])
     });
-    this.addFieldMapping();
+    this.addPayload();
   }  
-  get fieldMappings(): FormArray {
-    return this.ApiMethodForm.get('fieldMappings') as FormArray;
+  get payloadTemplates(): FormArray {
+    return this.ApiMethodForm.get('payloadTemplates') as FormArray;
   }
-  addFieldMapping(): void {
-    const mappingGroup = this.fb.group({
-      source: ['',Validators.required],
-      target: ['',Validators.required]
+  addPayload(): void {
+    const template = this.fb.group({
+      pathParam: ['',Validators.required],
+      template: ['',Validators.required]
+      
     });
-    this.fieldMappings.push(mappingGroup);
+    this.payloadTemplates.push(template);
   }
-  removeFieldMapping(index: number): void {
-    this.fieldMappings.removeAt(index);
-  }
+  
   onSubmit(): void {
     if (this.ApiMethodForm.invalid) {
       return;
     }
-    const configData = this.ApiMethodForm.value.fieldMappings; 
+    const configData = this.ApiMethodForm.value.payloadTemplates; 
     console.log('Configuration envoyée:', configData);
-    this.tiersService.addFieldMappings(this.methodId, configData).subscribe({
+    this.tiersService.addPayloadTemplate(this.methodId, configData).subscribe({
       next: () => {
-        this.successMessage = 'Configuration ajoutée avec succès !';
-        this.snackBar.open('Configuration enregistrée', 'Fermer', { duration: 3000 });
-        
+        this.successMessage = 'payload ajoutée avec succès !';
+        this.toastr.success('Configuration enregistrée avec succès !', 'Succès');
       },
       error: (error) => {
         console.error(error);
-        this.errorMessage = "Une erreur s'est produite lors de l'ajout de la configuration.";
+        this.errorMessage = "Une erreur s'est produite lors de l'ajout de la payload.";
+      this.toastr.error(this.errorMessage, 'Erreur');
       }
     });
     }
-  getAvailableTargets(index: number): string[] {
-    const selectedTargets = this.ApiMethodForm.get('fieldMappings')?.value
-      .map((mapping: any, i: number) => i !== index ? mapping.target : null)
-      .filter((target: string | null) => target !== null);
-  
-    return this.targetFields.filter(field => !selectedTargets.includes(field));
-  }
+    removePayload(index: number): void {
+      this.payloadTemplates.removeAt(index);
+    }
+    
 
 }
-
-
-
-
-
-

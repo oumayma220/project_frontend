@@ -19,10 +19,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { TestComponent } from '../test/test.component';
 import { Product } from '../Product';
 import { ChangeDetectorRef } from '@angular/core';
-import { NgZone } from '@angular/core'; // Ajoutez cette importation
-
-
-
+import { NgZone } from '@angular/core'; 
 @Component({
   selector: 'app-ajout-apimethod',
   standalone: true,
@@ -50,11 +47,6 @@ export class AjoutApimethodComponent implements OnInit, AfterViewInit  {
   parentConfig: any;
   produits: Product[] = [];
   targetFields = ['name', 'description', 'price', 'url', 'reference'];
-
-
-
-
-
   constructor(
     private fb: FormBuilder,
     private route: ActivatedRoute,
@@ -62,8 +54,6 @@ export class AjoutApimethodComponent implements OnInit, AfterViewInit  {
     private tiersService: TiersService,
     private cdr: ChangeDetectorRef,
     private zone: NgZone, 
-
-
     private snackBar: MatSnackBar,private dialog: MatDialog
   ) { }
   ngAfterViewInit(): void {
@@ -97,15 +87,29 @@ export class AjoutApimethodComponent implements OnInit, AfterViewInit  {
       totalPagesFieldInResponse: [''],  
       contentFieldInResponse: [''],
       type: [''],
-      fieldMappings: this.fb.array([])
-    });
+      fieldMappings: this.fb.array([]),
+      payloadTemplates: this.fb.array([])
 
-    // Utilisation de zone.run pour éviter les problèmes de détection
+    });
+    
+    this.ApiMethodForm.get('httpMethod')?.valueChanges.subscribe(method => {
+      if (method === 'POST' && this.payloadTemplates.length === 0) {
+        this.payloadTemplates.push(this.fb.group({
+          pathParam: [''],
+          template: ['']
+        }));
+      }
+    
+      if (method !== 'POST') {
+        this.payloadTemplates.clear();
+      }
+    });
     this.ApiMethodForm.get('paginated')?.valueChanges.subscribe(paginated => {
       this.zone.run(() => {
         this.updatePaginationValidators(paginated);
       });
     });
+    
   }
 
   private updatePaginationValidators(paginated: boolean): void {
@@ -117,7 +121,6 @@ export class AjoutApimethodComponent implements OnInit, AfterViewInit  {
     paginationControls.forEach(controlName => {
       const control = this.ApiMethodForm.get(controlName);
       if (control) {
-        // Désactiver les événements pour éviter les cycles de détection supplémentaires
         if (paginated) {
           control.setValidators(Validators.required);
         } else {
@@ -127,7 +130,12 @@ export class AjoutApimethodComponent implements OnInit, AfterViewInit  {
         control.updateValueAndValidity({ emitEvent: false });
       }
     });
+   
   }
+  get payloadTemplates(): FormArray {
+    return this.ApiMethodForm.get('payloadTemplates') as FormArray;
+  }
+  
   
   get fieldMappings(): FormArray {
     return this.ApiMethodForm.get('fieldMappings') as FormArray;
