@@ -73,8 +73,10 @@
                                     </span>
                                 </mat-panel-title>
                                 <mat-panel-description>
-                                    {{ method.endpoint }}
-                                    <span class="method-type-badge" *ngIf="method.type" style="background-color: rgb(254, 241, 0);">{{ method.type }}</span>
+                                    <span class="method-type-badge" style="background-color: rgb(163, 222, 222);">{{ method.endpoint }}</span>
+
+
+                                    <span class="method-type-badge" *ngIf="method.type" style="background-color: rgb(252, 240, 9);">{{ method.type }}</span>
                                 </mat-panel-description>
                                 <div class="config-quick-actions">
                                     <button mat-icon-button style="color: rgb(37, 37, 89);" matTooltip="Modifier" (click)="openSettingsDialogmethod(method,config)">

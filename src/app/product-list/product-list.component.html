@@ -16,6 +16,11 @@
                 </mat-option>
             </mat-select>
         </mat-form-field>
+
+        <mat-form-field appearance="outline" class="name-filter">
+            <mat-label>Filtrer par nom</mat-label>
+            <input matInput [(ngModel)]="searchName" (input)="applyNameFilter()" placeholder="Entrez un nom de produit">
+        </mat-form-field>
     </div>
 
     <!-- États -->

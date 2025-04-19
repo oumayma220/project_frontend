@@ -13,14 +13,25 @@
 }
 
 .filter-section {
+    display: flex;
+    justify-content: space-between;
+    /* Met l'un à gauche, l'autre à droite */
+    align-items: center;
+    flex-wrap: wrap;
     padding: 16px;
     background: #f8f9fa;
     margin: 0;
+    gap: 16px;
+}
+
+.name-filter {
+    flex: 1 1 300px;
+    max-width: 27%;
 }
 
 .tier-filter {
-    width: 100%;
-    max-width: 300px;
+    flex: 1 1 500px;
+    max-width: 24%;
 }
 
 

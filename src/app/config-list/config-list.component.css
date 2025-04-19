@@ -377,3 +377,46 @@ body,
         grid-template-columns: 1fr;
     }
 }
+
+@media (max-width: 768px) {
+    .config-header {
+        flex-direction: column;
+        text-align: center;
+        gap: 12px;
+    }
+    .config-quick-actions {
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+}
+
+@media (max-width: 600px) {
+    .config-card {
+        margin: 0 8px;
+    }
+}
+
+@media (max-width: 600px) {
+    .method-actions,
+    .config-quick-actions {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    .method-actions button,
+    .config-quick-actions button {
+        width: 100%;
+        margin: 4px 0;
+    }
+}
+
+@media (max-width: 480px) {
+    .pagination-details {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    .pagination-details {
+        grid-template-columns: 1fr;
+    }
+}

@@ -52,6 +52,10 @@ export class ProductListComponent implements OnInit, AfterViewInit {
   filteredProducts: Product[] = [];
   tiersList: Tiers[] = []; 
   selectedTier: string | null = null;
+  searchTerm: string = '';
+  searchName: string = '';
+
+
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
@@ -91,16 +95,24 @@ export class ProductListComponent implements OnInit, AfterViewInit {
   }
 
   applyTierFilter(): void {
+    // On commence avec tous les produits
+    let filtered = [...this.products];
+
     if (this.selectedTier) {
-      this.filteredProducts = this.products.filter(product => 
-        product.tierName === this.selectedTier
-      );
-    } else {
-      this.filteredProducts = [...this.products];
+        filtered = filtered.filter(p => p.tierName === this.selectedTier);
     }
+
+    if (this.searchName.trim()) {
+        const searchTerm = this.searchName.toLowerCase().trim();
+        filtered = filtered.filter(p => 
+            p.name.toLowerCase().includes(searchTerm)
+        );
+    }
+
+    this.filteredProducts = filtered;
     this.currentPage = 0;
     this.updatePaginatedProducts();
-  }
+}
 
   onPageChange(event: PageEvent): void {
     this.pageSize = event.pageSize;
@@ -120,4 +132,31 @@ export class ProductListComponent implements OnInit, AfterViewInit {
   ngAfterViewInit(): void {
     this.dataSource.paginator = this.paginator;
   }
+  // applyFilters(): void {
+  //   this.filteredProducts = this.products.filter(product => {
+  //     const matchTier = this.selectedTier ? product.tierName === this.selectedTier : true;
+  //     const matchName = this.searchTerm ? product.name.toLowerCase().includes(this.searchTerm.toLowerCase()) : true;
+  //     return matchTier && matchName;
+  //   });
+  
+  //   this.currentPage = 0;
+  //   this.updatePaginatedProducts();
+  // }
+  applyNameFilter(): void {
+    let filtered = this.selectedTier 
+        ? this.products.filter(p => p.tierName === this.selectedTier)
+        : [...this.products];
+
+    if (this.searchName.trim()) {
+        const searchTerm = this.searchName.toLowerCase().trim();
+        filtered = filtered.filter(product => 
+            product.name.toLowerCase().includes(searchTerm)
+        );
+    }
+
+    this.filteredProducts = filtered;
+    this.currentPage = 0;
+    this.updatePaginatedProducts();
+}
+  
 }
