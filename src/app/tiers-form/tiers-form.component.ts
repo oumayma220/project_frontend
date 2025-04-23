@@ -53,7 +53,6 @@ export class TiersFormComponent {
       methodHeaders: [''],
       paginated: [false],
       paginationParamName: [''],
-      // pageSizeParamName: [''],
       totalPagesFieldInResponse: [''],
       contentFieldInResponse: [''],
       type: [''],
@@ -74,6 +73,8 @@ export class TiersFormComponent {
       if (method === 'POST' && this.payloadTemplates.length === 0) {
         this.payloadTemplates.push(this.fb.group({
           pathParam: [''],
+          payloadSchema: [''],
+          succesRespone: [''],
           template: ['']
         }));
       }
@@ -87,19 +88,23 @@ export class TiersFormComponent {
     this.fieldMappingsForm = this.fb.group({
       fieldMappings: this.fb.array([])
     });
+    this.addFieldMapping()
+
   }
 
   get fieldMappings(): FormArray {
     return this.fieldMappingsForm.get('fieldMappings') as FormArray;
   }
 
-  addFieldMapping() {
-    const mapping = this.fb.group({
-      source: ['', Validators.required],
-      target: ['', Validators.required]
+  addFieldMapping(): void {
+    const isFirstMapping = this.fieldMappings.length === 0;
+  
+    const mappingGroup = this.fb.group({
+      source: ['', isFirstMapping ? Validators.required : []],
+      target: [isFirstMapping ? 'reference' : '']
     });
-
-    this.fieldMappings.push(mapping);
+  
+    this.fieldMappings.push(mappingGroup);
   }
 
   removeFieldMapping(index: number) {

@@ -105,9 +105,7 @@ export class ConfigListComponent implements OnInit {
   editConfig(config: Config): void {
     console.log('Édition de la configuration:', config);
   }
- 
- 
-
+  
   testConfig(config: Config): void {
     console.log('Test de la configuration:', config);
     
@@ -205,19 +203,7 @@ deletefield(methodId: number):void {
         this.getConfigs();
       });
     }
-    // openSettingsDialogmethod(method: any): void {
-    //   const dialogRef = this.dialog.open(UpdateMethodComponent, {
-    //     width: '700px',
-    //     data: method  
-    //   });
-  
-    //   dialogRef.afterClosed().subscribe((result: any) => {
-    //     if (result) {
-    //       console.log('Le dialogue a été fermé avec des données:', result);
-    //     }
-    //     this.getConfigs();
-    //   });
-    // }
+ 
     openSettingsDialogmethod(method: any, config: Config): void {
       console.log('Config transmis :', config); 
       const dialogRef = this.dialog.open(UpdateMethodComponent, {

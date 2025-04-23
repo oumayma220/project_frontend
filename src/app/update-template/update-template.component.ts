@@ -33,7 +33,7 @@ import { MatDividerModule } from '@angular/material/divider';
 })
 export class UpdateTemplateComponent implements OnInit {
   templateForm: FormGroup;
-  originalValues: PayloadTemplate = { pathParam: '', template: '' };
+  originalValues: PayloadTemplate = { pathParam: '', template: '' ,payloadSchema:'',succesRespone:''};
 
   constructor(
     private fb: FormBuilder,
@@ -43,8 +43,10 @@ export class UpdateTemplateComponent implements OnInit {
     private snackBar: MatSnackBar
   ) {
     this.templateForm = this.fb.group({
-      pathParam: ['', Validators.required],
-      template: ['', Validators.required]
+      pathParam: ['',Validators.required],
+      template: ['', Validators.required],
+      payloadSchema:['', Validators.required],
+      succesRespone:['', Validators.required],
     });
   }
 
@@ -55,7 +57,9 @@ export class UpdateTemplateComponent implements OnInit {
       const template = this.data.payloadTemplates[0];
           this.originalValues = {
         pathParam: template.pathParam || '',
-        template: template.template || ''
+        template: template.template || '',
+        payloadSchema:template.payloadSchema|| '',
+        succesRespone:template.succesRespone|| ''
       };
       
       this.templateForm.patchValue(this.originalValues);
@@ -87,7 +91,6 @@ export class UpdateTemplateComponent implements OnInit {
   }
 
   resetForm(): void {
-    // Réinitialiser aux valeurs originales plutôt qu'à vide
     this.templateForm.reset(this.originalValues);
   }
 }

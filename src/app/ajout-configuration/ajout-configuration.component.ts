@@ -49,12 +49,14 @@ export class AjoutConfigurationComponent implements OnInit, AfterViewInit {
   tiersId!: number;
   baseConfigForm!: FormGroup;
   advancedConfigForm!: FormGroup;
-  fieldMappingForm!: FormGroup;
-  
+  testResponse: any = null;
   completeForm!: FormGroup;
   payloadTemplateForm!: FormGroup;
 
-  
+  parsedJson: any = null;
+  selectedPath: string = '';
+  expandedPaths: Set<string> = new Set(['$']);
+  error: string = '';
   successMessage = '';
   errorMessage = '';
   tiersNom!: string;
@@ -98,7 +100,6 @@ export class AjoutConfigurationComponent implements OnInit, AfterViewInit {
         this.advancedConfigForm.get('type')?.updateValueAndValidity();
       });
     });
-    
   }
 
   private initializeFormGroups(): void {
@@ -116,27 +117,26 @@ export class AjoutConfigurationComponent implements OnInit, AfterViewInit {
       paginationParamName: [''],
       totalPagesFieldInResponse: [''],
       contentFieldInResponse: [''],
-      type: ['']
-    });
-
-    this.fieldMappingForm = this.fb.group({
+      type: [''],
       fieldMappings: this.fb.array([])
+
     });
+   
       this.addFieldMapping();
       this.payloadTemplateForm = this.fb.group({
         payloadTemplates: this.fb.array([])
     });
     this.addPayloadTemplate(); 
-
-
   }
   get payloadTemplates(): FormArray {
     return this.payloadTemplateForm.get('payloadTemplates') as FormArray;
 }
 
-addPayloadTemplate(template: string = '', pathParam: string = ''): void {
+addPayloadTemplate(template: string = '', pathParam: string = '', payloadSchema: string='', succesRespone: string=''): void {
     const templateGroup = this.fb.group({
         template: [template, Validators.required],
+        payloadSchema: [payloadSchema, Validators.required],
+        succesRespone: [succesRespone, Validators.required],
         pathParam: [pathParam]
     });
     this.payloadTemplates.push(templateGroup);
@@ -167,7 +167,7 @@ removePayloadTemplate(index: number): void {
   }
 
   get fieldMappings(): FormArray {
-    return this.fieldMappingForm.get('fieldMappings') as FormArray;
+    return this.advancedConfigForm.get('fieldMappings') as FormArray;
   }
 
   isGetMethod(): boolean {
@@ -184,12 +184,16 @@ removePayloadTemplate(index: number): void {
   }
 
   addFieldMapping(): void {
+    const isFirstMapping = this.fieldMappings.length === 0;
+  
     const mappingGroup = this.fb.group({
-      source: [''],
-      target: ['']
+      source: ['', isFirstMapping ? Validators.required : []],
+      target: [isFirstMapping ? 'reference' : '']
     });
+  
     this.fieldMappings.push(mappingGroup);
   }
+  
 
   removeFieldMapping(index: number): void {
     this.fieldMappings.removeAt(index);
@@ -210,19 +214,17 @@ removePayloadTemplate(index: number): void {
     return {
       ...this.baseConfigForm.value,
       ...this.advancedConfigForm.value,
-      ...this.fieldMappingForm.value,
       ...this.payloadTemplateForm.value
     };
   }
 
   onSubmit(): void {
     if (this.baseConfigForm.invalid || 
-        (this.isGetMethod() && this.advancedConfigForm.invalid) ||
-        this.fieldMappingForm.invalid) {
+        (this.isGetMethod() && this.advancedConfigForm.invalid) 
+        ) {
       
       this.baseConfigForm.markAllAsTouched();
       this.advancedConfigForm.markAllAsTouched();
-      this.fieldMappingForm.markAllAsTouched();
       
       this.errorMessage = 'Veuillez remplir tous les champs obligatoires.';
       return;
@@ -294,10 +296,122 @@ removePayloadTemplate(index: number): void {
   }
 
   getAvailableTargets(index: number): string[] {
-    const selectedTargets = this.fieldMappingForm.get('fieldMappings')?.value
+    const selectedTargets = this.advancedConfigForm.get('fieldMappings')?.value
       .map((mapping: any, i: number) => i !== index ? mapping.target : null)
       .filter((target: string | null) => target !== null);
   
     return this.targetFields.filter(field => !selectedTargets.includes(field));
   }
+  // testApiFromForm(): void {
+  //   const url = this.baseConfigForm.get('url')?.value;
+  //   const endpoint = this.baseConfigForm.get('endpoint')?.value;
+  
+  //   if (!url || !endpoint) {
+  //     this.snackBar.open('Veuillez saisir à la fois l’URL de base et l’endpoint.', 'Fermer', { duration: 3000 });
+  //     return;
+  //   }
+  
+  //   this.tiersService.testExternalApi(url, endpoint).subscribe({
+  //     next: (response) => {
+  //       this.testResponse = response; // on stocke la réponse dans la variable
+  //     },
+  //     error: (error) => {
+  //       this.testResponse = error.error; // en cas d’erreur, on stocke aussi le message d’erreur
+  //     }
+  //   });
+  // }
+  testApiFromForm(): void {
+    const url = this.baseConfigForm.get('url')?.value;
+    const endpoint = this.baseConfigForm.get('endpoint')?.value;
+  
+    if (!url || !endpoint) {
+      this.snackBar.open('Veuillez saisir à la fois l’URL de base et l’endpoint.', 'Fermer', { duration: 3000 });
+      return;
+    }
+  
+    this.tiersService.testExternalApi(url, endpoint).subscribe({
+      next: (response) => {
+        this.testResponse = response;
+        this.parsedJson = response; // pour activer l’exploration JSON
+        this.expandedPaths = new Set(['$']); // expand root
+        this.error = '';
+        this.selectedPath = '';
+      },
+      error: (error) => {
+        this.testResponse = error.error;
+        this.parsedJson = error.error; // si tu veux explorer aussi les erreurs
+        this.expandedPaths = new Set(['$']);
+        this.error = '';
+        this.selectedPath = '';
+      }
+    });
+  }
+  isObject(value: any): boolean {
+    return value !== null && typeof value === 'object';
+  }
+  
+  isArray(value: any): boolean {
+    return Array.isArray(value);
+  }
+  
+  getObjectKeys(obj: any): string[] {
+    return Object.keys(obj);
+  }
+  
+  formatValue(value: any): string {
+    if (this.isArray(value)) return `[${value.length} éléments]`;
+    if (typeof value === 'string') return `"${value}"`;
+    if (value === null) return 'null';
+    return String(value);
+  }
+  
+  selectPath(path: string): void {
+    this.selectedPath = path.replace(/\[\d+\]/g, '[*]');
+  }
+  
+  isExpanded(path: string): boolean {
+    return this.expandedPaths.has(path);
+  }
+  
+  toggleExpand(path: string): void {
+    if (this.expandedPaths.has(path)) {
+      this.expandedPaths.delete(path);
+    } else {
+      this.expandedPaths.add(path);
+    }
+  }
+  
+  getChildPath(parentPath: string, key: string): string {
+    if (this.isArray(this.getNodeByPath(parentPath))) {
+      return `${parentPath}[${key}]`;
+    }
+    return parentPath === '$' ? `$.${key}` : `${parentPath}.${key}`;
+  }
+  
+  getType(value: any): string {
+    if (value === null) return 'null';
+    if (Array.isArray(value)) return 'array';
+    return typeof value;
+  }
+  
+  getNodeByPath(path: string): any {
+    const pathParts = this.parseJsonPath(path);
+    let current = this.parsedJson;
+  
+    for (const part of pathParts) {
+      if (current === undefined || current === null) return null;
+      current = current[part];
+    }
+  
+    return current;
+  }
+  
+  private parseJsonPath(path: string): (string | number)[] {
+    if (path === '$') return [];
+  
+    const parts = path.substring(2).split(/\.|\[|\]/g).filter(p => p !== '');
+    return parts.map(p => isNaN(Number(p)) ? p : Number(p));
+  }
+  
+  
 }

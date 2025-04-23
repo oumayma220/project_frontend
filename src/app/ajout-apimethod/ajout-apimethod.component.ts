@@ -39,6 +39,7 @@ import { NgZone } from '@angular/core';
 })
 export class AjoutApimethodComponent implements OnInit, AfterViewInit  {
   configId!: number;
+  tiersId!: number;
   ApiMethodForm!: FormGroup;
   successMessage = '';
   errorMessage = '';
@@ -47,6 +48,12 @@ export class AjoutApimethodComponent implements OnInit, AfterViewInit  {
   parentConfig: any;
   produits: Product[] = [];
   targetFields = ['name', 'description', 'price', 'url', 'reference'];
+  parsedJson: any = null;
+  selectedPath: string = '';
+  expandedPaths: Set<string> = new Set(['$']);
+  error: string = '';
+  testResponse: any = null;
+
   constructor(
     private fb: FormBuilder,
     private route: ActivatedRoute,
@@ -68,6 +75,15 @@ export class AjoutApimethodComponent implements OnInit, AfterViewInit  {
       },
       error: (err) => {
         console.error('Erreur lors de la récupération de la configuration :', err);
+      }
+    });
+    this.tiersService.getTiersIdByConfigId(this.configId).subscribe({
+      next: (tiersId) => {
+        console.log('tiersId:', tiersId);
+        this.tiersId = tiersId; 
+      },
+      error: (err) => {
+        console.error('Erreur lors de la récupération du tiersId :', err);
       }
     });
 
@@ -96,6 +112,8 @@ export class AjoutApimethodComponent implements OnInit, AfterViewInit  {
       if (method === 'POST' && this.payloadTemplates.length === 0) {
         this.payloadTemplates.push(this.fb.group({
           pathParam: [''],
+          payloadSchema: [''],
+          succesRespone: [''],
           template: ['']
         }));
       }
@@ -142,10 +160,13 @@ export class AjoutApimethodComponent implements OnInit, AfterViewInit  {
   }
 
   addFieldMapping(): void {
+    const isFirstMapping = this.fieldMappings.length === 0;
+  
     const mappingGroup = this.fb.group({
-      source: [''],
-      target: ['']
+      source: ['', isFirstMapping ? Validators.required : []],
+      target: [isFirstMapping ? 'reference' : '']
     });
+  
     this.fieldMappings.push(mappingGroup);
   }
 
@@ -161,7 +182,7 @@ export class AjoutApimethodComponent implements OnInit, AfterViewInit  {
   }
 
   onSubmit(): void {
-    if (this.ApiMethodForm.invalid) {
+    if (this.isGetMethod() &&this.ApiMethodForm.invalid) {
       this.markFormGroupTouched(this.ApiMethodForm);
       this.errorMessage = 'Veuillez remplir tous les champs obligatoires.';
       return;
@@ -174,6 +195,8 @@ export class AjoutApimethodComponent implements OnInit, AfterViewInit  {
       next: () => {
         this.successMessage = 'Configuration ajoutée avec succès !';
         this.snackBar.open('Configuration enregistrée', 'Fermer', { duration: 3000 });
+        this.router.navigate(['success/configlist', this.tiersId]);
+
       },
       error: (error) => {
         console.error(error);
@@ -182,6 +205,7 @@ export class AjoutApimethodComponent implements OnInit, AfterViewInit  {
     });
   }
 
+
   private markFormGroupTouched(formGroup: FormGroup) {
     Object.values(formGroup.controls).forEach(control => {
       control.markAsTouched();
@@ -189,6 +213,12 @@ export class AjoutApimethodComponent implements OnInit, AfterViewInit  {
         this.markFormGroupTouched(control);
       }
     });
+  }
+  isGetMethod(): boolean {
+    return this.ApiMethodForm.get('httpMethod')?.value === 'GET';
+  }
+  isPostMethod(): boolean {
+    return this.ApiMethodForm.get('httpMethod')?.value === 'POST';
   }
  
   onTestClick() {
@@ -248,4 +278,97 @@ export class AjoutApimethodComponent implements OnInit, AfterViewInit  {
   
     return this.targetFields.filter(field => !selectedTargets.includes(field));
   }
+  testApiFromForm(): void {
+    const url = this.parentConfig.url;
+    const endpoint = this.ApiMethodForm.get('endpoint')?.value;
+  
+    if (!url || !endpoint) {
+      this.snackBar.open('Veuillez saisir à la fois l’URL de base et l’endpoint.', 'Fermer', { duration: 3000 });
+      return;
+    }
+  
+    this.tiersService.testExternalApi(url, endpoint).subscribe({
+      next: (response) => {
+        this.testResponse = response;
+        this.parsedJson = response; 
+        this.expandedPaths = new Set(['$']); // expand root
+        this.error = '';
+        this.selectedPath = '';
+      },
+      error: (error) => {
+        this.testResponse = error.error;
+        this.parsedJson = error.error; // si tu veux explorer aussi les erreurs
+        this.expandedPaths = new Set(['$']);
+        this.error = '';
+        this.selectedPath = '';
+      }
+    });
+  }
+  isObject(value: any): boolean {
+    return value !== null && typeof value === 'object';
+  }
+  
+  isArray(value: any): boolean {
+    return Array.isArray(value);
+  }
+  
+  getObjectKeys(obj: any): string[] {
+    return Object.keys(obj);
+  }
+  
+  formatValue(value: any): string {
+    if (this.isArray(value)) return `[${value.length} éléments]`;
+    if (typeof value === 'string') return `"${value}"`;
+    if (value === null) return 'null';
+    return String(value);
+  }
+  
+  selectPath(path: string): void {
+    this.selectedPath = path.replace(/\[\d+\]/g, '[*]');
+  }
+  
+  isExpanded(path: string): boolean {
+    return this.expandedPaths.has(path);
+  }
+  
+  toggleExpand(path: string): void {
+    if (this.expandedPaths.has(path)) {
+      this.expandedPaths.delete(path);
+    } else {
+      this.expandedPaths.add(path);
+    }
+  }
+  
+  getChildPath(parentPath: string, key: string): string {
+    if (this.isArray(this.getNodeByPath(parentPath))) {
+      return `${parentPath}[${key}]`;
+    }
+    return parentPath === '$' ? `$.${key}` : `${parentPath}.${key}`;
+  }
+  
+  getType(value: any): string {
+    if (value === null) return 'null';
+    if (Array.isArray(value)) return 'array';
+    return typeof value;
+  }
+  
+  getNodeByPath(path: string): any {
+    const pathParts = this.parseJsonPath(path);
+    let current = this.parsedJson;
+  
+    for (const part of pathParts) {
+      if (current === undefined || current === null) return null;
+      current = current[part];
+    }
+  
+    return current;
+  }
+  
+  private parseJsonPath(path: string): (string | number)[] {
+    if (path === '$') return [];
+  
+    const parts = path.substring(2).split(/\.|\[|\]/g).filter(p => p !== '');
+    return parts.map(p => isNaN(Number(p)) ? p : Number(p));
+  }
+  
 }

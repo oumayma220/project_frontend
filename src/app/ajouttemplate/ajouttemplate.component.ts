@@ -57,9 +57,11 @@ export class AjouttemplateComponent implements OnInit {
   }
   addPayload(): void {
     const template = this.fb.group({
-      pathParam: ['',Validators.required],
-      template: ['',Validators.required]
-      
+      pathParam: [''],
+      template: ['',Validators.required],
+      payloadSchema: ['',Validators.required],
+      succesRespone: ['',Validators.required],
+    
     });
     this.payloadTemplates.push(template);
   }

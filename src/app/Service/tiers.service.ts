@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { TiersRequest } from '../TiersRequest';
@@ -79,6 +79,19 @@ export class TiersService {
       responseType: 'text' as 'json'  
     });
   }
+  testExternalApi(url: string, endpoint: string) {
+    const params = new HttpParams()
+      .set('url', url)
+      .set('endpoint', endpoint);
+  
+    const options = {
+      params,
+      headers: this.getAuthHeaders()
+    };
+    return this.http.get(this.base + '/test-url', options);
+  }
+  
+
   getConfigsByTiersId(tiersId: number): Observable<Config[]> {
     return this.http.get<Config[]>(`${this.base}/tiers/configs/${tiersId}`, {
       headers: this.getAuthHeaders()
@@ -102,6 +115,12 @@ export class TiersService {
       }
     );
   }
+  getTiersIdByConfigId(id: number): Observable<number> {
+    return this.http.get<number>(`${this.base}/tiers-id-by-config/${id}`, {
+      headers: this.getAuthHeaders()
+    });
+  }
+  
   addConfigToTiers(tiersId: number, request: TiersRequest): Observable<any> {
     const url = `${this.base}/${tiersId}/configs`;
     return this.http.post<any>(url, request, {

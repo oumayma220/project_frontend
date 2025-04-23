@@ -75,6 +75,31 @@
 
                     </div>
                 </div>
+                <button mat-raised-button color="accent" (click)="testApiFromForm()" type="button">
+                    Tester l'URL
+                  </button>
+
+                <mat-card *ngIf="parsedJson" class="response-card">
+
+                    <mat-card-content>
+                        <div *ngIf="parsedJson && !error">
+                            <!-- <h4>Cliquez sur un élément pour voir son JSONPath :</h4> -->
+                            <div class="json-tree">
+                                <ng-container *ngTemplateOutlet="jsonTreeTemplate; context: {node: parsedJson, path: '$', isRoot: true}"></ng-container>
+                            </div>
+
+
+                        </div>
+                        <div *ngIf="error" class="error">{{ error }}</div>
+
+                    </mat-card-content>
+
+                </mat-card>
+
+                <div *ngIf="selectedPath && (ApiMethodForm.get('type')?.value == 'jsonPath')" class="selected-path" style="color: black;">
+                    <strong>Chemin sélectionné :</strong> {{ selectedPath }}
+                    <br>
+                </div>
 
                 <div class="row mt-3">
                     <div class="col-12">
@@ -98,13 +123,7 @@
                                 </mat-error>
                             </mat-form-field>
                         </div>
-                        <!-- <div class="col-md-6">
-                            <mat-form-field appearance="outline" class="w-100">
-                                <mat-label>Taille de page</mat-label>
-                                <input matInput formControlName="pageSizeParamName" placeholder="Ex: size">
-                                <mat-icon matSuffix>format_list_numbered</mat-icon>
-                            </mat-form-field>
-                        </div> -->
+
                         <div class="col-md-6">
                             <mat-form-field appearance="outline" class="w-100">
                                 <mat-label>Champ "Total Pages" dans la réponse</mat-label>
@@ -163,9 +182,9 @@
                             </mat-form-field>
                         </div>
                         <div class="col-md-2 d-flex justify-content-end">
-                            <button type="button" mat-mini-fab color="warn" aria-label="Supprimer" (click)="removeFieldMapping(i)">
-                                    <mat-icon>delete</mat-icon>
-                                </button>
+                            <button type="button" mat-mini-fab color="warn" (click)="removeFieldMapping(i)" aria-label="Supprimer" [disabled]="i === 0">
+                        <mat-icon>delete_forever</mat-icon>
+                    </button>
                         </div>
                     </div>
                 </div>
@@ -176,27 +195,35 @@
                 <div *ngFor="let template of payloadTemplates.controls; let i = index" [formGroupName]="i" class="mb-4 p-3 border rounded">
                     <mat-form-field appearance="outline" class="w-100">
                         <mat-label>Path Param (optionnel)</mat-label>
-                        <input matInput formControlName="pathParam" placeholder="/data">
+                        <input matInput formControlName="pathParam" placeholder="/RequestBody">
                     </mat-form-field>
-
                     <mat-form-field appearance="outline" class="w-100">
                         <mat-label>Template JSON</mat-label>
                         <textarea matInput formControlName="template" rows="6" placeholder='{"key": "value"}' required></textarea>
                         <mat-error *ngIf="ApiMethodForm.get('template')?.invalid">le champ est obligatoire</mat-error>
-
+                    </mat-form-field>
+                    <mat-form-field appearance="outline" class="w-100">
+                        <mat-label>Payload schema</mat-label>
+                        <textarea matInput formControlName="payloadSchema" rows="6" required></textarea>
+                        <mat-error *ngIf="ApiMethodForm.get('payloadSchema')?.invalid">le champ est obligatoire</mat-error>
+                    </mat-form-field>
+                    <mat-form-field appearance="outline" class="w-100">
+                        <mat-label>succesRespone</mat-label>
+                        <textarea matInput formControlName="succesRespone" rows="6" required></textarea>
+                        <mat-error *ngIf="ApiMethodForm.get('succesRespone')?.invalid">le champ est obligatoire</mat-error>
                     </mat-form-field>
                 </div>
             </div>
 
             <!-- Boutons d'action -->
             <div class="form-actions mt-5 pt-3 border-top">
-                <button type="button" mat-stroked-button class="me-3" (click)="onTestClick()" color="accent" [disabled]="ApiMethodForm.invalid">
+                <button type="button" mat-stroked-button class="me-3" (click)="onTestClick()" color="accent" [disabled]="ApiMethodForm.invalid" *ngIf="ApiMethodForm.get('httpMethod')?.value === 'GET'">
                     <mat-icon>play_arrow</mat-icon> tester
                 </button>
                 <button type="button" mat-stroked-button class="me-3">
                         <mat-icon>cancel</mat-icon> Annuler
                     </button>
-                <button type="submit" mat-raised-button color="accent" [disabled]="ApiMethodForm.invalid">
+                <button type="submit" mat-raised-button color="accent">
                         <mat-icon>save</mat-icon> Enregistrer
                     </button>
             </div>
@@ -212,3 +239,31 @@
         </div>
     </mat-card-content>
 </mat-card>
+<ng-template #jsonTreeTemplate let-node="node" let-path="path" let-isRoot="isRoot">
+    <div class="tree-item" [class.root]="isRoot">
+        <div *ngIf="isObject(node)" class="object-node">
+            <div class="node-toggle" [class.expanded]="isExpanded(path)" (click)="toggleExpand(path); $event.stopPropagation();">
+                {{ isExpanded(path) ? '▼' : '►' }}
+            </div>
+            <span class="object-symbol" (click)="selectPath(path)">
+      {{ isArray(node) ? '['+node.length+']' : '{ }' }}
+    </span>
+            <div class="object-content" *ngIf="isExpanded(path)">
+                <div *ngFor="let key of getObjectKeys(node); let i = index" class="object-property">
+                    <div class="property-line">
+                        <span class="property-key" (click)="selectPath(getChildPath(path, key))">
+            {{ isArray(node) ? i : key }}:
+          </span>
+                        <ng-container *ngIf="isObject(node[key])">
+                            <ng-container *ngTemplateOutlet="jsonTreeTemplate; context: {node: node[key], path: getChildPath(path, key), isRoot: false}">
+                            </ng-container>
+                        </ng-container>
+                        <span *ngIf="!isObject(node[key])" class="property-value" (click)="selectPath(getChildPath(path, key))">
+            {{ formatValue(node[key]) }}
+          </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-template>

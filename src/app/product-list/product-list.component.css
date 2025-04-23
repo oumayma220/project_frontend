@@ -34,9 +34,6 @@
     max-width: 24%;
 }
 
-
-/* Cartes produits */
-
 .card-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));

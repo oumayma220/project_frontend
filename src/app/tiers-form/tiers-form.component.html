@@ -156,15 +156,24 @@
                     <div *ngFor="let template of payloadTemplates.controls; let i = index" [formGroupName]="i" class="mb-4 p-3 border rounded">
                         <mat-form-field appearance="outline" class="w-100">
                             <mat-label>Path Param (optionnel)</mat-label>
-                            <input matInput formControlName="pathParam" placeholder="/data">
+                            <input matInput formControlName="pathParam" placeholder="RequestBody">
                         </mat-form-field>
-
                         <mat-form-field appearance="outline" class="w-100">
                             <mat-label>Template JSON</mat-label>
                             <textarea matInput formControlName="template" rows="6" placeholder='{"key": "value"}' required></textarea>
                             <mat-error *ngIf="configForm.get('template')?.invalid">le champ est obligatoire</mat-error>
-
                         </mat-form-field>
+                        <mat-form-field appearance="outline" class="w-100">
+                            <mat-label>Payload schema</mat-label>
+                            <textarea matInput formControlName="payloadSchema" rows="6" placeholder='{"key": "value"}' required></textarea>
+                            <mat-error *ngIf="configForm.get('payloadSchema')?.invalid">le champ est obligatoire</mat-error>
+                        </mat-form-field>
+                        <mat-form-field appearance="outline" class="w-100">
+                            <mat-label>succesRespone</mat-label>
+                            <textarea matInput formControlName="succesRespone" rows="2" required></textarea>
+                            <mat-error *ngIf="configForm.get('succesRespone')?.invalid">le champ est obligatoire</mat-error>
+                        </mat-form-field>
+
                     </div>
                 </div>
 
@@ -183,12 +192,7 @@
                 </div>
             </div>
         </form>
-
-    </mat-step>
-
-    <!-- STEP 3 : Field Mappings -->
-    <mat-step [stepControl]="fieldMappingsForm" *ngIf="configForm.get('httpMethod')?.value === 'GET'">
-        <form [formGroup]="fieldMappingsForm">
+        <form [formGroup]="fieldMappingsForm" *ngIf="configForm.get('httpMethod')?.value === 'GET'">
             <ng-template matStepLabel>Field Mappings</ng-template>
 
             <div class="step-content">
@@ -220,18 +224,15 @@
                                 <mat-error *ngIf="mapping.get('target')?.invalid">Target obligatoire</mat-error>
                             </mat-form-field>
 
-
-                            <!-- Bouton suppression -->
-                            <button mat-icon-button color="warn" (click)="removeFieldMapping(i)" type="button" aria-label="Supprimer le mapping" class="delete-button" matTooltip="Supprimer ce mapping">
-                                <mat-icon>delete</mat-icon>
+                            <button type="button" mat-mini-fab color="warn" (click)="removeFieldMapping(i)" aria-label="Supprimer" [disabled]="i === 0">
+                                <mat-icon>delete_forever</mat-icon>
                             </button>
                         </div>
                     </div>
 
-                    <!-- Message si aucun mapping -->
-                    <div *ngIf="fieldMappings.controls.length === 0" class="no-mappings-message">
+                    <!-- <div *ngIf="fieldMappings.controls.length === 0" class="no-mappings-message">
                         Aucun mapping défini.
-                    </div>
+                    </div> -->
                 </div>
 
                 <!-- Bouton ajouter un mapping -->
@@ -257,5 +258,8 @@
                 </div>
             </div>
         </form>
+
     </mat-step>
+
+
 </mat-horizontal-stepper>

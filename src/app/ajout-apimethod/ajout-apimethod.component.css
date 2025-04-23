@@ -1,5 +1,11 @@
-/* ajout-configuration.component.css */
-
+.response-card {
+    margin-top: 20px;
+    /* background-color: #d1cdee; */
+    color: #000;
+    border: 1px solid #ccc;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    padding: 15px;
+}
 .mat-form-field {
     width: 100%;
 }
@@ -13,61 +19,6 @@
     background-color: #f44336;
     color: white;
 }
-
-
-/* mat-card {
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
-    padding: 10px;
-}
-
-mat-card-header {
-    margin-bottom: 20px;
-    background-color: #f5f5f5;
-    padding: 16px;
-    border-radius: 8px 8px 0 0;
-}
-
-mat-card-title {
-    font-size: 1.5rem;
-    font-weight: 500;
-    color: #3f51b5;
-}
-
-.mapping-card {
-    border: 1px solid #eee;
-    padding: 10px;
-    margin-bottom: 10px;
-    border-radius: 4px;
-}
-
-.field-mappings-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 10px;
-}
-
-.field-mappings-container {
-    padding: 16px;
-    background-color: #f9f9f9;
-    border-radius: 8px;
-    margin-bottom: 20px;
-}
-
-.action-buttons {
-    margin-top: 20px;
-}
-
-.form-section {
-    margin-bottom: 24px;
-}
-
-.section-title {
-    font-weight: 500;
-    color: #3f51b5;
-    margin-bottom: 12px;
-} */
 
 .section-title {
     color: #23212190;
@@ -97,4 +48,127 @@ mat-card-title {
     font-size: 20px;
     height: 20px;
     width: 20px;
+}
+/* arbre */
+
+.json-tree {
+    font-family: 'Consolas', 'Courier New', monospace;
+    font-size: 14px;
+    line-height: 1.5;
+    margin: 15px 0;
+    background-color: #fafafa;
+    padding: 15px;
+    border-radius: 4px;
+    border: 1px solid #eee;
+    max-height: 500px;
+    overflow-y: auto;
+}
+
+.selected-path {
+    margin-top: 20px;
+    padding: 15px;
+    background-color: #f0f7ff;
+    border-radius: 4px;
+    border-left: 4px solid #ece808;
+}
+
+.path-box {
+    font-family: 'Consolas', 'Courier New', monospace;
+    background-color: #e8f4fc;
+    padding: 10px;
+    border-radius: 4px;
+    margin: 10px 0;
+    word-break: break-all;
+    color: #2c3e50;
+    font-weight: bold;
+}
+
+.value-info {
+    font-size: 14px;
+    color: #7f8c8d;
+}
+
+.tree-item {
+    margin-bottom: 5px;
+}
+
+.object-node {
+    margin-left: 16px;
+}
+
+.node-toggle {
+    cursor: pointer;
+    display: inline-block;
+    width: 16px;
+    text-align: center;
+    color: #3498db;
+    font-weight: bold;
+}
+
+.object-symbol {
+    cursor: pointer;
+    font-weight: bold;
+    color: #16a085;
+}
+
+.property-line {
+    display: flex;
+    align-items: flex-start;
+    margin-left: 20px;
+    margin-bottom: 5px;
+}
+
+.property-key {
+    cursor: pointer;
+    font-weight: bold;
+    margin-right: 4px;
+    color: #8e44ad;
+}
+
+.property-key:hover,
+.object-symbol:hover {
+    text-decoration: underline;
+}
+
+.property-value {
+    cursor: pointer;
+    color: #27ae60;
+}
+
+.object-node[data-isarray="true"] .object-symbol {
+    color: #e67e22;
+}
+
+.node-toggle {
+    transition: transform 0.2s;
+}
+
+.node-toggle.expanded {
+    transform: rotate(90deg);
+}
+
+.json-tree::-webkit-scrollbar {
+    width: 8px;
+}
+
+.json-tree::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+.json-tree::-webkit-scrollbar-thumb {
+    background: #bdc3c7;
+    border-radius: 4px;
+}
+
+.json-tree::-webkit-scrollbar-thumb:hover {
+    background: #95a5a6;
+}
+
+button:active {
+    transform: translateY(1px);
+}
+
+.property-key:active,
+.object-symbol:active {
+    opacity: 0.8;
 }

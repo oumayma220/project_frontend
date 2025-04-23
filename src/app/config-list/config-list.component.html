@@ -4,7 +4,7 @@
             <mat-icon>settings</mat-icon>
             Configurations pour le Tiers {{ tiersNom }}
         </h1>
-        <button mat-raised-button color="accent" class="add-button" (click)="redirectToAddConfig(tiersId)">
+        <button mat-raised-button color="accent" class="add-button" (click)="redirectToAddConfig(tiersId)" *ngIf="configs.length === 0">
             <mat-icon>add</mat-icon>
             Nouvelle Configuration
         </button>
@@ -89,7 +89,7 @@
                             </mat-expansion-panel-header>
 
                             <div class="method-details">
-                                <div class="method-actions">
+                                <div class="method-actions" *ngIf="method.httpMethod === 'GET' || !method.payloadTemplates || method.payloadTemplates.length === 0">
                                     <button mat-stroked-button color="accent" (click)="method.httpMethod === 'GET' ? redirectToAddMapping(method.id) : redirectToAddPayloadTemplate(method.id)">
                                         <mat-icon>add</mat-icon>
                                         {{ method.httpMethod === 'GET' ? 'Ajouter un mapping' : 'Ajouter un template' }}
@@ -186,6 +186,11 @@
                                                 <span class="detail-label">Template</span>
                                                 <pre class="detail-value code-block" style="border-left: 3px solid yellow;">{{ template.template }}</pre>
                                             </div>
+                                            <div class="detail-group">
+                                                <span class="detail-label">PayloadSchema</span>
+                                                <pre class="detail-value code-block" style="border-left: 3px solid yellow;">{{ template.payloadSchema }}</pre>
+                                            </div>
+
                                         </div>
                                     </div>
 

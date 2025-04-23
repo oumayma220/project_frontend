@@ -4,6 +4,58 @@
             <p>JSONPath est plus adapté si le modèle de réponse est complexe. Ci-joint, vous trouverez un exemple qui pourra vous aider.</p>
             <div class="flex-container">
                 <div class="flex-column">
+                    <h4>Exemple de réponse JSON :</h4>
+                    <pre>{{ '{' }}
+    "totalPages": 20,
+    "numberOfElements": 1,
+    "number": 0,
+    "totalElements": 20,
+    "content": [
+      {{ '{' }}
+        "title": "Exemple de produit",
+        "price": 109.95,
+        "description": "Description du produit...",
+        "image": "https://exemple.com/image.jpg",
+        "ref": "1234567890"
+      {{ '}' }}
+    ]
+  {{ '}' }}</pre>
+                    <h4>Exemple de configuration avec jsonPath :</h4>
+                    <pre>contentFieldInResponse: $.content[*]</pre>
+                    <p><strong>Explication :</strong> Ici, <code>content</code> est le champ contenant la liste des objets à traiter. Grâce à la reflection, chaque clé de l’objet JSON (par exemple <code>title</code>, <code>price</code>, etc.) sera mappée
+                        automatiquement sur une propriété Java portant le même nom.</p>
+                </div>
+                <div class="flex-column">
+                    <div class="note">
+                        <strong>NB :</strong> Si, par exemple, votre structure JSON contient une liste imbriquée sous <code>content</code> comme ceci :
+                    </div>
+                    <pre> {{ '{' }}
+    "content": {{ '{' }}
+    "data": [
+       {{ '{' }}
+        "title": "Produit imbriqué"
+        {{ '}' }}
+      ]
+    {{ '}' }}
+ {{ '}' }}
+    </pre>
+                    <p>Alors la configuration reflection devient :</p>
+                    <pre>contentFieldInResponse: $.content.data[*]</pre>
+                    <p>Pour accéder aux autres champs de la réponse JSON (comme <code>totalPages</code> ou <code>title</code>), il suffit d’utiliser directement le <strong>nom du champ</strong> précédé du symbole <code>$</code>, par exemple :</p>
+                    <ul>
+                        <li><code>$.totalPages</code></li>
+                        <li><code>$.title</code></li>
+                    </ul>
+                    <p>
+                        Si le champ de total pages est <strong>imbriqué</strong>, vous devrez spécifier le chemin vers ce champ à l'intérieur de la structure. Par exemple, pour accéder à <code>totalPages</code> dans un champ imbriqué sous <code>content</code>,
+                        vous écrirez :
+                    </p>
+                    <pre>$.content[*].totalPages</pre>
+                </div>
+            </div>
+
+            <!-- <div class="flex-container">
+                <div class="flex-column">
                     <div class="input-section">
                         <label for="jsonInput" style="color:  #3f51b5;">Entrez votre JSON :</label>
                         <textarea id="jsonInput" rows="14" [(ngModel)]="jsonInput" (change)="parseJson()" placeholder='{"exemple": {"champ1": "valeur1", "tableau": [1, 2, 3]}}' style="background-color: #d1cdee"></textarea>
@@ -21,7 +73,6 @@
                             <h3>Chemin sélectionné :</h3>
                             <div class="path-box">{{ selectedPath }}</div>
                             <div class="value-info" *ngIf="getNodeByPath(selectedPath) !== undefined">
-                                <!-- Type: {{ getType(getNodeByPath(selectedPath)) }} -->
                                 <span *ngIf="isArray(getNodeByPath(selectedPath))">
                     ({{ getNodeByPath(selectedPath).length }} éléments)
                   </span>
@@ -29,9 +80,9 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> -->
         </div>
-        <ng-template #jsonTreeTemplate let-node="node" let-path="path" let-isRoot="isRoot">
+        <!-- <ng-template #jsonTreeTemplate let-node="node" let-path="path" let-isRoot="isRoot">
             <div class="tree-item" [class.root]="isRoot">
                 <div *ngIf="isObject(node)" class="object-node">
                     <div class="node-toggle" [class.expanded]="isExpanded(path)" (click)="toggleExpand(path); $event.stopPropagation();">
@@ -58,7 +109,7 @@
                     </div>
                 </div>
             </div>
-        </ng-template>
+        </ng-template> -->
     </mat-tab>
     <mat-tab label="Reflection">
         <div class="help-content">

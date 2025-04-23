@@ -65,6 +65,7 @@ export class AjoutMappingComponent implements OnInit {
     });
     this.fieldMappings.push(mappingGroup);
   }
+  
   removeFieldMapping(index: number): void {
     this.fieldMappings.removeAt(index);
   }

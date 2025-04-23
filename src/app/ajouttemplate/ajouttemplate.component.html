@@ -8,8 +8,8 @@
                 <mat-card class="mat-elevation-z2 mb-3">
                     <mat-form-field appearance="outline" class="full-width">
                         <mat-label>Path Param</mat-label>
-                        <input matInput formControlName="pathParam" required />
-                        <mat-error *ngIf="group.get('pathParam')?.invalid">Champ requis</mat-error>
+                        <input matInput formControlName="pathParam" />
+                        <!-- <mat-error *ngIf="group.get('pathParam')?.invalid">Champ requis</mat-error> -->
                     </mat-form-field>
 
                     <mat-form-field appearance="outline" class="full-width">
@@ -17,6 +17,17 @@
                         <textarea matInput formControlName="template" required></textarea>
                         <mat-error *ngIf="group.get('template')?.invalid">Champ requis</mat-error>
                     </mat-form-field>
+                    <mat-form-field appearance="outline" class="full-width">
+                        <mat-label>Payload schema</mat-label>
+                        <textarea matInput formControlName="payloadSchema" required></textarea>
+                        <mat-error *ngIf="group.get('payloadSchema')?.invalid">Champ requis</mat-error>
+                    </mat-form-field>
+                    <mat-form-field appearance="outline" class="full-width">
+                        <mat-label>succesRespone</mat-label>
+                        <input matInput formControlName="succesRespone" />
+                        <mat-error *ngIf="group.get('succesRespone')?.invalid">Champ requis</mat-error>
+                    </mat-form-field>
+
 
                     <button mat-icon-button color="warn" (click)="removePayload(i)" *ngIf="payloadTemplates.length > 1">
               <mat-icon>delete</mat-icon>
