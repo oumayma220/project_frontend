@@ -14,6 +14,7 @@
                 <mat-option *ngFor="let tier of tiersList" [value]="tier.nom">
                     {{ tier.nom }}
                 </mat-option>
+
             </mat-select>
         </mat-form-field>
 
@@ -52,6 +53,11 @@
                         <span class="product-reference">Ref: {{ product.reference }}</span>
                     </div>
                 </mat-card-content>
+                <mat-card-actions align="end">
+                    <button mat-raised-button color="accent" (click)="ajouterAuPanier(product)">
+                      <mat-icon>add_shopping_cart</mat-icon> Ajouter au panier
+                    </button>
+                </mat-card-actions>
             </mat-card>
         </div>
 

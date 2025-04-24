@@ -19,6 +19,14 @@ import {  ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatOptionModule } from '@angular/material/core';
+import { MatButtonModule } from '@angular/material/button';
+import { PanierService } from '../Service/panier.service';
+import { PanierItem } from '../PanierItem';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
+
+
 
 @Component({
   selector: 'app-product-list',
@@ -36,7 +44,9 @@ import { MatOptionModule } from '@angular/material/core';
     MatFormFieldModule,
     MatSelectModule,
     MatInputModule,
-    MatOptionModule
+    MatOptionModule,
+    MatButtonModule,
+    MatDialogModule
   ],
   templateUrl: './product-list.component.html',
   styleUrl: './product-list.component.css'
@@ -59,7 +69,8 @@ export class ProductListComponent implements OnInit, AfterViewInit {
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
-  constructor(private tiersService: TiersService) {}
+  constructor(private tiersService: TiersService,private panierService: PanierService,private dialog: MatDialog
+  ) {}
 
   ngOnInit(): void {
     this.loadData();
@@ -132,16 +143,6 @@ export class ProductListComponent implements OnInit, AfterViewInit {
   ngAfterViewInit(): void {
     this.dataSource.paginator = this.paginator;
   }
-  // applyFilters(): void {
-  //   this.filteredProducts = this.products.filter(product => {
-  //     const matchTier = this.selectedTier ? product.tierName === this.selectedTier : true;
-  //     const matchName = this.searchTerm ? product.name.toLowerCase().includes(this.searchTerm.toLowerCase()) : true;
-  //     return matchTier && matchName;
-  //   });
-  
-  //   this.currentPage = 0;
-  //   this.updatePaginatedProducts();
-  // }
   applyNameFilter(): void {
     let filtered = this.selectedTier 
         ? this.products.filter(p => p.tierName === this.selectedTier)
@@ -158,5 +159,47 @@ export class ProductListComponent implements OnInit, AfterViewInit {
     this.currentPage = 0;
     this.updatePaginatedProducts();
 }
-  
+ajouterAuPanier(product: any) {
+  const produit: PanierItem = {
+    produitId: product.reference,
+    nomProduit: product.name,
+    prixUnitaire: product.price,
+    quantite: 1,
+    tierId: product.tierId,
+    imageUrl: product.url
+  };
+
+  const panierItems = this.panierService.getPanierItems();
+  const vendeurActuelId = panierItems[0]?.tierId;
+
+  if (vendeurActuelId && vendeurActuelId !== produit.tierId) {
+    this.tiersService.getTiersById(vendeurActuelId).subscribe({
+      next: (tiers) => {
+        const vendeurActuelNom = tiers.nom;
+        const message = `Votre panier contient déjà des produits du vendeur ${vendeurActuelNom}. ` +
+                        `En ajoutant ce produit du vendeur ${product.tierName}, votre panier sera vidé. Continuer ?`;
+
+        const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+          width: '400px',
+          data: { message }
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+          if (result) {
+            this.panierService.viderPanier();
+            this.panierService.ajouterProduit(produit);
+          }
+        });
+      },
+      error: (err) => {
+        console.error('Erreur lors de la récupération du vendeur :', err);
+        alert("Une erreur s'est produite en vérifiant le vendeur du panier.");
+      }
+    });
+  } else {
+    this.panierService.ajouterProduit(produit);
+  }
+}
+
+
 }

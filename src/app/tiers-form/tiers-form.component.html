@@ -116,6 +116,31 @@
                         <mat-icon>help_outline</mat-icon>
                     </button>
                 </div>
+                <button mat-raised-button color="accent" (click)="testApiFromForm()" type="button">
+                    Tester l'URL
+                  </button>
+
+                <mat-card *ngIf="parsedJson" class="response-card">
+
+                    <mat-card-content>
+                        <div *ngIf="parsedJson && !error">
+                            <!-- <h4>Cliquez sur un élément pour voir son JSONPath :</h4> -->
+                            <div class="json-tree">
+                                <ng-container *ngTemplateOutlet="jsonTreeTemplate; context: {node: parsedJson, path: '$', isRoot: true}"></ng-container>
+                            </div>
+
+
+                        </div>
+                        <div *ngIf="error" class="error">{{ error }}</div>
+
+                    </mat-card-content>
+
+                </mat-card>
+
+                <div *ngIf="selectedPath && (configForm.get('type')?.value == 'jsonPath')" class="selected-path" style="color: black;">
+                    <strong>Chemin sélectionné :</strong> {{ selectedPath }}
+                    <br>
+                </div>
 
                 <div class="form-row pagination-section" *ngIf="configForm.get('httpMethod')?.value === 'GET'">
                     <mat-checkbox formControlName="paginated" color="accent">Pagination activée</mat-checkbox>
@@ -179,7 +204,7 @@
 
                 <!-- Boutons navigation -->
                 <div class="step-actions">
-                    <button mat-stroked-button color="accent" matStepperPrevious>
+                    <button mat-stroked-button color="accent" matStepperPrevious *ngIf="configForm.get('httpMethod')?.value === 'POST'">
                         <mat-icon>arrow_back</mat-icon> Retour
                     </button>
                     <button mat-raised-button color="accent" matStepperNext *ngIf="configForm.get('httpMethod')?.value === 'GET'">
@@ -230,9 +255,6 @@
                         </div>
                     </div>
 
-                    <!-- <div *ngIf="fieldMappings.controls.length === 0" class="no-mappings-message">
-                        Aucun mapping défini.
-                    </div> -->
                 </div>
 
                 <!-- Bouton ajouter un mapping -->
@@ -258,8 +280,33 @@
                 </div>
             </div>
         </form>
-
     </mat-step>
-
-
 </mat-horizontal-stepper>
+<ng-template #jsonTreeTemplate let-node="node" let-path="path" let-isRoot="isRoot">
+    <div class="tree-item" [class.root]="isRoot">
+        <div *ngIf="isObject(node)" class="object-node">
+            <div class="node-toggle" [class.expanded]="isExpanded(path)" (click)="toggleExpand(path); $event.stopPropagation();">
+                {{ isExpanded(path) ? '▼' : '►' }}
+            </div>
+            <span class="object-symbol" (click)="selectPath(path)">
+      {{ isArray(node) ? '['+node.length+']' : '{ }' }}
+    </span>
+            <div class="object-content" *ngIf="isExpanded(path)">
+                <div *ngFor="let key of getObjectKeys(node); let i = index" class="object-property">
+                    <div class="property-line">
+                        <span class="property-key" (click)="selectPath(getChildPath(path, key))">
+            {{ isArray(node) ? i : key }}:
+          </span>
+                        <ng-container *ngIf="isObject(node[key])">
+                            <ng-container *ngTemplateOutlet="jsonTreeTemplate; context: {node: node[key], path: getChildPath(path, key), isRoot: false}">
+                            </ng-container>
+                        </ng-container>
+                        <span *ngIf="!isObject(node[key])" class="property-value" (click)="selectPath(getChildPath(path, key))">
+            {{ formatValue(node[key]) }}
+          </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-template>

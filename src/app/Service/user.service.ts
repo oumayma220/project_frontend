@@ -1,9 +1,12 @@
-import { Injectable } from '@angular/core';
+import { forwardRef, Inject, Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { User } from '../User';
 import { AuthenticationService } from './authentication.service';
 import { Router } from '@angular/router';
+import { PanierService } from './panier.service';
+import { EventServiceService } from './event-service.service';
 
+ 
 
 @Injectable({
   providedIn: 'root'
@@ -12,14 +15,19 @@ export class UserService {
   private currentUserSubject: BehaviorSubject<User | null>;
   public currentUser$: Observable<User | null>;
 
-  constructor(private service: AuthenticationService, private _router: Router) {
+  constructor(
+    private service: AuthenticationService, 
+    private _router: Router,
+    private eventService: EventServiceService
+  ) {
     this.currentUserSubject = new BehaviorSubject<User | null>(null);
     this.currentUser$ = this.currentUserSubject.asObservable();
-    this.getCurrentUser();  
+    this.getCurrentUser();
   }
+
   public getCurrentUser() {
     if (!this.service.isLoggedIn()) {
-      this.currentUserSubject.next(null); // Aucun utilisateur n'est connecté
+      this.currentUserSubject.next(null);
       return;
     }
     this.service.getPrincipal().subscribe({
@@ -28,16 +36,18 @@ export class UserService {
           this.service.getById(data.id).subscribe({
             next: (user: User) => {
               this.currentUserSubject.next(user);
-              console.log("Current User: ", user);
               localStorage.setItem('currentUser', JSON.stringify(user));
+              
+              // Émettre un événement pour signaler la connexion d'un utilisateur
+              this.eventService.emitUserLogin(user.id);
 
+              // Redirection selon le rôle
               if (user.roles && user.roles.includes('ADMIN')) {
                 this._router.navigate(['/success']);
-              } 
+              }
               else if (user.roles && user.roles.includes('EMPLOYEE')) {
                 this._router.navigate(['/success']);
               }
-              
               else {
                 this._router.navigate(['/clienthome']);
               }
@@ -56,16 +66,14 @@ export class UserService {
       }
     });
   }
-
+  
   public get currentUserValue(): User | null {
     return this.currentUserSubject.value;
   }
 
   logout(): void {
     localStorage.removeItem('accessToken');
-    localStorage.removeItem('currentUser'); // Supprimer l'utilisateur du localStorage
-    this.currentUserSubject.next(null); // Réinitialiser le BehaviorSubject
+    localStorage.removeItem('currentUser');
+    this.currentUserSubject.next(null);
     this._router.navigate(['/login']);
-  }
-  
-}
+  }}

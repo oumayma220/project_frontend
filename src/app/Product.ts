@@ -5,4 +5,5 @@ export class Product {
     price!: number;
     reference!: string;
     tierName!: string;
+    tierId!: number;
   }

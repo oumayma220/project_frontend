@@ -15,6 +15,8 @@ import { HelpMappingComponent } from '../help-mapping/help-mapping.component';
 import { MatDialog } from '@angular/material/dialog';
 import { TestComponent } from '../test/test.component';
 import { Product } from '../Product';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatCardModule } from '@angular/material/card';
 @Component({
   selector: 'app-tiers-form',
   standalone: true,
@@ -27,6 +29,8 @@ import { Product } from '../Product';
       MatCheckboxModule,
       MatSelectModule,
       MatIconModule,
+      MatCardModule
+      
       
         ],
   templateUrl: './tiers-form.component.html',
@@ -38,7 +42,18 @@ export class TiersFormComponent {
   fieldMappingsForm: FormGroup;
   produits: Product[] = [];
   targetFields = ['name', 'description', 'price', 'url', 'reference'];
-  constructor(private fb: FormBuilder, private tiersService: TiersService, private router: Router,private dialog: MatDialog) {
+  parsedJson: any = null;
+  selectedPath: string = '';
+  expandedPaths: Set<string> = new Set(['$']);
+  error: string = '';
+  testResponse: any = null;
+
+  constructor(private fb: FormBuilder,
+     private tiersService: TiersService,
+      private router: Router,
+      private dialog: MatDialog,
+          private snackBar: MatSnackBar
+  ) {
     this.tiersInfoForm = this.fb.group({
       nom: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
@@ -248,6 +263,98 @@ getAvailableTargets(index: number): string[] {
     .filter(target => target !== null);
 
   return this.targetFields.filter(field => !selectedTargets.includes(field));
+}
+testApiFromForm(): void {
+  const url = this.configForm.get('url')?.value;
+  const endpoint = this.configForm.get('endpoint')?.value;
+
+  if (!url || !endpoint) {
+    this.snackBar.open('Veuillez saisir à la fois l’URL de base et l’endpoint.', 'Fermer', { duration: 3000 });
+    return;
+  }
+
+  this.tiersService.testExternalApi(url, endpoint).subscribe({
+    next: (response) => {
+      this.testResponse = response;
+      this.parsedJson = response; // pour activer l’exploration JSON
+      this.expandedPaths = new Set(['$']); // expand root
+      this.error = '';
+      this.selectedPath = '';
+    },
+    error: (error) => {
+      this.testResponse = error.error;
+      this.parsedJson = error.error; // si tu veux explorer aussi les erreurs
+      this.expandedPaths = new Set(['$']);
+      this.error = '';
+      this.selectedPath = '';
+    }
+  });
+}
+isObject(value: any): boolean {
+  return value !== null && typeof value === 'object';
+}
+
+isArray(value: any): boolean {
+  return Array.isArray(value);
+}
+
+getObjectKeys(obj: any): string[] {
+  return Object.keys(obj);
+}
+
+formatValue(value: any): string {
+  if (this.isArray(value)) return `[${value.length} éléments]`;
+  if (typeof value === 'string') return `"${value}"`;
+  if (value === null) return 'null';
+  return String(value);
+}
+
+selectPath(path: string): void {
+  this.selectedPath = path.replace(/\[\d+\]/g, '[*]');
+}
+
+isExpanded(path: string): boolean {
+  return this.expandedPaths.has(path);
+}
+
+toggleExpand(path: string): void {
+  if (this.expandedPaths.has(path)) {
+    this.expandedPaths.delete(path);
+  } else {
+    this.expandedPaths.add(path);
+  }
+}
+
+getChildPath(parentPath: string, key: string): string {
+  if (this.isArray(this.getNodeByPath(parentPath))) {
+    return `${parentPath}[${key}]`;
+  }
+  return parentPath === '$' ? `$.${key}` : `${parentPath}.${key}`;
+}
+
+getType(value: any): string {
+  if (value === null) return 'null';
+  if (Array.isArray(value)) return 'array';
+  return typeof value;
+}
+
+getNodeByPath(path: string): any {
+  const pathParts = this.parseJsonPath(path);
+  let current = this.parsedJson;
+
+  for (const part of pathParts) {
+    if (current === undefined || current === null) return null;
+    current = current[part];
+  }
+
+  return current;
+}
+
+private parseJsonPath(path: string): (string | number)[] {
+  if (path === '$') return [];
+
+  const parts = path.substring(2).split(/\.|\[|\]/g).filter(p => p !== '');
+  return parts.map(p => isNaN(Number(p)) ? p : Number(p));
 }
 
 

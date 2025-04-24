@@ -302,24 +302,7 @@ removePayloadTemplate(index: number): void {
   
     return this.targetFields.filter(field => !selectedTargets.includes(field));
   }
-  // testApiFromForm(): void {
-  //   const url = this.baseConfigForm.get('url')?.value;
-  //   const endpoint = this.baseConfigForm.get('endpoint')?.value;
-  
-  //   if (!url || !endpoint) {
-  //     this.snackBar.open('Veuillez saisir à la fois l’URL de base et l’endpoint.', 'Fermer', { duration: 3000 });
-  //     return;
-  //   }
-  
-  //   this.tiersService.testExternalApi(url, endpoint).subscribe({
-  //     next: (response) => {
-  //       this.testResponse = response; // on stocke la réponse dans la variable
-  //     },
-  //     error: (error) => {
-  //       this.testResponse = error.error; // en cas d’erreur, on stocke aussi le message d’erreur
-  //     }
-  //   });
-  // }
+ 
   testApiFromForm(): void {
     const url = this.baseConfigForm.get('url')?.value;
     const endpoint = this.baseConfigForm.get('endpoint')?.value;

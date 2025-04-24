@@ -32,6 +32,7 @@ import { ProduitsTiersComponent } from './produits-tiers/produits-tiers.componen
 import { JsonPathViewerComponent } from './json-path-viewer/json-path-viewer.component';
 import { AjouttemplateComponent } from './ajouttemplate/ajouttemplate.component';
 import { UpdateTemplateComponent } from './update-template/update-template.component';
+import { PanierComponent } from './panier/panier.component';
 
 export const routes: Routes = [
 {
@@ -77,7 +78,9 @@ export const routes: Routes = [
         { path: 'productlist', component:ProductListComponent},
         { path: 'list-tiers', component:ListTiersComponent},
         { path: 'produits-tiers/:tiersId', component:ProduitsTiersComponent},
-        { path: 'jsonpathviewer', component:JsonPathViewerComponent,canActivate: [adminGuard]}
+        { path: 'jsonpathviewer', component:JsonPathViewerComponent,canActivate: [adminGuard]},
+        { path: 'panier', component:PanierComponent},
+
     ]  
 
 },
