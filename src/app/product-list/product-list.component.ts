@@ -64,6 +64,8 @@ export class ProductListComponent implements OnInit, AfterViewInit {
   selectedTier: string | null = null;
   searchTerm: string = '';
   searchName: string = '';
+  postConfigMap: { [tierId: number]: boolean } = {};
+
 
 
 
@@ -78,14 +80,24 @@ export class ProductListComponent implements OnInit, AfterViewInit {
 
   private loadData(): void {
     this.loading = true;
-    
-    // Charger les produits
+
     this.tiersService.importAllProducts().subscribe({
       next: (products) => {
         this.products = products;
         this.filteredProducts = [...products];
         this.updatePaginatedProducts();
         this.loading = false;
+
+        // Charger les configurations POST pour chaque produit
+        this.products.forEach(product => {
+          const tierId = product.tierId;
+          if (!(tierId in this.postConfigMap)) {
+            this.tiersService.hasPostMethodForTiers(tierId).subscribe({
+              next: (hasPost) => this.postConfigMap[tierId] = hasPost,
+              error: () => this.postConfigMap[tierId] = false
+            });
+          }
+        });
       },
       error: (error) => {
         console.error('Erreur produits:', error);
@@ -94,7 +106,6 @@ export class ProductListComponent implements OnInit, AfterViewInit {
       }
     });
 
-    // Charger les tiers
     this.tiersService.getAllTiers().subscribe({
       next: (tiers) => {
         this.tiersList = tiers;
@@ -106,7 +117,6 @@ export class ProductListComponent implements OnInit, AfterViewInit {
   }
 
   applyTierFilter(): void {
-    // On commence avec tous les produits
     let filtered = [...this.products];
 
     if (this.selectedTier) {
@@ -200,6 +210,19 @@ ajouterAuPanier(product: any) {
     this.panierService.ajouterProduit(produit);
   }
 }
+checkPostMethod(tierId: number): void {
+  this.tiersService.hasPostMethodForTiers(tierId).subscribe({
+    next: (hasPost) => {
+      console.log(`Le tiers ${tierId} a une méthode POST ? ${hasPost}`);
+    },
+    error: (err) => {
+      console.error(`Erreur lors de la vérification du tiers ${tierId} :`, err);
+    }
+  });
+}
+
+
+
 
 
 }

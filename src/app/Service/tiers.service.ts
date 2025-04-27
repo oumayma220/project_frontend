@@ -192,4 +192,12 @@ export class TiersService {
           headers: this.getAuthHeaders() 
         });
       }
+      hasPostMethodForTiers(tiersId: number): Observable<boolean> {
+        return this.http.get<boolean>(`${this.baseapi}/${tiersId}/has-post-method`,
+          { headers: this.getAuthHeaders() ,
+            
+          }
+        );
+      }
+    
   }

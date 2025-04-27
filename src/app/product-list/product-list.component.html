@@ -14,7 +14,6 @@
                 <mat-option *ngFor="let tier of tiersList" [value]="tier.nom">
                     {{ tier.nom }}
                 </mat-option>
-
             </mat-select>
         </mat-form-field>
 
@@ -54,8 +53,11 @@
                     </div>
                 </mat-card-content>
                 <mat-card-actions align="end">
-                    <button mat-raised-button color="accent" (click)="ajouterAuPanier(product)">
-                      <mat-icon>add_shopping_cart</mat-icon> Ajouter au panier
+                    <!-- <button mat-raised-button color="primary" (click)="ajouterAuPanier(product)" [disabled]="!postConfigMap[product.tierId]">
+                        <mat-icon>add_shopping_cart</mat-icon> Ajouter au panier
+                    </button> -->
+                    <button mat-raised-button (click)="ajouterAuPanier(product)" style="background-color: rgb(9, 9, 95); color: white;">
+                        <mat-icon>add_shopping_cart</mat-icon> Ajouter au panier
                     </button>
                 </mat-card-actions>
             </mat-card>

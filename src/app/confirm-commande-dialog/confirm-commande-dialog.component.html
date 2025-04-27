@@ -1,0 +1,33 @@
+<h2 mat-dialog-title class="dialog-title">Confirmer la commande</h2>
+
+<mat-dialog-content class="dialog-content">
+    <div class="summary-section">
+        <div class="summary-item">
+            <span class="label">Adresse de livraison :</span>
+            <strong>{{data.adresse}}</strong>
+        </div>
+        <div class="summary-item">
+            <span class="label">Nombre d'articles :</span>
+            <strong>{{data.panierItems.length}}</strong>
+        </div>
+        <div class="summary-item total">
+            <span class="label">Total :</span>
+            <strong>{{data.total}} DT</strong>
+        </div>
+    </div>
+
+    <div class="items-section">
+        <h3 class="items-title">Détails de la commande</h3>
+        <div *ngFor="let item of data.panierItems" class="item-card">
+            <div class="item-details">
+                <span class="item-name">{{item.nomProduit}}</span>
+                <span class="item-price">{{item.quantite}} x {{item.prixUnitaire}} DT</span>
+            </div>
+        </div>
+    </div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end" class="dialog-actions">
+    <button mat-button class="cancel-button" (click)="onAnnuler()">Annuler</button>
+    <button mat-raised-button color="accent" class="confirm-button" (click)="onConfirmer()">Confirmer</button>
+</mat-dialog-actions>

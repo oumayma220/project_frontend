@@ -15,7 +15,7 @@
                                 <div *ngIf="panierItems.length === 0" class="text-center py-5">
                                     <mat-icon class="display-4 text-muted">shopping_cart</mat-icon>
                                     <p class="text-muted">Votre panier est vide</p>
-                                    <button mat-raised-button color="primary" routerLink="/success/productlist">
+                                    <button mat-raised-button color="accent" routerLink="/success/productlist">
                         Continuer vos achats
                       </button>
                                 </div>
@@ -79,6 +79,13 @@
                                     <h5 class="text-uppercase">Total</h5>
                                     <h5>{{total}} DT</h5>
                                 </div>
+                                <mat-form-field appearance="fill" class="w-100 mb-3">
+                                    <mat-label>Adresse de livraison</mat-label>
+                                    <mat-icon matPrefix>location_on</mat-icon>
+                                    <input matInput [(ngModel)]="adresseLivraison" placeholder="Entrez votre adresse">
+
+                                </mat-form-field>
+
 
                                 <button mat-raised-button color="accent" class="w-100 py-2" (click)="passerCommande()">
                       <mat-icon>payment</mat-icon> Passer la commande

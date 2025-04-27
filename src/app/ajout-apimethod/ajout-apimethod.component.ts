@@ -20,6 +20,7 @@ import { TestComponent } from '../test/test.component';
 import { Product } from '../Product';
 import { ChangeDetectorRef } from '@angular/core';
 import { NgZone } from '@angular/core'; 
+import { HelpDialogComponent } from '../help-dialog/help-dialog.component';
 @Component({
   selector: 'app-ajout-apimethod',
   standalone: true,
@@ -53,6 +54,16 @@ export class AjoutApimethodComponent implements OnInit, AfterViewInit  {
   expandedPaths: Set<string> = new Set(['$']);
   error: string = '';
   testResponse: any = null;
+  variables: string[] = ['employeId', 'produitId', 'nomProduit', 'prixUnitaire','total', 'quantite'];
+  blocks: string[] = [
+    '{{#each lignes}}',
+    '{{#unless @last}},{{/unless}}{{/each}}'
+  ];
+  templateText: string = '';
+  validationMessage: string = '';
+  isValid: boolean = true;
+  isDragOver: boolean = false;
+
 
   constructor(
     private fb: FormBuilder,
@@ -111,7 +122,7 @@ export class AjoutApimethodComponent implements OnInit, AfterViewInit  {
     this.ApiMethodForm.get('httpMethod')?.valueChanges.subscribe(method => {
       if (method === 'POST' && this.payloadTemplates.length === 0) {
         this.payloadTemplates.push(this.fb.group({
-          pathParam: [''],
+          // pathParam: [''],
           payloadSchema: [''],
           succesRespone: [''],
           template: ['']
@@ -370,5 +381,57 @@ export class AjoutApimethodComponent implements OnInit, AfterViewInit  {
     const parts = path.substring(2).split(/\.|\[|\]/g).filter(p => p !== '');
     return parts.map(p => isNaN(Number(p)) ? p : Number(p));
   }
+  
+  onDragStart(event: DragEvent, item: string, isVariable: boolean = false) {
+    if (event.dataTransfer) {
+      // Ajoute {{}} seulement si c'est une variable
+      const data = isVariable ? `{{${item}}}` : item;
+      event.dataTransfer.setData('text/plain', data);
+    }
+  }
+
+
+
+  onDragOver(event: DragEvent) {
+    event.preventDefault(); // Important pour permettre le drop
+    this.isDragOver = true;
+
+  }
+
+  onDrop(event: DragEvent) {
+    event.preventDefault();
+    this.isDragOver = false;
+    if (event.dataTransfer) {
+      const data = event.dataTransfer.getData('text/plain');
+      const target = event.target as HTMLTextAreaElement;
+      const cursorPos = target.selectionStart || this.templateText.length;
+      
+      this.templateText = 
+        this.templateText.slice(0, cursorPos) + 
+        data + 
+        this.templateText.slice(cursorPos);
+    }
+  }
+  onDragLeave(event: DragEvent) {
+    this.isDragOver = false;
+  }
+  validateTemplate() {
+    const placeholders = [...this.templateText.matchAll(/{{\s*(\w+)\s*}}/g)].map(match => match[1]);
+    const invalidPlaceholders = placeholders.filter(ph => !this.variables.includes(ph));
+
+    if (invalidPlaceholders.length > 0) {
+      this.isValid = false;
+      this.validationMessage = `Erreur: Ces placeholders ne sont pas autorisés: ${invalidPlaceholders.join(', ')}`;
+    } else {
+      this.isValid = true;
+      this.validationMessage = 'Template valide ✅';
+    }
+  }
+  openHelpDialogtemplate() {
+    this.dialog.open(HelpDialogComponent, {
+      width: '900px'
+    });
+  }
+  
   
 }

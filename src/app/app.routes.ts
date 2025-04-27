@@ -33,6 +33,8 @@ import { JsonPathViewerComponent } from './json-path-viewer/json-path-viewer.com
 import { AjouttemplateComponent } from './ajouttemplate/ajouttemplate.component';
 import { UpdateTemplateComponent } from './update-template/update-template.component';
 import { PanierComponent } from './panier/panier.component';
+import { TestdragComponent } from './testdrag/testdrag.component';
+import { HelpDialogComponent } from './help-dialog/help-dialog.component';
 
 export const routes: Routes = [
 {
@@ -80,7 +82,8 @@ export const routes: Routes = [
         { path: 'produits-tiers/:tiersId', component:ProduitsTiersComponent},
         { path: 'jsonpathviewer', component:JsonPathViewerComponent,canActivate: [adminGuard]},
         { path: 'panier', component:PanierComponent},
-
+        { path: 'testdrag', component:TestdragComponent,canActivate: [adminGuard]},
+        { path: 'helpdialog', component:HelpDialogComponent,canActivate: [adminGuard]},
     ]  
 
 },

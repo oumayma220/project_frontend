@@ -1,0 +1,46 @@
+<div class="row p-4 gap-4">
+
+    <!-- Liste des variables -->
+    <div class="col-md-4">
+        <mat-card class="p-4 shadow-sm rounded-3">
+            <mat-card-title class="text-primary mb-3 text-center">Variables disponibles</mat-card-title>
+            <mat-card-content>
+                <div *ngFor="let variable of variables" draggable="true" (dragstart)="onDragStart($event, variable, true)" class="p-2 my-2 bg-white rounded border text-dark text-center cursor-pointer hover-shadow">
+                    {{ variable }}
+                </div>
+                <div *ngFor="let block of blocks" draggable="true" (dragstart)="onDragStart($event, block)" class="p-2 my-2 bg-white rounded border text-dark text-center cursor-pointer hover-shadow">
+                    {{ block }}
+                </div>
+
+            </mat-card-content>
+        </mat-card>
+    </div>
+
+    <!-- Textarea pour construire le template -->
+    <div class="col-md-7">
+        <mat-card class="p-4 shadow-sm rounded-3">
+            <mat-card-title class="text-primary mb-3 text-center">Payload Template</mat-card-title>
+            <mat-card-content>
+                <mat-form-field class="w-100" appearance="outline">
+                    <textarea matInput (drop)="onDrop($event)" (dragover)="onDragOver($event)" [(ngModel)]="templateText" rows="15" placeholder="Déposez vos variables ici et écrivez votre template..." class="text-dark bg-light">
+            </textarea>
+                </mat-form-field>
+                <div class="text-end mt-3">
+                    <button mat-raised-button color="primary" (click)="validateTemplate()">
+                      Valider
+                    </button>
+                </div>
+
+                <div *ngIf="validationMessage" class="alert mt-3" [ngClass]="{
+                    'alert-success': isValid,
+                    'alert-danger': !isValid
+                  }">
+                    {{ validationMessage }}
+                </div>
+
+            </mat-card-content>
+        </mat-card>
+    </div>
+
+
+</div>

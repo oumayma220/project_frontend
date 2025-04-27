@@ -1,7 +1,7 @@
 <mat-sidenav-container class="sidenav-container">
     <mat-sidenav #sidenav [mode]="isMobile ? 'over' : 'side'" [opened]="!isMobile" [fixedInViewport]="isMobile" class="sidenav">
         <mat-nav-list>
-            <a *ngIf="isAdmin" mat-list-item routerLink="/success/panier" routerLinkActive="active">
+            <a *ngIf="isAdmin" mat-list-item routerLink="/success/testdrag" routerLinkActive="active">
                 <mat-icon>dashboard</mat-icon>
                 <span>Tableau de bord</span>
             </a>
@@ -20,6 +20,10 @@
             <a mat-list-item routerLink="/success/tiers" *ngIf="isAdmin" routerLinkActive="active">
                 <mat-icon>settings</mat-icon>
                 <span>Tiers&Configuration</span>
+            </a>
+            <a mat-list-item routerLink="/success/panier" routerLinkActive="active">
+                <mat-icon>shopping_cart</mat-icon>
+                <span>Panier</span>
             </a>
             <a mat-list-item (click)="logout()">
                 <mat-icon>logout</mat-icon>

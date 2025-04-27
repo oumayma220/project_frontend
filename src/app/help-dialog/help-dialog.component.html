@@ -1,0 +1,30 @@
+<h2 mat-dialog-title>Informations sur les Variables</h2>
+
+<mat-dialog-content>
+
+    <h4>Variables disponibles :</h4>
+    <ul>
+        <li><strong>employe</strong> : ID de l'employé responsable.</li>
+        <li><strong>produitId</strong> : ID du produit commandé.</li>
+        <li><strong>nomProduit</strong> : Nom du produit.</li>
+        <li><strong>prixUnitaire</strong> : Prix unitaire du produit.</li>
+        <li><strong>quantite</strong> : Quantité commandée.</li>
+    </ul>
+
+
+
+
+    <h4 class="mt-4">Exemple de Payload :</h4>
+
+    <pre class="bg-light p-3 rounded">
+    {{ payloadExample }}
+
+    </pre>
+
+
+
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Fermer</button>
+</mat-dialog-actions>

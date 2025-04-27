@@ -47,6 +47,15 @@ export class TiersFormComponent {
   expandedPaths: Set<string> = new Set(['$']);
   error: string = '';
   testResponse: any = null;
+  templateText: string = '';
+  validationMessage: string = '';
+  isValid: boolean = true;
+  isDragOver: boolean = false;
+  variables: string[] = ['employeId', 'produitId', 'nomProduit', 'prixUnitaire','total', 'quantite'];
+  blocks: string[] = [
+    '{{#each lignes}}',
+    '{{#unless @last}},{{/unless}}{{/each}}'
+  ];
 
   constructor(private fb: FormBuilder,
      private tiersService: TiersService,
@@ -87,7 +96,7 @@ export class TiersFormComponent {
     this.configForm.get('httpMethod')?.valueChanges.subscribe(method => {
       if (method === 'POST' && this.payloadTemplates.length === 0) {
         this.payloadTemplates.push(this.fb.group({
-          pathParam: [''],
+          // pathParam: [''],
           payloadSchema: [''],
           succesRespone: [''],
           template: ['']
@@ -356,6 +365,53 @@ private parseJsonPath(path: string): (string | number)[] {
   const parts = path.substring(2).split(/\.|\[|\]/g).filter(p => p !== '');
   return parts.map(p => isNaN(Number(p)) ? p : Number(p));
 }
+onDragStart(event: DragEvent, item: string, isVariable: boolean = false) {
+  if (event.dataTransfer) {
+    // Ajoute {{}} seulement si c'est une variable
+    const data = isVariable ? `{{${item}}}` : item;
+    event.dataTransfer.setData('text/plain', data);
+  }
+}
+
+
+
+onDragOver(event: DragEvent) {
+  event.preventDefault(); // Important pour permettre le drop
+  this.isDragOver = true;
+
+}
+
+onDrop(event: DragEvent) {
+  event.preventDefault();
+  this.isDragOver = false;
+  if (event.dataTransfer) {
+    const data = event.dataTransfer.getData('text/plain');
+    const target = event.target as HTMLTextAreaElement;
+    const cursorPos = target.selectionStart || this.templateText.length;
+    
+    this.templateText = 
+      this.templateText.slice(0, cursorPos) + 
+      data + 
+      this.templateText.slice(cursorPos);
+  }
+}
+onDragLeave(event: DragEvent) {
+  this.isDragOver = false;
+}
+validateTemplate() {
+  const placeholders = [...this.templateText.matchAll(/{{\s*(\w+)\s*}}/g)].map(match => match[1]);
+  const invalidPlaceholders = placeholders.filter(ph => !this.variables.includes(ph));
+
+  if (invalidPlaceholders.length > 0) {
+    this.isValid = false;
+    this.validationMessage = `Erreur: Ces placeholders ne sont pas autorisés: ${invalidPlaceholders.join(', ')}`;
+  } else {
+    this.isValid = true;
+    this.validationMessage = 'Template valide ✅';
+  }
+}
 
 
 }
+
+

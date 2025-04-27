@@ -38,7 +38,7 @@ input[readonly] {
     font-size: .875rem;
     font-size: 1rem;
     line-height: 2.15;
-    width: 40px;
+    width: 45px;
 }
 
 
@@ -73,4 +73,85 @@ input[readonly] {
     padding: 5px 10px;
     border-radius: 15px;
     font-size: 0.8rem;
+}
+
+
+/* add */
+
+
+/* Améliorations générales */
+
+.card-body .p-5 {
+    padding: 1.5rem !important;
+    /* Augmenter le padding */
+}
+
+h1,
+h3,
+h5,
+h6 {
+    margin-bottom: 1rem;
+    /* Ajouter de la marge sous les titres */
+}
+
+
+/* Améliorations liste des articles */
+
+.cart-item .col-md-2 {
+    flex-basis: 10%;
+    /* Ajuster la largeur de l'image */
+    max-width: 10%;
+}
+
+.cart-item .col-md-3:first-child {
+    /* Nom du produit */
+    font-weight: 500;
+    /* Semi-gras pour le nom */
+    font-size: 1.1rem;
+}
+
+.quantity-buttons button {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.9rem;
+    border: none;
+    background-color: #e9ecef;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.quantity-buttons button:hover {
+    background-color: #d3d9df;
+}
+
+.cart-item .col-md-3:last-child h6 {
+    /* Prix total de l'article */
+    font-weight: bold;
+    color: #007bff;
+    /* Couleur accent pour le prix */
+}
+
+.cart-item .col-md-1 button {
+    /* Bouton supprimer */
+    padding: 0.2rem;
+}
+
+
+/* Améliorations récapitulatif */
+
+.bg-body-tertiary h3 {
+    margin-bottom: 1.5rem;
+}
+
+.bg-body-tertiary h5:last-child {
+    /* Total dans le récapitulatif */
+    font-weight: bold;
+    color: #032548;
+    font-size: 1.2rem;
+}
+
+
+/* Améliorations panier vide */
+
+.text-center.py-5 button {
+    margin-top: 1rem;
 }

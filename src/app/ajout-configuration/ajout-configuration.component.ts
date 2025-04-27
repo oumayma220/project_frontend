@@ -64,6 +64,16 @@ export class AjoutConfigurationComponent implements OnInit, AfterViewInit {
 
   httpMethods = ['GET', 'POST', 'PUT', 'DELETE'];
   targetFields = ['name', 'description', 'price', 'url', 'reference'];
+  variables: string[] = ['employeId', 'produitId', 'nomProduit', 'prixUnitaire','total', 'quantite'];
+  blocks: string[] = [
+    '{{#each lignes}}',
+    '{{#unless @last}},{{/unless}}{{/each}}'
+  ];
+  templateText: string = '';
+  validationMessage: string = '';
+  isValid: boolean = true;
+  isDragOver: boolean = false;
+
 
   constructor(
     private fb: FormBuilder,
@@ -132,12 +142,12 @@ export class AjoutConfigurationComponent implements OnInit, AfterViewInit {
     return this.payloadTemplateForm.get('payloadTemplates') as FormArray;
 }
 
-addPayloadTemplate(template: string = '', pathParam: string = '', payloadSchema: string='', succesRespone: string=''): void {
+addPayloadTemplate(template: string = '', payloadSchema: string='', succesRespone: string=''): void {
     const templateGroup = this.fb.group({
         template: [template, Validators.required],
         payloadSchema: [payloadSchema, Validators.required],
-        succesRespone: [succesRespone, Validators.required],
-        pathParam: [pathParam]
+        succesRespone: [succesRespone, Validators.required]
+        // pathParam: [pathParam]
     });
     this.payloadTemplates.push(templateGroup);
 }
@@ -394,6 +404,51 @@ removePayloadTemplate(index: number): void {
   
     const parts = path.substring(2).split(/\.|\[|\]/g).filter(p => p !== '');
     return parts.map(p => isNaN(Number(p)) ? p : Number(p));
+  }
+  onDragStart(event: DragEvent, item: string, isVariable: boolean = false) {
+    if (event.dataTransfer) {
+      // Ajoute {{}} seulement si c'est une variable
+      const data = isVariable ? `{{${item}}}` : item;
+      event.dataTransfer.setData('text/plain', data);
+    }
+  }
+
+
+
+  onDragOver(event: DragEvent) {
+    event.preventDefault(); // Important pour permettre le drop
+    this.isDragOver = true;
+
+  }
+
+  onDrop(event: DragEvent) {
+    event.preventDefault();
+    this.isDragOver = false;
+    if (event.dataTransfer) {
+      const data = event.dataTransfer.getData('text/plain');
+      const target = event.target as HTMLTextAreaElement;
+      const cursorPos = target.selectionStart || this.templateText.length;
+      
+      this.templateText = 
+        this.templateText.slice(0, cursorPos) + 
+        data + 
+        this.templateText.slice(cursorPos);
+    }
+  }
+  onDragLeave(event: DragEvent) {
+    this.isDragOver = false;
+  }
+  validateTemplate() {
+    const placeholders = [...this.templateText.matchAll(/{{\s*(\w+)\s*}}/g)].map(match => match[1]);
+    const invalidPlaceholders = placeholders.filter(ph => !this.variables.includes(ph));
+
+    if (invalidPlaceholders.length > 0) {
+      this.isValid = false;
+      this.validationMessage = `Erreur: Ces placeholders ne sont pas autorisés: ${invalidPlaceholders.join(', ')}`;
+    } else {
+      this.isValid = true;
+      this.validationMessage = 'Template valide ✅';
+    }
   }
   
   
