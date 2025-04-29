@@ -1,32 +1,63 @@
 import { Component } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-help-dialog',
   standalone: true,
-  imports: [MatDialogModule],
+  imports: [MatDialogModule, MatButtonModule],
   templateUrl: './help-dialog.component.html',
   styleUrl: './help-dialog.component.css'
 })
 export class HelpDialogComponent {
   payloadExample: string = `
-{
-  "employe": {{employe}},
-  "details": [
-    {
-      "ref": {{produitId}},
-      "nom": "{{nomProduit}}",
-      "prix": {{prixUnitaire}},
-      "qte": {{quantite}}
-    }
-  ]
-}
+  {
+    "employe": {{employe}},
+    "details": [
+      {
+        "ref": {{produitId}},
+        "nom": "{{nomProduit}}",
+        "prix": {{prixUnitaire}},
+        "qte": {{quantite}}
+      }
+    ]
+  }
+  `;
+  
+    // Variables contenant les syntaxes Handlebars (sous forme de texte)
+    hbEach = '{{#each lignes}}';
+    hbEndEach = '{{/each}}';
+    hbUnless = '{{#unless @last}},{{/unless}}';
+    
+    // Exemples d'utilisation prêts à afficher
+    tableauSimple = `[
+    {{#each lignes}}
+      { 
+        "produitId": {{produitId}},
+        "nomProduit": "{{nomProduit}}",
+        "quantite": {{quantite}}
+      }{{#unless @last}},{{/unless}}
+    {{/each}}
+  ]`;
+  
+    objetJSON = `{
+    "employe": {{employe}},
+    "lignes": [
+      {{#each lignes}}
+      {
+        "ref": {{produitId}},
+        "nom": "{{nomProduit}}",
+        "prix": {{prixUnitaire}},
+        "qte": {{quantite}}
+      }{{#unless @last}},{{/unless}}
+      {{/each}}
+    ]
+  }`;
+  helpText: string = `
+  <code>{{#unless @last}},{{/unless}}</code> : Ajoute une virgule sauf après le dernier élément
 `;
-// handlebarsBlocks: { [key: string]: string } = {
-//   each: '{{#each lignes}}',
-//   unless: '{{#unless @last}}',
-//   endEach: '{{/each}}',
-//   endUnless: '{{/unless}}'
-// };
+ helpText1: string = `
+    Pour éviter les virgules en trop, utilisez <code>{{#unless @last}},{{/unless}}</code>
+`;
 
-}
+  }

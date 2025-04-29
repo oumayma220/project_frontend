@@ -17,6 +17,8 @@ import { TestComponent } from '../test/test.component';
 import { Product } from '../Product';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatCardModule } from '@angular/material/card';
+import { HelpDialogComponent } from '../help-dialog/help-dialog.component';
+import { TestdragComponent } from '../testdrag/testdrag.component';
 @Component({
   selector: 'app-tiers-form',
   standalone: true,
@@ -30,9 +32,7 @@ import { MatCardModule } from '@angular/material/card';
       MatSelectModule,
       MatIconModule,
       MatCardModule
-      
-      
-        ],
+            ],
   templateUrl: './tiers-form.component.html',
   styleUrl: './tiers-form.component.css'
 })
@@ -51,11 +51,13 @@ export class TiersFormComponent {
   validationMessage: string = '';
   isValid: boolean = true;
   isDragOver: boolean = false;
-  variables: string[] = ['employeId', 'produitId', 'nomProduit', 'prixUnitaire','total', 'quantite'];
+  variables: string[] = ['employeId', 'produitId', 'nomProduit', 'prixUnitaire','total', 'quantite','adresse','dateCommande'];
   blocks: string[] = [
     '{{#each lignes}}',
     '{{#unless @last}},{{/unless}}{{/each}}'
   ];
+  schemaFields: any[] = [];
+  generatedPayloadSchema: any = null;
 
   constructor(private fb: FormBuilder,
      private tiersService: TiersService,
@@ -102,12 +104,13 @@ export class TiersFormComponent {
           template: ['']
         }));
       }
+
     
       if (method !== 'POST') {
         this.payloadTemplates.clear();
       }
     });
-    
+
 
     this.fieldMappingsForm = this.fb.group({
       fieldMappings: this.fb.array([])
@@ -285,14 +288,14 @@ testApiFromForm(): void {
   this.tiersService.testExternalApi(url, endpoint).subscribe({
     next: (response) => {
       this.testResponse = response;
-      this.parsedJson = response; // pour activer l’exploration JSON
-      this.expandedPaths = new Set(['$']); // expand root
+      this.parsedJson = response; 
+      this.expandedPaths = new Set(['$']); 
       this.error = '';
       this.selectedPath = '';
     },
     error: (error) => {
       this.testResponse = error.error;
-      this.parsedJson = error.error; // si tu veux explorer aussi les erreurs
+      this.parsedJson = error.error; 
       this.expandedPaths = new Set(['$']);
       this.error = '';
       this.selectedPath = '';
@@ -367,7 +370,6 @@ private parseJsonPath(path: string): (string | number)[] {
 }
 onDragStart(event: DragEvent, item: string, isVariable: boolean = false) {
   if (event.dataTransfer) {
-    // Ajoute {{}} seulement si c'est une variable
     const data = isVariable ? `{{${item}}}` : item;
     event.dataTransfer.setData('text/plain', data);
   }
@@ -376,7 +378,7 @@ onDragStart(event: DragEvent, item: string, isVariable: boolean = false) {
 
 
 onDragOver(event: DragEvent) {
-  event.preventDefault(); // Important pour permettre le drop
+  event.preventDefault(); 
   this.isDragOver = true;
 
 }
@@ -410,6 +412,17 @@ validateTemplate() {
     this.validationMessage = 'Template valide ✅';
   }
 }
+  openHelpDialogtemplate() {
+    this.dialog.open(HelpDialogComponent, {
+      width: '1100px'
+    });
+  }
+
+  //payload
+
+
+  // Pour faciliter l'accès au FormArray
+ 
 
 
 }

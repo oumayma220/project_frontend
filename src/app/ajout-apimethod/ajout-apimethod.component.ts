@@ -21,6 +21,9 @@ import { Product } from '../Product';
 import { ChangeDetectorRef } from '@angular/core';
 import { NgZone } from '@angular/core'; 
 import { HelpDialogComponent } from '../help-dialog/help-dialog.component';
+import { Field } from '../Field';
+import { NgxJsonViewerModule } from 'ngx-json-viewer';
+import { TestdragComponent } from '../testdrag/testdrag.component';
 @Component({
   selector: 'app-ajout-apimethod',
   standalone: true,
@@ -34,7 +37,8 @@ import { HelpDialogComponent } from '../help-dialog/help-dialog.component';
           MatSelectModule,
           MatIconModule,
           MatCardModule,
-          MatFormFieldModule],
+          MatFormFieldModule,
+          NgxJsonViewerModule ],
   templateUrl: './ajout-apimethod.component.html',
   styleUrl: './ajout-apimethod.component.css'
 })
@@ -54,7 +58,7 @@ export class AjoutApimethodComponent implements OnInit, AfterViewInit  {
   expandedPaths: Set<string> = new Set(['$']);
   error: string = '';
   testResponse: any = null;
-  variables: string[] = ['employeId', 'produitId', 'nomProduit', 'prixUnitaire','total', 'quantite'];
+  variables: string[] = ['employeId', 'produitId', 'nomProduit', 'prixUnitaire','total', 'quantite','adresse','dateCommande'];
   blocks: string[] = [
     '{{#each lignes}}',
     '{{#unless @last}},{{/unless}}{{/each}}'
@@ -63,6 +67,10 @@ export class AjoutApimethodComponent implements OnInit, AfterViewInit  {
   validationMessage: string = '';
   isValid: boolean = true;
   isDragOver: boolean = false;
+ 
+
+  schemaFields: Field[] = [];
+  generatedSchema: any = {};
 
 
   constructor(
@@ -73,7 +81,9 @@ export class AjoutApimethodComponent implements OnInit, AfterViewInit  {
     private cdr: ChangeDetectorRef,
     private zone: NgZone, 
     private snackBar: MatSnackBar,private dialog: MatDialog
-  ) { }
+  ) {
+
+   }
   ngAfterViewInit(): void {
   }
 
@@ -115,10 +125,9 @@ export class AjoutApimethodComponent implements OnInit, AfterViewInit  {
       contentFieldInResponse: [''],
       type: [''],
       fieldMappings: this.fb.array([]),
-      payloadTemplates: this.fb.array([])
-
-    });
-    
+      payloadTemplates: this.fb.array([]) 
+      
+          });    
     this.ApiMethodForm.get('httpMethod')?.valueChanges.subscribe(method => {
       if (method === 'POST' && this.payloadTemplates.length === 0) {
         this.payloadTemplates.push(this.fb.group({
@@ -429,9 +438,15 @@ export class AjoutApimethodComponent implements OnInit, AfterViewInit  {
   }
   openHelpDialogtemplate() {
     this.dialog.open(HelpDialogComponent, {
-      width: '900px'
+      width: '1100px'
     });
   }
+  //payloadSchema 
   
-  
-}
+  openDialog1() {
+    this.dialog.open(TestdragComponent, {
+      width: '80%',
+      height: '80%'
+    });
+  }
+  }

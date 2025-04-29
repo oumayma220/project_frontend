@@ -256,8 +256,12 @@
                                             <div *ngFor="let block of blocks" draggable="true" (dragstart)="onDragStart($event, block)" class="p-2 my-2  rounded border text-dark text-center cursor-pointer hover-shadow draggable-item" style="background-color: rgb(197, 231, 240);">
                                                 {{ block }}
                                             </div>
-
                                         </mat-card-content>
+                                        <div class="text-end mt-3">
+                                            <button mat-mini-fab color="accent" (click)="openHelpDialogtemplate()" matTooltip="Aide" type="button">
+                                              <mat-icon>priority_high</mat-icon>  
+                                            </button>
+                                        </div>
                                     </mat-card>
                                 </div>
 
@@ -268,7 +272,7 @@
                                         <mat-card-content>
 
                                             <mat-form-field class="w-100" appearance="outline">
-                                                <textarea matInput (drop)="onDrop($event)" (dragover)="onDragOver($event)" (dragleave)="onDragLeave($event)" [(ngModel)]="templateText" formControlName="template" rows="15" placeholder="Glissez-déposez les variables et blocs ici pour construire votre template, ou écrivez directement."
+                                                <textarea matInput (drop)="onDrop($event)" (dragover)="onDragOver($event)" (dragleave)="onDragLeave($event)" [(ngModel)]="templateText" formControlName="template" rows="17" placeholder="Glissez-déposez les variables et blocs ici pour construire votre template, ou écrivez directement."
                                                     class="text-dark bg-light" [ngClass]="{'drop-zone': !isDragOver, 'drag-over drop-zone': isDragOver}">
                                                 </textarea>
                                             </mat-form-field>

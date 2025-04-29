@@ -1,46 +1,120 @@
-<div class="row p-4 gap-4">
-
-    <!-- Liste des variables -->
-    <div class="col-md-4">
-        <mat-card class="p-4 shadow-sm rounded-3">
-            <mat-card-title class="text-primary mb-3 text-center">Variables disponibles</mat-card-title>
-            <mat-card-content>
-                <div *ngFor="let variable of variables" draggable="true" (dragstart)="onDragStart($event, variable, true)" class="p-2 my-2 bg-white rounded border text-dark text-center cursor-pointer hover-shadow">
-                    {{ variable }}
-                </div>
-                <div *ngFor="let block of blocks" draggable="true" (dragstart)="onDragStart($event, block)" class="p-2 my-2 bg-white rounded border text-dark text-center cursor-pointer hover-shadow">
-                    {{ block }}
-                </div>
-
-            </mat-card-content>
-        </mat-card>
+<div class="container p-4 my-4">
+    <!-- En-tête simple et clair -->
+    <div class="mb-4">
+        <h1 class="fw-bold mb-2">Générateur de Schéma</h1>
+        <p class="text-muted">Créez facilement votre structure de données avec notre éditeur interactif</p>
+        <hr class="mb-4">
     </div>
 
-    <!-- Textarea pour construire le template -->
-    <div class="col-md-7">
-        <mat-card class="p-4 shadow-sm rounded-3">
-            <mat-card-title class="text-primary mb-3 text-center">Payload Template</mat-card-title>
-            <mat-card-content>
-                <mat-form-field class="w-100" appearance="outline">
-                    <textarea matInput (drop)="onDrop($event)" (dragover)="onDragOver($event)" [(ngModel)]="templateText" rows="15" placeholder="Déposez vos variables ici et écrivez votre template..." class="text-dark bg-light">
-            </textarea>
-                </mat-form-field>
-                <div class="text-end mt-3">
-                    <button mat-raised-button color="primary" (click)="validateTemplate()">
-                      Valider
+    <!-- Liste des champs avec design simplifié -->
+    <div *ngFor="let field of fields; let i = index" class="card mb-4">
+        <div class="card-body p-4">
+            <div class="row g-3 align-items-center">
+                <div class="col-md-3">
+                    <label class="form-label">Nom du champ</label>
+                    <input class="form-control" placeholder="Nom du champ" [(ngModel)]="field.name" />
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Type</label>
+                    <select class="form-select" [(ngModel)]="field.type" (change)="onTypeChange(field)">
+                        <option value="string">Texte</option>
+                        <option value="number">Nombre</option>
+                        <option value="integer">Entier</option>
+                        <option value="boolean">Booléen</option>
+                        <option value="array">Liste</option>
+                        <option value="object">Objet</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-check mt-4">
+                        <input type="checkbox" class="form-check-input" id="required-{{i}}" [(ngModel)]="field.required" />
+                        <label class="form-check-label" for="required-{{i}}">Obligatoire</label>
+                    </div>
+                </div>
+                <div class="col-md-3 text-end">
+                    <button class="btn btn-outline-danger" (click)="removeField(fields, i)" type="button">
+                        <i class="bi bi-trash me-1"></i> Supprimer
                     </button>
                 </div>
+            </div>
 
-                <div *ngIf="validationMessage" class="alert mt-3" [ngClass]="{
-                    'alert-success': isValid,
-                    'alert-danger': !isValid
-                  }">
-                    {{ validationMessage }}
+            <!-- Sous-champs avec bordure claire -->
+            <div *ngIf="field.children" class="mt-4 ms-4 ps-3 border-start border-primary">
+                <div class="d-flex align-items-center mb-3">
+                    <span class="badge bg-primary me-2">Sous-champs</span>
+                    <button class="btn btn-sm btn-primary" (click)="addField(field.children)" type="button">
+                        <i class="bi bi-plus-circle me-1"></i> Ajouter un sous-champ
+                    </button>
                 </div>
-
-            </mat-card-content>
-        </mat-card>
+                <ng-container *ngTemplateOutlet="fieldTemplate; context: { fields: field.children }"></ng-container>
+            </div>
+        </div>
     </div>
 
+    <!-- Boutons d'action clairs -->
+    <div class="d-flex gap-3 mb-5">
+        <button class="btn btn-primary" (click)="addField(fields)" type="button">
+            <i class="bi bi-plus-circle me-2"></i> Ajouter un champ
+        </button>
+        <button class="btn btn-success" (click)="generateSchema()" type="button">
+            <i class="bi bi-code-slash me-2"></i> Générer le schéma
+        </button>
+    </div>
 
+    <!-- Résultat JSON avec fond contrasté pour lisibilité -->
+    <div class="card mt-5">
+        <div class="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+            <h5 class="m-0">Schéma généré</h5>
+            <button class="btn btn-outline-light" (click)="copyToClipboard()">
+                <i class="bi bi-clipboard me-1"></i> Copier
+            </button>
+        </div>
+        <div class="card-body bg-light">
+            <pre class="mb-0 p-3 bg-dark text-light" id="json-result">{{ generatedSchema | json }}</pre>
+        </div>
+    </div>
 </div>
+
+<!-- Template récursif pour les sous-champs -->
+<ng-template #fieldTemplate let-fields="fields">
+    <div *ngFor="let field of fields; let i = index" class="card mb-3">
+        <div class="card-body p-3">
+            <div class="row g-3 align-items-center">
+                <div class="col-md-3">
+                    <input class="form-control" placeholder="Nom du champ" [(ngModel)]="field.name" />
+                </div>
+                <div class="col-md-3">
+                    <select class="form-select" [(ngModel)]="field.type" (change)="onTypeChange(field)">
+                        <option value="string">Texte</option>
+                        <option value="number">Nombre</option>
+                        <option value="integer">Entier</option>
+                        <option value="boolean">Booléen</option>
+                        <option value="array">Liste</option>
+                        <option value="object">Objet</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input" id="child-required-{{i}}" [(ngModel)]="field.required" />
+                        <label class="form-check-label" for="child-required-{{i}}">Obligatoire</label>
+                    </div>
+                </div>
+                <div class="col-md-3 text-end">
+                    <button class="btn btn-sm btn-outline-danger" (click)="removeField(fields, i)">
+                        <i class="bi bi-trash me-1"></i> Supprimer
+                    </button>
+                </div>
+            </div>
+
+            <!-- Sous-champs récursifs avec style clair -->
+            <div *ngIf="field.children" class="mt-3 ms-3 ps-3 border-start border-info">
+                <div class="d-flex align-items-center mb-2">
+                    <button class="btn btn-sm btn-outline-primary" (click)="addField(field.children)">
+                        <i class="bi bi-plus-circle me-1"></i> Ajouter un sous-champ
+                    </button>
+                </div>
+                <ng-container *ngTemplateOutlet="fieldTemplate; context: { fields: field.children }"></ng-container>
+            </div>
+        </div>
+    </div>
+</ng-template>

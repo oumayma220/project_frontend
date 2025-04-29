@@ -20,6 +20,7 @@ import { Product } from '../Product';
 import { MatTableModule } from '@angular/material/table';
 import { TestComponent } from '../test/test.component';
 import { DragDropModule } from '@angular/cdk/drag-drop';
+import { HelpDialogComponent } from '../help-dialog/help-dialog.component';
 
 
 @Component({
@@ -64,7 +65,7 @@ export class AjoutConfigurationComponent implements OnInit, AfterViewInit {
 
   httpMethods = ['GET', 'POST', 'PUT', 'DELETE'];
   targetFields = ['name', 'description', 'price', 'url', 'reference'];
-  variables: string[] = ['employeId', 'produitId', 'nomProduit', 'prixUnitaire','total', 'quantite'];
+  variables: string[] = ['employeId', 'produitId', 'nomProduit', 'prixUnitaire','total', 'quantite','adresse','dateCommande'];
   blocks: string[] = [
     '{{#each lignes}}',
     '{{#unless @last}},{{/unless}}{{/each}}'
@@ -450,6 +451,11 @@ removePayloadTemplate(index: number): void {
       this.validationMessage = 'Template valide ✅';
     }
   }
+    openHelpDialogtemplate() {
+      this.dialog.open(HelpDialogComponent, {
+        width: '1100px'
+      });
+    }
   
   
 }

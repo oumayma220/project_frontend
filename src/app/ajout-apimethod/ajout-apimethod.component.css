@@ -363,3 +363,167 @@ button:active {
         transform: translateY(0);
     }
 }
+
+
+/* payloadschema */
+
+.border-start.border-primary {
+    border-left-width: 3px !important;
+    padding-left: 1.5rem !important;
+    position: relative;
+}
+
+.border-start.border-info {
+    border-left-width: 2px !important;
+    padding-left: 1.25rem !important;
+}
+
+.border-start.border-primary:before {
+    content: '';
+    position: absolute;
+    left: -6px;
+    top: -5px;
+    width: 12px;
+    height: 12px;
+    background-color: #0d6efd;
+    border-radius: 50%;
+}
+
+
+/* Inputs et contrôles de formulaire */
+
+.form-control,
+.form-select {
+    border-radius: 8px;
+    border-color: #dee2e6;
+    padding: 0.6rem 1rem;
+    transition: all 0.2s;
+}
+
+.form-control:focus,
+.form-select:focus {
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.15);
+}
+
+.form-control-lg,
+.form-select-lg {
+    font-size: 1rem;
+}
+
+
+/* Badges et étiquettes */
+
+.badge {
+    padding: 0.5rem 0.8rem;
+    font-weight: 500;
+}
+
+.form-label {
+    margin-bottom: 0.3rem;
+    font-weight: 500;
+}
+
+
+/* Boutons */
+
+.btn {
+    padding: 0.5rem 1.2rem;
+    font-weight: 500;
+    transition: all 0.2s;
+}
+
+.btn-lg {
+    padding: 0.7rem 1.5rem;
+}
+
+.btn-sm {
+    padding: 0.25rem 0.8rem;
+}
+
+.btn-primary {
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+}
+
+.btn-primary:hover {
+    background-color: #0b5ed7;
+    border-color: #0a58ca;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(13, 110, 253, 0.25);
+}
+
+.btn-success {
+    background-color: #198754;
+    border-color: #198754;
+}
+
+.btn-success:hover {
+    background-color: #157347;
+    border-color: #146c43;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(25, 135, 84, 0.25);
+}
+
+.btn-outline-danger {
+    color: #dc3545;
+    border-color: #dc3545;
+}
+
+.btn-outline-danger:hover {
+    background-color: #dc3545;
+    border-color: #dc3545;
+    color: white;
+}
+
+.rounded-pill {
+    border-radius: 50rem !important;
+}
+
+
+/* Switches et checkboxes */
+
+.form-check-input {
+    cursor: pointer;
+    width: 2.5em;
+    height: 1.25em;
+}
+
+.form-switch .form-check-input:checked {
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+}
+
+
+/* Zone de résultat JSON */
+
+.card.bg-dark {
+    background-color: #212529 !important;
+}
+
+pre#json-result {
+    background-color: #2d3238;
+    padding: 1.25rem;
+    border-radius: 8px;
+    color: #e9ecef;
+    font-family: 'Fira Code', monospace;
+    /* max-height: 400px; */
+    overflow-y: auto;
+}
+
+
+/* Animation lors de l'ajout/suppression */
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.card {
+    animation: fadeIn 0.3s ease-out forwards;
+}

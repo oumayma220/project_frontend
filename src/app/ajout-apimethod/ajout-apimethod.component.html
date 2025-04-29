@@ -72,7 +72,6 @@
                         <button mat-icon-button type="button" class="help-button" (click)="openHelpDialog()" matTooltip="Aide sur les types de mapping" color="accent">
                                 <mat-icon>help_outline</mat-icon>
                             </button>
-
                     </div>
                 </div>
                 <button mat-raised-button color="accent" (click)="testApiFromForm()" type="button">
@@ -83,7 +82,6 @@
 
                     <mat-card-content>
                         <div *ngIf="parsedJson && !error">
-                            <!-- <h4>Cliquez sur un élément pour voir son JSONPath :</h4> -->
                             <div class="json-tree">
                                 <ng-container *ngTemplateOutlet="jsonTreeTemplate; context: {node: parsedJson, path: '$', isRoot: true}"></ng-container>
                             </div>
@@ -135,7 +133,6 @@
                         </div>
                     </div>
                 </ng-container>
-
                 <!-- Champ Content -->
                 <div class="row mt-2">
                     <div class="col-md-12">
@@ -197,17 +194,11 @@
                         <mat-label>Path Param (optionnel)</mat-label>
                         <input matInput formControlName="pathParam" placeholder="/RequestBody">
                     </mat-form-field> -->
-                    <!-- <mat-form-field appearance="outline" class="w-100">
-                        <mat-label>Template JSON</mat-label>
-                        <textarea matInput formControlName="template" rows="6" placeholder='{"key": "value"}' required></textarea>
-                        <mat-error *ngIf="ApiMethodForm.get('template')?.invalid">le champ est obligatoire</mat-error>
-                    </mat-form-field> -->
                     <div class="row p-4 gap-4">
                         <!-- Liste des variables -->
                         <div class="col-md-4">
 
                             <mat-card class="p-4 shadow-sm rounded-3">
-
 
                                 <mat-card-title class=" mb-3 text-center" style="color: #0f033e;">Variables disponibles</mat-card-title>
                                 <mat-card-content>
@@ -236,7 +227,7 @@
                                 <mat-card-content>
 
                                     <mat-form-field class="w-100" appearance="outline">
-                                        <textarea matInput (drop)="onDrop($event)" (dragover)="onDragOver($event)" (dragleave)="onDragLeave($event)" [(ngModel)]="templateText" formControlName="template" rows="15" placeholder="Glissez-déposez les variables et blocs ici pour construire votre template, ou écrivez directement."
+                                        <textarea matInput (drop)="onDrop($event)" (dragover)="onDragOver($event)" (dragleave)="onDragLeave($event)" [(ngModel)]="templateText" formControlName="template" rows="17" placeholder="Glissez-déposez les variables et blocs ici pour construire votre template, ou écrivez directement."
                                             class="text-dark bg-light" [ngClass]="{'drop-zone': !isDragOver, 'drag-over drop-zone': isDragOver}">
                                         </textarea>
                                         <mat-error *ngIf="ApiMethodForm.get('template')?.invalid">le champ est obligatoire</mat-error>
@@ -261,11 +252,18 @@
 
 
                     </div>
-                    <mat-form-field appearance="outline" class="w-100">
+                    <!-- payload -->
+
+                    <button mat-mini-fab color="accent" (click)="openDialog1()" matTooltip="Aide" type="button">
+                        <mat-icon>priority_high</mat-icon>  
+                      </button>
+
+                    <mat-form-field appearance="outline" class="w-100 mt-4">
                         <mat-label>Payload schema</mat-label>
-                        <textarea matInput formControlName="payloadSchema" rows="6" required></textarea>
+                        <textarea matInput formControlName="payloadSchema" rows="17" required>{{ generatedSchema | json }}</textarea>
                         <mat-error *ngIf="ApiMethodForm.get('payloadSchema')?.invalid">le champ est obligatoire</mat-error>
                     </mat-form-field>
+
                     <mat-form-field appearance="outline" class="w-100">
                         <mat-label>succesRespone</mat-label>
                         <textarea matInput formControlName="succesRespone" rows="6" required></textarea>

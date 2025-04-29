@@ -4,6 +4,11 @@ import { FormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { NgxJsonViewerModule } from 'ngx-json-viewer'; // Importez le module
+ import { Field } from '../Field';
+
+
+
 
 @Component({
   selector: 'app-testdrag',
@@ -12,68 +17,103 @@ import { MatInputModule } from '@angular/material/input';
     MatCardModule,
     MatFormFieldModule,
     MatInputModule,
-  CommonModule],
+  CommonModule,
+  NgxJsonViewerModule],
   templateUrl: './testdrag.component.html',
   styleUrl: './testdrag.component.css'
 })
 export class TestdragComponent {
-  variables: string[] = ['employeId', 'produitId', 'nomProduit', 'prixUnitaire', 'quantite'];
-  blocks: string[] = [
-    '{{#each lignes}}',
-    '{{#unless @last}},{{/unless}}{{/each}}'
-  ];
+fields: Field[] = [];
+generatedSchema: any = {};
+addField(fieldsArray: Field[]) {
+  fieldsArray.push({
+    name: '',
+    type: 'string',
+    required: false
+  });
+}
 
-  
-  templateText: string = '';
+removeField(fieldsArray: Field[], index: number) {
+  fieldsArray.splice(index, 1);
+}
 
-  validationMessage: string = '';
-  isValid: boolean = true;
-  // onDragStart(event: DragEvent, variable: string) {
-  //   if (event.dataTransfer) {
-  //     event.dataTransfer.setData('text/plain', `{{${variable}}}`);
-  //   }
-  // }
-  onDragStart(event: DragEvent, item: string, isVariable: boolean = false) {
-    if (event.dataTransfer) {
-      // Ajoute {{}} seulement si c'est une variable
-      const data = isVariable ? `{{${item}}}` : item;
-      event.dataTransfer.setData('text/plain', data);
-    }
-  }
-
-
-
-  onDragOver(event: DragEvent) {
-    event.preventDefault(); // Important pour permettre le drop
-  }
-
-  
-  onDrop(event: DragEvent) {
-    event.preventDefault();
-    if (event.dataTransfer) {
-      const data = event.dataTransfer.getData('text/plain');
-      const target = event.target as HTMLTextAreaElement;
-      const cursorPos = target.selectionStart || this.templateText.length;
-      
-      this.templateText = 
-        this.templateText.slice(0, cursorPos) + 
-        data + 
-        this.templateText.slice(cursorPos);
-    }
-  }
-  validateTemplate() {
-    const placeholders = [...this.templateText.matchAll(/{{\s*(\w+)\s*}}/g)].map(match => match[1]);
-    const invalidPlaceholders = placeholders.filter(ph => !this.variables.includes(ph));
-
-    if (invalidPlaceholders.length > 0) {
-      this.isValid = false;
-      this.validationMessage = `Erreur: Ces placeholders ne sont pas autorisés: ${invalidPlaceholders.join(', ')}`;
-    } else {
-      this.isValid = true;
-      this.validationMessage = 'Template valide ✅';
-    }
+onTypeChange(field: Field) {
+  if (field.type === 'object' || field.type === 'array') {
+    field.children = [];
+  } else {
+    delete field.children;
   }
 }
+
+generateSchema() {
+  this.generatedSchema = this.buildSchema(this.fields);
+}
+
+buildSchema(fields: Field[]): any {
+  const properties: any = {};
+  const required: string[] = [];
+
+  for (const field of fields) {
+    let fieldSchema: any = {};
+
+    if (field.type === 'object') {
+      const childSchema = this.buildSchema(field.children || []);
+      fieldSchema = {
+        type: 'object',
+        properties: childSchema.properties
+      };
+      if (childSchema.required && childSchema.required.length > 0) {
+        fieldSchema.required = childSchema.required;
+      }
+    } else if (field.type === 'array') {
+      const childSchema = this.buildSchema(field.children || []);
+      fieldSchema = {
+        type: 'array',
+        items: {
+          type: 'object',
+          properties: childSchema.properties
+        }
+      };
+      if (childSchema.required && childSchema.required.length > 0) {
+        fieldSchema.items.required = childSchema.required;
+      }
+    } else {
+      fieldSchema = { type: field.type };
+    }
+
+    properties[field.name] = fieldSchema;
+
+    if (field.required) {
+      required.push(field.name);
+    }
+  }
+
+  const schema: any = {
+    type: 'object',
+    properties: properties
+  };
+
+  if (required.length > 0) {
+    schema.required = required;
+  }
+
+  return schema;
+}
+copyToClipboard() {
+  const jsonString = JSON.stringify(this.generatedSchema, null, 2); // formaté avec indentation
+  navigator.clipboard.writeText(jsonString)
+    .then(() => {
+      alert('JSON copié dans le presse-papiers !');
+    })
+    .catch(err => {
+      console.error('Erreur de copie :', err);
+    });
+}
+
+
+
+
+  }
 
 
 
