@@ -67,8 +67,6 @@ export class AjoutApimethodComponent implements OnInit, AfterViewInit  {
   validationMessage: string = '';
   isValid: boolean = true;
   isDragOver: boolean = false;
- 
-
   schemaFields: Field[] = [];
   generatedSchema: any = {};
 
@@ -90,23 +88,31 @@ export class AjoutApimethodComponent implements OnInit, AfterViewInit  {
   ngOnInit(): void {
     this.configId = Number(this.route.snapshot.paramMap.get('configId'));
 
-    this.tiersService.getConfigsById(this.configId).subscribe({
-      next: (config) => {
-        this.parentConfig = config;
-      },
-      error: (err) => {
-        console.error('Erreur lors de la récupération de la configuration :', err);
-      }
-    });
     this.tiersService.getTiersIdByConfigId(this.configId).subscribe({
       next: (tiersId) => {
         console.log('tiersId:', tiersId);
-        this.tiersId = tiersId; 
+        this.tiersId = tiersId;
+    
+        // Une fois le tiersId récupéré, vérifier s'il a déjà une méthode POST
+        this.tiersService.hasPostMethodForTiers(this.tiersId).subscribe({
+          next: (hasPost: boolean) => {
+            // Ne garder POST que s’il n’est pas encore utilisé
+            this.httpMethods = hasPost
+              ? ['GET', 'PUT', 'DELETE']
+              : ['GET', 'POST', 'PUT', 'DELETE'];
+          },
+          error: (err) => {
+            console.error('Erreur lors de la vérification de la méthode POST :', err);
+            // En cas d’erreur, on garde toutes les méthodes par défaut
+            this.httpMethods = ['GET', 'POST', 'PUT', 'DELETE'];
+          }
+        });
       },
       error: (err) => {
         console.error('Erreur lors de la récupération du tiersId :', err);
       }
     });
+    
 
     this.initializeForm();
     
@@ -449,4 +455,6 @@ export class AjoutApimethodComponent implements OnInit, AfterViewInit  {
       height: '80%'
     });
   }
-  }
+
+  //ajout
+   }

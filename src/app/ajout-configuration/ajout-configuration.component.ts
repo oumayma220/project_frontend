@@ -21,6 +21,8 @@ import { MatTableModule } from '@angular/material/table';
 import { TestComponent } from '../test/test.component';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { HelpDialogComponent } from '../help-dialog/help-dialog.component';
+import { Field } from '../Field';
+import { TestdragComponent } from '../testdrag/testdrag.component';
 
 
 @Component({
@@ -74,6 +76,8 @@ export class AjoutConfigurationComponent implements OnInit, AfterViewInit {
   validationMessage: string = '';
   isValid: boolean = true;
   isDragOver: boolean = false;
+  schemaFields: Field[] = [];
+  generatedSchema: any = {};
 
 
   constructor(
@@ -456,6 +460,12 @@ removePayloadTemplate(index: number): void {
         width: '1100px'
       });
     }
+     openDialog1() {
+        this.dialog.open(TestdragComponent, {
+          width: '80%',
+          height: '80%'
+        });
+      }
   
   
 }

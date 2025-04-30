@@ -58,6 +58,7 @@ export class TiersFormComponent {
   ];
   schemaFields: any[] = [];
   generatedPayloadSchema: any = null;
+    generatedSchema: any = {};
 
   constructor(private fb: FormBuilder,
      private tiersService: TiersService,
@@ -417,7 +418,12 @@ validateTemplate() {
       width: '1100px'
     });
   }
-
+  openDialog1() {
+    this.dialog.open(TestdragComponent, {
+      width: '80%',
+      height: '80%'
+    });
+  }
   //payload
 
 

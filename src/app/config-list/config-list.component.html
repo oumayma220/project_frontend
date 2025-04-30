@@ -176,12 +176,12 @@
                                         </div>
 
                                         <div *ngFor="let template of method.payloadTemplates; let i = index" class="template-block">
-                                            <div class="detail-group path-param-group">
+                                            <!-- <div class="detail-group path-param-group">
                                                 <span class="detail-label" style="font-size: 16px;">
                                                     Path Param
                                                 </span>
                                                 <span class="detail-value path-param-value">{{ template.pathParam || 'Aucun' }}</span>
-                                            </div>
+                                            </div> -->
                                             <div class="detail-group">
                                                 <span class="detail-label">Template</span>
                                                 <pre class="detail-value code-block" style="border-left: 3px solid yellow;">{{ template.template }}</pre>

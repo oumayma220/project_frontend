@@ -1,62 +1,64 @@
-<mat-card class="template-container mat-elevation-z4">
-    <!-- Header -->
-    <div class="dialog-toolbar">
-        <span class="dialog-title">Modifier le Template</span>
-        <span class="spacer"></span>
-        <button mat-icon-button mat-dialog-close aria-label="Fermer">
+<mat-card class="template-dialog mat-elevation-z4">
+    <!-- En-tête avec dégradé subtil -->
+    <div class="dialog-header">
+        <h2 class="dialog-title">Modifier le Template</h2>
+        <button mat-icon-button mat-dialog-close aria-label="Fermer" class="close-button">
         <mat-icon>close</mat-icon>
       </button>
     </div>
 
     <mat-divider></mat-divider>
-    <!-- <mat-card-subtitle class="method-id">ID Méthode: {{ data.methodId }}</mat-card-subtitle> -->
-    <div class="scrollable-content">
-        <form [formGroup]="templateForm" class="form-layout">
-            <mat-form-field appearance="outline" class="full-width">
+
+    <!-- Contenu scrollable avec padding amélioré -->
+    <div class="dialog-content">
+        <form [formGroup]="templateForm" class="form-container">
+            <!-- <mat-form-field appearance="outline" class="form-field">
                 <mat-label>Path Param</mat-label>
                 <input matInput formControlName="pathParam" placeholder="Saisir le path param" />
-                <mat-icon matSuffix>link</mat-icon>
+                <mat-icon matSuffix class="field-icon">link</mat-icon>
                 <mat-error *ngIf="templateForm.get('pathParam')?.hasError('required') && templateForm.get('pathParam')?.touched">
-                    Ce champ est requis.
+                    Ce champ est requis
                 </mat-error>
-            </mat-form-field>
+            </mat-form-field> -->
 
-            <mat-form-field appearance="outline" class="full-width">
+            <mat-form-field appearance="outline" class="form-field">
                 <mat-label>Template</mat-label>
-                <textarea matInput formControlName="template" placeholder="Saisir le contenu du template" rows="8"></textarea>
-                <mat-icon matSuffix>code</mat-icon>
+                <textarea matInput formControlName="template" placeholder="Saisir le contenu du template" rows="13" class="code-textarea"></textarea>
+                <mat-icon matSuffix class="field-icon">code</mat-icon>
                 <mat-error *ngIf="templateForm.get('template')?.hasError('required') && templateForm.get('template')?.touched">
-                    Ce champ est requis.
+                    Ce champ est requis
                 </mat-error>
             </mat-form-field>
 
-            <mat-form-field appearance="outline" class="full-width">
-                <mat-label>PayloadSchema</mat-label>
-                <textarea matInput formControlName="payloadSchema" placeholder="Saisir le contenu du payloadSchema" rows="6"></textarea>
-                <mat-icon matSuffix>code</mat-icon>
+            <mat-form-field appearance="outline" class="form-field">
+                <mat-label>Payload Schema</mat-label>
+                <textarea matInput formControlName="payloadSchema" placeholder="Saisir le contenu du payload schema" rows="22" class="code-textarea"></textarea>
+                <mat-icon matSuffix class="field-icon">schema</mat-icon>
                 <mat-error *ngIf="templateForm.get('payloadSchema')?.hasError('required') && templateForm.get('payloadSchema')?.touched">
-                    Ce champ est requis.
+                    Ce champ est requis
                 </mat-error>
             </mat-form-field>
 
-            <mat-form-field appearance="outline" class="full-width">
-                <mat-label>succesRespone</mat-label>
-                <textarea matInput formControlName="succesRespone" placeholder="Saisir le contenu du succesRespone" rows="2"></textarea>
-                <mat-icon matSuffix>code</mat-icon>
+            <mat-form-field appearance="outline" class="form-field">
+                <mat-label>Réponse de succès</mat-label>
+                <textarea matInput formControlName="succesRespone" placeholder="Saisir le contenu de la réponse de succès" rows="2" class="code-textarea"></textarea>
+                <mat-icon matSuffix class="field-icon">check_circle</mat-icon>
                 <mat-error *ngIf="templateForm.get('succesRespone')?.hasError('required') && templateForm.get('succesRespone')?.touched">
-                    Ce champ est requis.
+                    Ce champ est requis
                 </mat-error>
             </mat-form-field>
         </form>
     </div>
 
-    <!-- Boutons -->
-    <mat-card-actions align="end" class="card-actions">
-        <button mat-stroked-button mat-dialog-close color="warn">
-        <mat-icon>cancel</mat-icon> Annuler
+    <!-- Boutons avec style amélioré -->
+    <div class="dialog-actions">
+        <button mat-stroked-button mat-dialog-close class="cancel-button">
+        <mat-icon>cancel</mat-icon>
+        <span>Annuler</span>
       </button>
-        <button mat-flat-button color="primary" (click)="saveChanges()" [disabled]="templateForm.invalid">
-        <mat-icon>save</mat-icon> Enregistrer
+        <button mat-flat-button color="primary" (click)="saveChanges()" [disabled]="templateForm.invalid" class="save-button">
+        <mat-icon>save</mat-icon>
+        <span>Enregistrer</span>
       </button>
-    </mat-card-actions>
+    </div>
 </mat-card>

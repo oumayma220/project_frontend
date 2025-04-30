@@ -299,17 +299,52 @@
 
 
                             <!-- <mat-form-field appearance="outline" class="w-100">
-                                <mat-label>Template JSON</mat-label>
-                                <textarea matInput formControlName="template" rows="8"></textarea>
-                            </mat-form-field> -->
-                            <mat-form-field appearance="outline" class="w-100">
                                 <mat-label>Payload schema</mat-label>
                                 <textarea matInput formControlName="payloadSchema" rows="8"></textarea>
-                            </mat-form-field>
-                            <mat-form-field appearance="outline" class="w-100">
+                            </mat-form-field> -->
+                            <div class="row mt-4">
+                                <div class="col-12">
+                                    <div class="d-flex align-items-center justify-content-between mb-3">
+                                        <h5 class="m-0">Définition de la structure de données</h5>
+                                        <button mat-raised-button style="background-color: #11024d ; color: white ;" (click)="openDialog1()" type="button" class="px-3 py-2">
+                                    <mat-icon>edit</mat-icon>
+                                    <span class="ms-2">Construire votre structure avec l'éditeur interactif</span>
+                                </button>
+                                    </div>
+
+                                    <!-- Payload Schema avec visualisation améliorée -->
+                                    <mat-card class="shadow-sm">
+                                        <mat-card-content>
+                                            <mat-form-field appearance="outline" class="w-100">
+                                                <mat-label>Schéma de la charge utile (Payload Schema)</mat-label>
+                                                <textarea matInput formControlName="payloadSchema" rows="15" required class="text-dark bg-light schema-editor">{{ generatedSchema | json }}</textarea>
+                                                <mat-hint>Format JSON attendu pour définir la structure de votre payload</mat-hint>
+                                                <mat-error *ngIf="payloadTemplateForm.get('payloadSchema')?.hasError('required')">Le schéma est obligatoire</mat-error>
+                                                <!-- <mat-error *ngIf="ApiMethodForm.get('payloadSchema')?.hasError('invalidJson')">Format JSON invalide</mat-error> -->
+                                            </mat-form-field>
+                                        </mat-card-content>
+                                    </mat-card>
+                                </div>
+                            </div>
+                            <!-- <mat-form-field appearance="outline" class="w-100">
                                 <mat-label>succesRespone</mat-label>
                                 <textarea matInput formControlName="succesRespone" rows="2"></textarea>
-                            </mat-form-field>
+                            </mat-form-field> -->
+                            <div class="row mt-4">
+                                <div class="col-12">
+                                    <h5 class="mb-3">Réponse en cas de succès</h5>
+                                    <mat-card class="shadow-sm">
+                                        <mat-card-content>
+                                            <mat-form-field appearance="outline" class="w-100">
+                                                <mat-label>Format de la réponse en cas de succès</mat-label>
+                                                <textarea matInput formControlName="succesRespone" rows="6" required placeholder='{ "status": "success", "message": "Opération réussie", "data": {} }' class="text-dark bg-light"></textarea>
+                                                <mat-hint>Définissez le format de réponse attendu en cas de succès (généralement au format JSON)</mat-hint>
+                                                <mat-error *ngIf="payloadTemplateForm.get('succesRespone')?.hasError('required')">La réponse de succès est obligatoire</mat-error>
+                                            </mat-form-field>
+                                        </mat-card-content>
+                                    </mat-card>
+                                </div>
+                            </div>
                         </div>
                     </div>
 

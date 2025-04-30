@@ -6,6 +6,18 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { NgxJsonViewerModule } from 'ngx-json-viewer'; // Importez le module
  import { Field } from '../Field';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatButtonModule } from '@angular/material/button';
+import { MatSelectModule } from '@angular/material/select';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatIconModule } from '@angular/material/icon';
+import { MatDialogModule } from '@angular/material/dialog';
+
 
 
 
@@ -18,7 +30,14 @@ import { NgxJsonViewerModule } from 'ngx-json-viewer'; // Importez le module
     MatFormFieldModule,
     MatInputModule,
   CommonModule,
-  NgxJsonViewerModule],
+  NgxJsonViewerModule,
+  MatToolbarModule,
+  MatButtonModule ,
+MatInputModule,
+MatSelectModule,
+MatSlideToggleModule,MatExpansionModule,
+MatDividerModule,MatChipsModule,MatSnackBarModule,MatTooltipModule,MatIconModule, MatDialogModule
+ ],
   templateUrl: './testdrag.component.html',
   styleUrl: './testdrag.component.css'
 })
@@ -109,10 +128,31 @@ copyToClipboard() {
       console.error('Erreur de copie :', err);
     });
 }
+//ajout
+getTypeIcon(type: string): string {
+  const icons: {[key: string]: string} = {
+    'string': 'text_fields',
+    'number': 'pin',
+    'integer': 'tag',
+    'boolean': 'toggle_on',
+    'array': 'view_list',
+    'object': 'widgets'
+  };
+  return icons[type] || 'help_outline';
+}
 
-
-
-
+// Obtenir le nom formaté du type
+getTypeName(type: string): string {
+  const names: {[key: string]: string} = {
+    'string': 'Texte',
+    'number': 'Nombre',
+    'integer': 'Entier',
+    'boolean': 'Booléen',
+    'array': 'Liste',
+    'object': 'Objet'
+  };
+  return names[type] || type;
+}
   }
 
 

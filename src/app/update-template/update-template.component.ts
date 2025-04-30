@@ -43,7 +43,7 @@ export class UpdateTemplateComponent implements OnInit {
     private snackBar: MatSnackBar
   ) {
     this.templateForm = this.fb.group({
-      pathParam: ['',Validators.required],
+      // pathParam: ['',Validators.required],
       template: ['', Validators.required],
       payloadSchema:['', Validators.required],
       succesRespone:['', Validators.required],
