@@ -1,30 +1,23 @@
-<mat-card class="template-dialog mat-elevation-z4">
-    <!-- En-tête avec dégradé subtil -->
+<mat-card class="template-dialog">
+    <!-- En-tête élégant avec dégradé et typographie améliorée -->
     <div class="dialog-header">
-        <h2 class="dialog-title">Modifier le Template</h2>
+        <h2 class="dialog-title">
+            <mat-icon class="title-icon">article</mat-icon>
+            Modifier le Template
+        </h2>
         <button mat-icon-button mat-dialog-close aria-label="Fermer" class="close-button">
         <mat-icon>close</mat-icon>
       </button>
     </div>
 
-    <mat-divider></mat-divider>
-
-    <!-- Contenu scrollable avec padding amélioré -->
+    <!-- Contenu scrollable avec espacement optimisé -->
     <div class="dialog-content">
         <form [formGroup]="templateForm" class="form-container">
-            <!-- <mat-form-field appearance="outline" class="form-field">
-                <mat-label>Path Param</mat-label>
-                <input matInput formControlName="pathParam" placeholder="Saisir le path param" />
-                <mat-icon matSuffix class="field-icon">link</mat-icon>
-                <mat-error *ngIf="templateForm.get('pathParam')?.hasError('required') && templateForm.get('pathParam')?.touched">
-                    Ce champ est requis
-                </mat-error>
-            </mat-form-field> -->
-
             <mat-form-field appearance="outline" class="form-field">
                 <mat-label>Template</mat-label>
-                <textarea matInput formControlName="template" placeholder="Saisir le contenu du template" rows="13" class="code-textarea"></textarea>
-                <mat-icon matSuffix class="field-icon">code</mat-icon>
+                <textarea matInput formControlName="template" placeholder="Saisir le contenu du template" rows="13" class="code-textarea" spellcheck="false"></textarea>
+                <mat-icon matSuffix class="field-icon" [matTooltip]="'Code du template'">code</mat-icon>
+                <mat-hint align="end">Format JSON/texte</mat-hint>
                 <mat-error *ngIf="templateForm.get('template')?.hasError('required') && templateForm.get('template')?.touched">
                     Ce champ est requis
                 </mat-error>
@@ -32,8 +25,9 @@
 
             <mat-form-field appearance="outline" class="form-field">
                 <mat-label>Payload Schema</mat-label>
-                <textarea matInput formControlName="payloadSchema" placeholder="Saisir le contenu du payload schema" rows="22" class="code-textarea"></textarea>
-                <mat-icon matSuffix class="field-icon">schema</mat-icon>
+                <textarea matInput formControlName="payloadSchema" placeholder="Saisir le contenu du payload schema" rows="22" class="code-textarea" spellcheck="false"></textarea>
+                <mat-icon matSuffix class="field-icon" [matTooltip]="'Structure du schema'">schema</mat-icon>
+                <mat-hint align="end">Format JSON Schema</mat-hint>
                 <mat-error *ngIf="templateForm.get('payloadSchema')?.hasError('required') && templateForm.get('payloadSchema')?.touched">
                     Ce champ est requis
                 </mat-error>
@@ -41,8 +35,9 @@
 
             <mat-form-field appearance="outline" class="form-field">
                 <mat-label>Réponse de succès</mat-label>
-                <textarea matInput formControlName="succesRespone" placeholder="Saisir le contenu de la réponse de succès" rows="2" class="code-textarea"></textarea>
-                <mat-icon matSuffix class="field-icon">check_circle</mat-icon>
+                <textarea matInput formControlName="succesRespone" placeholder="Saisir le contenu de la réponse de succès" rows="2" class="code-textarea" spellcheck="false"></textarea>
+                <mat-icon matSuffix class="field-icon" [matTooltip]="'Message de confirmation'">check_circle</mat-icon>
+                <mat-hint align="end">Format texte/JSON</mat-hint>
                 <mat-error *ngIf="templateForm.get('succesRespone')?.hasError('required') && templateForm.get('succesRespone')?.touched">
                     Ce champ est requis
                 </mat-error>
@@ -50,13 +45,13 @@
         </form>
     </div>
 
-    <!-- Boutons avec style amélioré -->
+    <!-- Boutons avec style moderne et interactif -->
     <div class="dialog-actions">
-        <button mat-stroked-button mat-dialog-close class="cancel-button">
+        <button mat-stroked-button mat-dialog-close class="cancel-button" style="color: black;">
         <mat-icon>cancel</mat-icon>
         <span>Annuler</span>
       </button>
-        <button mat-flat-button color="primary" (click)="saveChanges()" [disabled]="templateForm.invalid" class="save-button">
+        <button mat-flat-button color="accent" (click)="saveChanges()" [disabled]="templateForm.invalid" class="save-button">
         <mat-icon>save</mat-icon>
         <span>Enregistrer</span>
       </button>

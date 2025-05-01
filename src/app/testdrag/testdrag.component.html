@@ -1,117 +1,117 @@
 <mat-dialog-content>
-
-    <div class="container p-4">
-        <div class="mb-4">
-            <h2 class="fw-bold mb-3" style="color: rgb(6, 1, 41);">Générateur de Schéma</h2>
-            <p class="text-muted">Créez facilement votre structure de données avec notre éditeur interactif</p>
+    <div class="container p-5">
+        <div class="mb-5 text-center">
+            <h2 class="fw-bold mb-3" style="color: #3f51b5; font-size: 2rem;">Générateur de Schéma</h2>
+            <p class="text-muted mb-4">Créez facilement votre structure de données avec notre éditeur interactif</p>
+            <div class="d-flex justify-content-center gap-3 mb-4">
+                <button mat-raised-button style="background-color: #3f51b5; color: white;" (click)="addField(fields)" class="px-4 py-2 rounded-pill" type="button">
+                    <mat-icon class="me-2">add_circle</mat-icon> Ajouter un champ
+                </button>
+                <button mat-raised-button style="background-color: #fff018; color: white;" (click)="generateSchema()" class="px-4 py-2 rounded-pill" type="button">
+                    <mat-icon class="me-2">code</mat-icon> Générer le schéma
+                </button>
+            </div>
         </div>
 
-        <div *ngFor="let field of fields; let i = index" class="card mb-3 rounded-3 border-0 shadow-sm">
-            <div class="card-body p-4">
-                <div class="row g-3 align-items-center">
-                    <div class="col-md-3">
-                        <label class="form-label small text-muted">Nom du champ</label>
-                        <input class="form-control form-control-lg" placeholder="Nom du champ" [(ngModel)]="field.name" />
-                    </div>
-                    <div class="col-md-3">
-                        <label class="form-label small text-muted">Type</label>
-                        <div class="input-group">
-                            <span class="input-group-text bg-light">
-                            <mat-icon>{{getTypeIcon(field.type)}}</mat-icon>
-                        </span>
-                            <select class="form-select form-select-lg" [(ngModel)]="field.type" (change)="onTypeChange(field)">
-                            <option value="string">{{getTypeName('string')}}</option>
-                            <option value="number">{{getTypeName('number')}}</option>
-                            <option value="integer">{{getTypeName('integer')}}</option>
-                            <option value="boolean">{{getTypeName('boolean')}}</option>
-                            <option value="array">{{getTypeName('array')}}</option>
-                            <option value="object">{{getTypeName('object')}}</option>
-                        </select>
+        <!-- Zone de configuration des champs -->
+        <div class="fields-container mb-5">
+            <div *ngFor="let field of fields; let i = index" class="card mb-4 rounded-4 border-0 shadow-sm hover-shadow transition">
+                <div class="card-body p-4">
+                    <div class="row g-3 align-items-center">
+                        <div class="col-md-4">
+                            <label class="form-label fw-medium mb-2" style="color: #3f51b5;">Nom du champ</label>
+                            <input class="form-control form-control-lg rounded-pill border-0 shadow-sm" placeholder="Nom du champ" [(ngModel)]="field.name" />
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label fw-medium mb-2" style="color: #3f51b5;">Type</label>
+                            <div class="input-group">
+                                <span class="input-group-text border-0 shadow-sm" style="background-color: #f5f7ff;">
+                                    <mat-icon style="color: #3f51b5;">{{getTypeIcon(field.type)}}</mat-icon>
+                                </span>
+                                <select class="form-select form-select-lg border-0 shadow-sm rounded-end" [(ngModel)]="field.type" (change)="onTypeChange(field)">
+                                    <option value="string">{{getTypeName('string')}}</option>
+                                    <option value="number">{{getTypeName('number')}}</option>
+                                    <option value="integer">{{getTypeName('integer')}}</option>
+                                    <option value="boolean">{{getTypeName('boolean')}}</option>
+                                    <option value="array">{{getTypeName('array')}}</option>
+                                    <option value="object">{{getTypeName('object')}}</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="form-check form-switch mt-4">
+                                <input type="checkbox" class="form-check-input" style="transform: scale(1.4); margin-right: 10px;" id="required-{{i}}" [(ngModel)]="field.required" />
+                                <label class="form-check-label fw-medium" for="required-{{i}}">Obligatoire</label>
+                            </div>
+                        </div>
+                        <div class="col-md-2 text-end">
+                            <button class="btn btn-outline-danger rounded-pill px-3 py-2" (click)="removeField(fields, i)" type="button">
+                                <mat-icon class="align-middle me-1">delete</mat-icon> Supprimer
+                            </button>
                         </div>
                     </div>
-                    <div class="col-md-3">
-                        <div class="form-check form-switch mt-4">
-                            <input type="checkbox" class="form-check-input" id="required-{{i}}" [(ngModel)]="field.required" />
-                            <label class="form-check-label" for="required-{{i}}">Obligatoire</label>
+
+                    <!-- Sous-champs si c'est un objet ou un tableau -->
+                    <div *ngIf="field.children" class="mt-4 ps-4 py-3" style="border-left: 3px solid #3f51b5; background-color: #f8f9ff; border-radius: 0 16px 16px 0;">
+                        <div class="d-flex align-items-center mb-3">
+                            <span class="badge rounded-pill me-2 px-3 py-2" style="background-color: #3f51b5;">
+                                <mat-icon class="mat-icon-sm me-1">{{field.type === 'object' ? 'widgets' : 'view_list'}}</mat-icon>
+                                Sous-champs
+                            </span>
+                            <button class="btn btn-sm rounded-pill px-3 py-2" (click)="addField(field.children)" type="button" style="background-color: #3f51b5; color: white;">
+                                <mat-icon class="align-middle me-1">add_circle</mat-icon> Ajouter un sous-champ
+                            </button>
                         </div>
+                        <ng-container *ngTemplateOutlet="fieldTemplate; context: { fields: field.children }"></ng-container>
                     </div>
-                    <div class="col-md-3 text-end">
-                        <button class="btn btn-outline-danger rounded-pill" (click)="removeField(fields, i)" type="button">
-                        <mat-icon class="align-middle me-1">delete</mat-icon> Supprimer
-                    </button>
-                    </div>
-                </div>
-
-                <!-- Sous-champs si c'est un objet ou un tableau -->
-                <div *ngIf="field.children" class="mt-4 ps-4 border-start border-2 border-primary">
-                    <div class="d-flex align-items-center mb-3">
-                        <!-- <span class="badge bg-primary rounded-pill me-2"> -->
-                        <span class="badge  rounded-pill me-2" style="background-color: rgb(11, 11, 98);">
-
-                        <mat-icon class="mat-icon-sm">{{field.type === 'object' ? 'widgets' : 'view_list'}}</mat-icon>
-                        Sous-champs
-                    </span>
-                        <!-- <button class="btn btn-sm btn-primary rounded-pill" (click)="addField(field.children)" type="button"> -->
-                        <button class="btn btn-sm  rounded-pill" (click)="addField(field.children)" type="button" style="background-color: rgb(11, 11, 98);color: white;">
-    
-                        <mat-icon class="align-middle me-1">add_circle</mat-icon> Ajouter un sous-champ
-                    </button>
-                    </div>
-                    <ng-container *ngTemplateOutlet="fieldTemplate; context: { fields: field.children }"></ng-container>
                 </div>
             </div>
         </div>
 
-        <div class="d-flex gap-2 mt-4">
-            <button mat-raised-button style="background-color: #07086a; color: white;" (click)="addField(fields)" class="mat-mdc-button-lg rounded-pill" type="button">
-          <mat-icon class="me-1">add_circle</mat-icon> Ajouter un champ
-        </button>
-
-            <button mat-raised-button color="accent" (click)="generateSchema()" class="mat-mdc-button-lg rounded-pill" type="button">
-          <mat-icon class="me-1">code</mat-icon> Générer le schéma
-        </button>
+        <!-- Message si aucun champ n'est présent -->
+        <div *ngIf="fields.length === 0" class="text-center my-5 py-5">
+            <mat-icon style="font-size: 48px; height: 48px; width: 48px; color: #ccc;">schema</mat-icon>
+            <p class="mt-3 text-muted">Commencez par ajouter des champs à votre schéma</p>
         </div>
-
 
         <!-- Résultat JSON généré -->
-        <div class="card mt-5 bg-dark text-white border-0 rounded-3">
-            <div class="card-header bg-dark bg-gradient d-flex justify-content-between align-items-center">
-                <h5 class="m-0">Schéma généré</h5>
-                <button class="btn btn-sm btn-outline-light" (click)="copyToClipboard()">
-                <mat-icon class="align-middle me-1">content_copy</mat-icon> Copier
-            </button>
+        <div class="card mt-5 bg-dark border-0 rounded-4 shadow">
+            <div class="card-header bg-gradient d-flex justify-content-between align-items-center p-4" style="background-color: #2c3154; border-radius: 16px 16px 0 0;">
+                <h5 class="m-0 text-white fw-bold">Schéma généré</h5>
+                <div>
+                    <button class="btn btn-sm btn-outline-light rounded-pill px-3 py-2" (click)="copyToClipboard()">
+                        <mat-icon class="align-middle me-1">content_copy</mat-icon> Copier
+                    </button>
+                </div>
             </div>
-            <div class="card-body">
-                <pre class="mb-0 text-light" id="json-result">{{ generatedSchema | json }}</pre>
+            <div class="card-body p-4">
+                <pre class="mb-0 p-3 rounded bg-dark text-light" style="overflow: auto; max-height: 300px;" id="json-result">{{ generatedSchema | json }}</pre>
             </div>
         </div>
     </div>
 </mat-dialog-content>
-<pre>
-    
-</pre>
 
-<mat-dialog-actions align="end" class="mt-4">
-    <button mat-stroked-button mat-dialog-close color="warn">
-      <mat-icon>close</mat-icon>
-      Fermer
+<mat-dialog-actions align="end" class="p-4 bg-light" style="border-top: 1px solid #eee; border-radius: 0 0 24px 24px;">
+    <button mat-stroked-button mat-dialog-close color="accent" class="rounded-pill px-4">
+        <mat-icon class="me-2">close</mat-icon>
+        Fermer
     </button>
 </mat-dialog-actions>
 
 <!-- Template récursif -->
 <ng-template #fieldTemplate let-fields="fields">
-    <div *ngFor="let field of fields; let i = index" class="card mb-3 rounded-3 border-0 shadow-sm">
+    <div *ngFor="let field of fields; let i = index" class="card mb-3 rounded-3 border-0 shadow-sm" style="background-color: rgba(255, 255, 255, 0.7);">
         <div class="card-body p-3">
             <div class="row g-3 align-items-center">
-                <div class="col-md-3">
-                    <input class="form-control" placeholder="Nom du champ" [(ngModel)]="field.name" />
+                <div class="col-md-4">
+                    <input class="form-control rounded-pill border-0 shadow-sm" placeholder="Nom du champ" [(ngModel)]="field.name" />
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-4">
                     <div class="input-group">
-                        <span class="input-group-text bg-light">
-                            <mat-icon>{{getTypeIcon(field.type)}}</mat-icon>
+                        <span class="input-group-text border-0" style="background-color: #f0f2ff;">
+                            <mat-icon style="color: #3f51b5;">{{getTypeIcon(field.type)}}</mat-icon>
                         </span>
-                        <select class="form-select" [(ngModel)]="field.type" (change)="onTypeChange(field)">
+                        <select class="form-select border-0 shadow-sm rounded-end" [(ngModel)]="field.type" (change)="onTypeChange(field)">
                             <option value="string">{{getTypeName('string')}}</option>
                             <option value="number">{{getTypeName('number')}}</option>
                             <option value="integer">{{getTypeName('integer')}}</option>
@@ -121,24 +121,24 @@
                         </select>
                     </div>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-2">
                     <div class="form-check form-switch">
-                        <input type="checkbox" class="form-check-input" id="child-required-{{i}}" [(ngModel)]="field.required" />
+                        <input type="checkbox" class="form-check-input" style="transform: scale(1.2);" id="child-required-{{i}}" [(ngModel)]="field.required" />
                         <label class="form-check-label" for="child-required-{{i}}">Obligatoire</label>
                     </div>
                 </div>
-                <div class="col-md-3 text-end">
+                <div class="col-md-2 text-end">
                     <button class="btn btn-sm btn-outline-danger rounded-pill" (click)="removeField(fields, i)">
-                        <mat-icon class="align-middle me-1">delete</mat-icon> Supprimer
+                        <mat-icon class="align-middle me-1">delete</mat-icon>
                     </button>
                 </div>
             </div>
 
             <!-- Sous-champs récursifs -->
-            <div *ngIf="field.children" class="mt-3 ps-3 border-start border-2 border-info">
-                <div class="d-flex align-items-center mb-2">
-                    <button class="btn btn-sm btn-outline-info rounded-pill" (click)="addField(field.children)">
-                        <mat-icon class="align-middle me-1">add_circle</mat-icon> Ajouter un sous-champ
+            <div *ngIf="field.children" class="mt-3 ps-3" style="border-left: 2px solid #ff4081; background-color: rgba(255, 64, 129, 0.05); border-radius: 0 12px 12px 0;">
+                <div class="d-flex align-items-center mb-2 mt-2">
+                    <button class="btn btn-sm rounded-pill px-3" (click)="addField(field.children)" style="background-color: #ff4081; color: white;">
+                        <mat-icon class="align-middle me-1">add_circle</mat-icon> Sous-champ
                     </button>
                 </div>
                 <ng-container *ngTemplateOutlet="fieldTemplate; context: { fields: field.children }"></ng-container>

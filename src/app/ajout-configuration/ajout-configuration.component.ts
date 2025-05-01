@@ -67,7 +67,7 @@ export class AjoutConfigurationComponent implements OnInit, AfterViewInit {
 
   httpMethods = ['GET', 'POST', 'PUT', 'DELETE'];
   targetFields = ['name', 'description', 'price', 'url', 'reference'];
-  variables: string[] = ['employeId', 'produitId', 'nomProduit', 'prixUnitaire','total', 'quantite','adresse','dateCommande'];
+  variables: string[] = ['employeId','nomEmploye', 'produitId', 'nomProduit', 'prixUnitaire','total', 'quantite','adresse','dateCommande'];
   blocks: string[] = [
     '{{#each lignes}}',
     '{{#unless @last}},{{/unless}}{{/each}}'

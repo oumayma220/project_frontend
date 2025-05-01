@@ -58,7 +58,7 @@ export class AjoutApimethodComponent implements OnInit, AfterViewInit  {
   expandedPaths: Set<string> = new Set(['$']);
   error: string = '';
   testResponse: any = null;
-  variables: string[] = ['employeId', 'produitId', 'nomProduit', 'prixUnitaire','total', 'quantite','adresse','dateCommande'];
+  variables: string[] = ['employeId','nomEmploye', 'produitId', 'nomProduit', 'prixUnitaire','total', 'quantite','adresse','dateCommande'];
   blocks: string[] = [
     '{{#each lignes}}',
     '{{#unless @last}},{{/unless}}{{/each}}'
@@ -87,6 +87,14 @@ export class AjoutApimethodComponent implements OnInit, AfterViewInit  {
 
   ngOnInit(): void {
     this.configId = Number(this.route.snapshot.paramMap.get('configId'));
+    this.tiersService.getConfigsById(this.configId).subscribe({
+      next: (config) => {
+        this.parentConfig = config;
+      },
+      error: (err) => {
+        console.error('Erreur lors de la récupération de la configuration :', err);
+      }
+    });
 
     this.tiersService.getTiersIdByConfigId(this.configId).subscribe({
       next: (tiersId) => {

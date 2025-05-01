@@ -227,7 +227,7 @@
                                 <mat-card-content>
 
                                     <mat-form-field class="w-100" appearance="outline">
-                                        <textarea matInput (drop)="onDrop($event)" (dragover)="onDragOver($event)" (dragleave)="onDragLeave($event)" [(ngModel)]="templateText" formControlName="template" rows="17" placeholder="Glissez-déposez les variables et blocs ici pour construire votre template, ou écrivez directement."
+                                        <textarea matInput (drop)="onDrop($event)" (dragover)="onDragOver($event)" (dragleave)="onDragLeave($event)" [(ngModel)]="templateText" formControlName="template" rows="19" spellcheck="false" placeholder="Glissez-déposez les variables et blocs ici pour construire votre template, ou écrivez directement."
                                             class="text-dark bg-light" [ngClass]="{'drop-zone': !isDragOver, 'drag-over drop-zone': isDragOver}">
                                         </textarea>
                                         <mat-error *ngIf="ApiMethodForm.get('template')?.invalid">le champ est obligatoire</mat-error>
@@ -269,7 +269,7 @@
                                 <mat-card-content>
                                     <mat-form-field appearance="outline" class="w-100">
                                         <mat-label>Schéma de la charge utile (Payload Schema)</mat-label>
-                                        <textarea matInput formControlName="payloadSchema" rows="15" required class="text-dark bg-light schema-editor">{{ generatedSchema | json }}</textarea>
+                                        <textarea matInput formControlName="payloadSchema" rows="15" required class="text-dark bg-light schema-editor" spellcheck="false">{{ generatedSchema | json }}</textarea>
                                         <mat-hint>Format JSON attendu pour définir la structure de votre payload</mat-hint>
                                         <mat-error *ngIf="ApiMethodForm.get('payloadSchema')?.hasError('required')">Le schéma est obligatoire</mat-error>
                                         <!-- <mat-error *ngIf="ApiMethodForm.get('payloadSchema')?.hasError('invalidJson')">Format JSON invalide</mat-error> -->
@@ -287,7 +287,7 @@
                                 <mat-card-content>
                                     <mat-form-field appearance="outline" class="w-100">
                                         <mat-label>Format de la réponse en cas de succès</mat-label>
-                                        <textarea matInput formControlName="succesRespone" rows="6" required placeholder='{ "status": "success", "message": "Opération réussie", "data": {} }' class="text-dark bg-light"></textarea>
+                                        <textarea matInput formControlName="succesRespone" rows="6" required placeholder='{ "status": "success", "message": "Opération réussie", "data": {} }' class="text-dark bg-light" spellcheck="false"></textarea>
                                         <mat-hint>Définissez le format de réponse attendu en cas de succès (généralement au format JSON)</mat-hint>
                                         <mat-error *ngIf="ApiMethodForm.get('succesRespone')?.hasError('required')">La réponse de succès est obligatoire</mat-error>
                                     </mat-form-field>

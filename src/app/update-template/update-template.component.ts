@@ -13,6 +13,8 @@ import { MatCard } from '@angular/material/card';
 import { MatCardModule } from '@angular/material/card'; 
 import { PayloadTemplate } from '../PayloadTemplate';
 import { MatDividerModule } from '@angular/material/divider';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-update-template',
@@ -27,7 +29,8 @@ import { MatDividerModule } from '@angular/material/divider';
     ReactiveFormsModule,
     MatTableModule,
     MatCardModule,
-    MatDividerModule],
+    MatDividerModule,
+    MatTooltipModule],
   templateUrl: './update-template.component.html',
   styleUrl: './update-template.component.css'
 })

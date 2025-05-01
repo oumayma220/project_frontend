@@ -44,20 +44,17 @@
                                         <div class="col-md-1 col-lg-1 col-xl-1 text-end">
                                             <button mat-icon-button (click)="removeItem(item.produitId)">
                             <mat-icon style="color: rgb(203, 4, 4);">delete</mat-icon>
-
-
                           </button>
                                         </div>
                                     </div>
                                     <hr class="my-4">
                                 </div>
 
-                                <div class="pt-5" *ngIf="panierItems.length > 0">
-                                    <h6 class="mb-0">
-                                        <a routerLink="/success/productlist" class="text-body">
-                                            <mat-icon>arrow_back</mat-icon> Continuer vos achats
-                                        </a>
-                                    </h6>
+
+                                <div class="pt-4" *ngIf="panierItems.length > 0">
+                                    <a routerLink="/success/productlist" class="btn btn-outline rounded-pill d-inline-flex align-items-center">
+                                        <mat-icon class="me-2">arrow_back</mat-icon> Continuer vos achats
+                                    </a>
                                 </div>
                             </div>
                         </div>
@@ -71,24 +68,28 @@
                                     <h5 class="text-uppercase">{{panierItems.length}} Articles </h5>
                                     <h5>{{total}} DT</h5>
                                 </div>
-
-
                                 <hr class="my-4">
-
                                 <div class="d-flex justify-content-between mb-5">
                                     <h5 class="text-uppercase">Total</h5>
                                     <h5>{{total}} DT</h5>
                                 </div>
-                                <mat-form-field appearance="fill" class="w-100 mb-3">
+                                <pre>
+                                    </pre>
+                                <!-- <mat-form-field appearance="fill" class="w-100 mb-3">
                                     <mat-label>Adresse de livraison</mat-label>
                                     <mat-icon matPrefix>location_on</mat-icon>
                                     <input matInput [(ngModel)]="adresseLivraison" placeholder="Entrez votre adresse">
 
+                                </mat-form-field> -->
+                                <mat-form-field appearance="outline" class="w-100 mb-4 address-field">
+                                    <mat-label>Adresse de livraison</mat-label>
+                                    <mat-icon matPrefix>location_on</mat-icon>
+                                    <input matInput [(ngModel)]="adresseLivraison" placeholder="Entrez votre adresse complète">
                                 </mat-form-field>
 
-
-                                <button mat-raised-button color="accent" class="w-100 py-2" (click)="passerCommande()">
-                      <mat-icon>payment</mat-icon> Passer la commande
+                                <button mat-raised-button color="accent" class="w-100 py-3 rounded-pill checkout-btn shadow" (click)="passerCommande()">
+                        <mat-icon class="me-2">payment</mat-icon> 
+                        Passer la commande
                     </button>
                             </div>
                         </div>
