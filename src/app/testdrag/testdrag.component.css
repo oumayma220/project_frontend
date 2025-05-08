@@ -15,6 +15,20 @@
     min-height: calc(100vh - 64px);
 }
 
+
+/* Style pour mat-dialog-content sans footer */
+
+.mat-dialog-content-no-footer {
+    max-height: none !important;
+    display: block;
+    margin: 0;
+    padding: 0;
+    position: relative;
+    overflow: auto;
+    box-sizing: border-box;
+    border-radius: 0 0 24px 24px;
+}
+
 @media (min-width: 1200px) {
     .content-container {
         flex-direction: row;
@@ -215,9 +229,6 @@ mat-chip {
 }
 
 
-/* ajout */
-
-
 /* Styles pour les icônes Material */
 
 .mat-icon {
@@ -255,11 +266,6 @@ button .mat-icon {
 .border-primary {
     --bs-border-opacity: 1;
     border-color: rgb(31, 22, 131) !important;
-}
-
-mat-dialog-actions {
-    display: flex;
-    justify-content: flex-end;
 }
 
 

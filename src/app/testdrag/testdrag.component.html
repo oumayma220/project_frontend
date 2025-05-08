@@ -1,8 +1,22 @@
-<mat-dialog-content>
+<mat-dialog-content class="mat-dialog-content-no-footer">
     <div class="container p-5">
         <div class="mb-5 text-center">
             <h2 class="fw-bold mb-3" style="color: #3f51b5; font-size: 2rem;">Générateur de Schéma</h2>
             <p class="text-muted mb-4">Créez facilement votre structure de données avec notre éditeur interactif</p>
+
+            <!-- Type racine du schéma -->
+            <div class="d-flex justify-content-center align-items-center mb-4">
+                <label class="me-3 fw-medium">Type racine:</label>
+                <div class="btn-group" role="group">
+                    <button type="button" class="btn px-4" [class.btn-primary]="rootType === 'object'" [class.btn-outline-primary]="rootType !== 'object'" (click)="rootType = 'object'">
+                        <mat-icon class="me-2">widgets</mat-icon>Objet
+                    </button>
+                    <button type="button" class="btn px-4" [class.btn-primary]="rootType === 'array'" [class.btn-outline-primary]="rootType !== 'array'" (click)="rootType = 'array'">
+                        <mat-icon class="me-2">view_list</mat-icon>Tableau
+                    </button>
+                </div>
+            </div>
+
             <div class="d-flex justify-content-center gap-3 mb-4">
                 <button mat-raised-button style="background-color: #3f51b5; color: white;" (click)="addField(fields)" class="px-4 py-2 rounded-pill" type="button">
                     <mat-icon class="me-2">add_circle</mat-icon> Ajouter un champ
@@ -73,6 +87,10 @@
             <mat-icon style="font-size: 48px; height: 48px; width: 48px; color: #ccc;">schema</mat-icon>
             <p class="mt-3 text-muted">Commencez par ajouter des champs à votre schéma</p>
         </div>
+        <pre>
+
+            
+        </pre>
 
         <!-- Résultat JSON généré -->
         <div class="card mt-5 bg-dark border-0 rounded-4 shadow">
@@ -82,6 +100,9 @@
                     <button class="btn btn-sm btn-outline-light rounded-pill px-3 py-2" (click)="copyToClipboard()">
                         <mat-icon class="align-middle me-1">content_copy</mat-icon> Copier
                     </button>
+                    <button mat-stroked-button color="accent" mat-dialog-close class="ms-2 rounded-pill px-3 py-1">
+                        <mat-icon class="me-1">close</mat-icon> Fermer
+                    </button>
                 </div>
             </div>
             <div class="card-body p-4">
@@ -90,13 +111,6 @@
         </div>
     </div>
 </mat-dialog-content>
-
-<mat-dialog-actions align="end" class="p-4 bg-light" style="border-top: 1px solid #eee; border-radius: 0 0 24px 24px;">
-    <button mat-stroked-button mat-dialog-close color="accent" class="rounded-pill px-4">
-        <mat-icon class="me-2">close</mat-icon>
-        Fermer
-    </button>
-</mat-dialog-actions>
 
 <!-- Template récursif -->
 <ng-template #fieldTemplate let-fields="fields">
